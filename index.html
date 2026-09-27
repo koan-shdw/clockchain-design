@@ -30,7 +30,7 @@
     href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@100;200;300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="styles.css?v=5" />
-  <link rel="stylesheet" href="site.css?v=19" />
+  <link rel="stylesheet" href="site.css?v=20" />
   <script>window.CC_GA_ID = 'G-56GW11EBX3';</script>
   <script>(function () { try { var t = localStorage.getItem('cc-theme'); if (t === 'eclipse' || t === 'daylight') { document.documentElement.setAttribute('data-variant', t); } } catch (e) { } })();</script>
 </head>
@@ -340,62 +340,84 @@
     </section>
 
     <!-- ===== USE CASES ===== -->
-    <section class="usecases reveal split" id="use-cases" data-screen-label="04 Use cases">
+    <section class="usecases reveal" id="use-cases" data-screen-label="04 Use cases">
       <div class="container">
-        <div class="ps-subhead">
+        <div class="uc-head">
           <span class="tag">Use Cases</span>
-          <h3 class="ps-subhead-title">One verifiable timeline. <em>Many applications.</em></h3>
-          <p class="body-lg">One trusted chronology across people, organizations, and machines.</p>
+          <h2 class="uc-title">Universally Verifiable Time.<br /><span class="uc-band">Coordinate. Verify. Automate.</span></h2>
+          <p class="body-lg">One clock everyone can check: people, companies and machines.</p>
         </div>
-        <div class="uc-list">
-          <article class="uc-card">
-            <div class="uc-n">01</div>
-            <div class="uc-body">
-              <h4>Compliance &amp; auditability</h4>
-              <p>A regulator investigates a sudden stock market crash. Using Clockchain's independently verifiable
-                timestamps, investigators reconstruct the exact sequence of orders, trades, and market events to
-                determine what happened and resolve disputes with confidence.</p>
-              <span class="pill"><span class="cursor-pointer" onclick="window.open('assets/industry/clockchain-financial-services.pdf', '_blank')">Finance</span> · <span
-                  class="cursor-pointer" onclick="window.open('assets/docs/verifiable-time-for-regulatory-compliance.pdf', '_blank')">Regulation</span> · <span
-                  class="cursor-pointer" onclick="window.open('assets/docs/verifiable-time-for-regulatory-compliance.pdf', '_blank')">Audit</span> · <span class="cursor-pointer"
-                  onclick="window.open('assets/industry/clockchain-healthcare-medicine.pdf', '_blank')">Healthcare</span> · <span class="cursor-pointer"
-                  onclick="window.open('assets/industry/clockchain-cybersecurity.pdf', '_blank')">Cybersecurity</span> · <span class="cursor-pointer"
-                  onclick="window.open('assets/industry/clockchain-transportation.pdf', '_blank')">Transport</span></span>
+
+        <div class="uc-timeline" aria-hidden="true">
+          <div class="uc-scale"><span>12:04:30.000</span><span>12:04:34.000 UTC</span></div>
+          <div class="uc-ruler">
+            <div class="uc-marks">
+              <div class="uc-mark"><i></i><span>12:04:31.114</span></div>
+              <div class="uc-mark"><i></i><span>12:04:32.415</span></div>
+              <div class="uc-mark"><i></i><span>12:04:33.620</span></div>
             </div>
+          </div>
+        </div>
+
+        <div class="uc-grid">
+          <article class="uc-card">
+            <div class="uc-kicker"><b>01</b>Compliance &amp; Audit</div>
+            <h3>Go back in time, see exactly what happened</h3>
+            <div class="uc-fig uc-fig-order" aria-hidden="true">
+              <div class="uc-col">
+                <div class="uc-col-h">Raw logs</div>
+                <span class="uc-raw" style="--x:8px">Halt</span>
+                <span class="uc-raw" style="--x:0px">Sell 4,000</span>
+                <span class="uc-raw" style="--x:14px">Price &minus;7%</span>
+                <span class="uc-raw" style="--x:3px">Buy 1,200</span>
+              </div>
+              <svg class="uc-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+              <div class="uc-col">
+                <div class="uc-col-h uc-green">Proven order</div>
+                <span class="uc-row"><em>.114</em>Buy 1,200</span>
+                <span class="uc-row"><em>.287</em>Sell 4,000</span>
+                <span class="uc-row"><em>.301</em>Price &minus;7%</span>
+                <span class="uc-row"><em>.902</em>Halt</span>
+              </div>
+            </div>
+            <p>Put every event back in its true order, to the millisecond, so audits and disputes settle on facts.</p>
+            <div class="uc-powered"><small>Powered by</small><a href="services.html">Logging · Time Services<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7" /></svg></a></div>
+            <div class="uc-tags"><a href="assets/industry/clockchain-financial-services.pdf" target="_blank" rel="noopener">Finance</a> · <a href="assets/docs/verifiable-time-for-regulatory-compliance.pdf" target="_blank" rel="noopener">Regulation</a> · <a href="assets/industry/clockchain-healthcare-medicine.pdf" target="_blank" rel="noopener">Healthcare</a> · <a href="assets/industry/clockchain-cybersecurity.pdf" target="_blank" rel="noopener">Cybersecurity</a> · <a href="assets/industry/clockchain-transportation.pdf" target="_blank" rel="noopener">Transport</a></div>
           </article>
+
           <article class="uc-card">
-            <div class="uc-n">02</div>
-            <div class="uc-body">
-              <h4>Chain of custody &amp; proof of provenance</h4>
-              <p>A viral video appears online showing a public figure making controversial remarks. Clockchain provides
-                independently verifiable proof of when the original recording was created and whether it has been
-                modified, helping distinguish authentic media from deepfakes.</p>
-              <span class="pill"><span class="cursor-pointer" onclick="window.open('assets/industry/clockchain-supply-chain.pdf', '_blank')">Supply chain</span> ·
-                <span class="cursor-pointer" onclick="window.open('assets/industry/clockchain-legal-services.pdf', '_blank')">Legal</span> · <span
-                  class="cursor-pointer" onclick="window.open('assets/industry/clockchain-media-publishing.pdf', '_blank')">Media</span> · <span class="cursor-pointer"
-                  onclick="window.open('assets/industry/clockchain-digital-commerce.pdf', '_blank')">Commerce</span> · <span class="cursor-pointer"
-                  onclick="window.open('assets/industry/clockchain-pharma-life-sciences.pdf', '_blank')">Pharma</span></span>
+            <div class="uc-kicker"><b>02</b>Provenance</div>
+            <h3>Follow the logs, prove what's real</h3>
+            <div class="uc-fig uc-fig-prov" aria-hidden="true">
+              <div class="uc-rec">
+                <div class="uc-thumb"><svg viewBox="0 0 24 24"><path d="M9 7l8 5-8 5z" /></svg></div>
+                <div class="uc-meta"><small>recorded</small><b>2026-03-14 18:22:07.415 UTC</b><small>SHA-256 <em>9f3a…c21e</em></small></div>
+              </div>
+              <div class="uc-check uc-ok"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7" /></svg>Original file<span>matches</span></div>
+              <div class="uc-check uc-bad"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" /></svg>Edited copy<span>doesn't match</span></div>
             </div>
+            <p>Show when a file was created and that it hasn't changed since. An edited copy or deepfake won't match.</p>
+            <div class="uc-powered"><small>Powered by</small><a href="services.html">Logging<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7" /></svg></a></div>
+            <div class="uc-tags"><a href="assets/industry/clockchain-media-publishing.pdf" target="_blank" rel="noopener">Media</a> · <a href="assets/industry/clockchain-legal-services.pdf" target="_blank" rel="noopener">Legal</a> · <a href="assets/industry/clockchain-supply-chain.pdf" target="_blank" rel="noopener">Supply chain</a> · <a href="assets/industry/clockchain-pharma-life-sciences.pdf" target="_blank" rel="noopener">Pharma</a> · <a href="assets/industry/clockchain-digital-commerce.pdf" target="_blank" rel="noopener">Commerce</a></div>
           </article>
+
           <article class="uc-card">
-            <div class="uc-n">03</div>
-            <div class="uc-body">
-              <h4>Interoperability &amp; a unified temporal system</h4>
-              <p>Multiple AI agents from different companies collaborate to complete a complex task. Clockchain provides
-                a common, independently verifiable timeline so every agent can prove when actions were taken, messages
-                were exchanged, and decisions were made.</p>
-              <span class="pill"><span class="cursor-pointer" onclick="window.open('assets/industry/clockchain-ai-systems.pdf', '_blank')">AI agents</span> ·
-                <span class="cursor-pointer" onclick="window.open('assets/industry/clockchain-critical-infrastructure.pdf', '_blank')">Infrastructure</span> · <span
-                  class="cursor-pointer" onclick="window.open('assets/industry/clockchain-industrial-manufacturing.pdf', '_blank')">Manufacturing</span> · <span
-                  class="cursor-pointer" onclick="window.open('assets/industry/clockchain-robotics-autonomous-systems.pdf', '_blank')">Robotics</span> · <span
-                  class="cursor-pointer" onclick="window.open('assets/industry/clockchain-government-public-sector.pdf', '_blank')">Government</span></span>
+            <div class="uc-kicker"><b>03</b>Coordination</div>
+            <h3>One clock, see when something goes wrong</h3>
+            <div class="uc-fig uc-fig-sync" aria-hidden="true">
+              <div class="uc-lane"><span>Agent A</span><div class="uc-track"><i class="g" style="--p:6%"></i><i class="g" style="--p:46%"></i><i class="g" style="--p:88%"></i></div></div>
+              <div class="uc-lane"><span>Agent B</span><div class="uc-track"><i class="b" style="--p:22%"></i><i class="b" style="--p:60%"></i></div></div>
+              <div class="uc-lane"><span>Agent C</span><div class="uc-track"><i class="o" style="--p:34%"></i><i class="o" style="--p:74%"></i></div></div>
+              <div class="uc-axis"><span>.000</span><span>.250</span><span>.500</span><span>.750</span><span>1.000</span></div>
             </div>
+            <p>AI agents, systems and partners share one timeline, so every action and handoff is provably in sequence.</p>
+            <div class="uc-powered"><small>Powered by</small><a href="services.html">Time Services · Smart Contracts<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7" /></svg></a></div>
+            <div class="uc-tags"><a href="assets/industry/clockchain-ai-systems.pdf" target="_blank" rel="noopener">AI agents</a> · <a href="assets/industry/clockchain-robotics-autonomous-systems.pdf" target="_blank" rel="noopener">Robotics</a> · <a href="assets/industry/clockchain-critical-infrastructure.pdf" target="_blank" rel="noopener">Infrastructure</a> · <a href="assets/industry/clockchain-industrial-manufacturing.pdf" target="_blank" rel="noopener">Manufacturing</a> · <a href="assets/industry/clockchain-government-public-sector.pdf" target="_blank" rel="noopener">Government</a></div>
           </article>
         </div>
+
         <div class="how-more">
-          <a class="btn btn-outline" href="industry-solutions.html">Industry Solutions<svg viewBox="0 0 24 24">
-              <path d="M5 12h14M13 5l7 7-7 7" />
-            </svg></a>
+          <a class="btn btn-outline" href="industry-solutions.html">Industry solutions<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7" /></svg></a>
         </div>
       </div>
     </section>
