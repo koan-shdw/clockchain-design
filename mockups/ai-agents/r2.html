@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI &amp; Agents Round 2</title>
+<style>body{margin:0;}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* Review shell, round 2. One control row (page, version, theme, sliders), a line on what the version changes,
+     then the version's desktop and phone frames side by side at one height (stacked on a phone). */
+  :root{
+    --bg:#eef1ee; --panel:#ffffff; --fg:#151815; --fg-2:#4c544c; --fg-3:#79817a;
+    --line:rgba(0,0,0,.10); --accent:#0a8a0a; --accent-soft:rgba(10,138,10,.10); --frame:#d9ded9;
+    --sans:'Inter',ui-sans-serif,system-ui,sans-serif; --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
+  }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+    --bg:#0e110e; --panel:#161a16; --fg:#f2f5f2; --fg-2:#b0b8b0; --fg-3:#79817a;
+    --line:rgba(255,255,255,.09); --accent:#00cc00; --accent-soft:rgba(0,204,0,.12); --frame:#262c26; color-scheme:dark;
+  }}
+  :root[data-theme="dark"]{
+    --bg:#0e110e; --panel:#161a16; --fg:#f2f5f2; --fg-2:#b0b8b0; --fg-3:#79817a;
+    --line:rgba(255,255,255,.09); --accent:#00cc00; --accent-soft:rgba(0,204,0,.12); --frame:#262c26; color-scheme:dark;
+  }
+  body{background:var(--bg);color:var(--fg);font:400 14px/1.5 var(--sans);-webkit-font-smoothing:antialiased;}
+  .wrap{padding-block:20px 32px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));max-width:1800px;margin:0 auto;}
+
+  .bar{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;}
+  .name{font-weight:600;font-size:15px;margin-right:auto;}
+  .name span{font-family:var(--mono);font-weight:400;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--fg-3);margin-left:10px;}
+  .grp{display:flex;align-items:center;gap:8px;min-width:0;}
+  .grp-k{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--fg-3);}
+  .seg{display:inline-flex;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px;}
+  .seg button{font:500 12.5px/1 var(--sans);color:var(--fg-2);background:none;border:0;border-radius:999px;padding:8px 13px;cursor:pointer;white-space:nowrap;}
+  .seg button:hover{color:var(--fg);}
+  .seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);}
+  .seg button:focus-visible{outline:2px solid var(--accent);outline-offset:1px;}
+  .sl{display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:6px 14px;}
+  .sl input{width:110px;accent-color:var(--accent);}
+  .sl output{font-family:var(--mono);font-size:11.5px;color:var(--fg-2);min-width:3.6ch;text-align:right;font-variant-numeric:tabular-nums;}
+  .sl[aria-disabled="true"]{opacity:.45;}
+  .why{margin:12px 0 18px;color:var(--fg-2);font-size:13.5px;max-width:110ch;}
+  .why b{color:var(--fg);font-weight:600;margin-right:6px;}
+
+  .stage{display:flex;gap:24px;align-items:flex-start;}
+  .fr{flex:none;min-width:0;}
+  .fr-k{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--fg-3);margin-bottom:8px;}
+  .box{position:relative;overflow:hidden;border:1px solid var(--frame);border-radius:10px;background:var(--frame);}
+  .box iframe{position:absolute;top:0;left:0;border:0;transform-origin:0 0;background:#fff;}
+  .stage.stack{flex-direction:column;}
+  .stage.stack #fr-p{order:-1;}
+  @media (max-width:700px){ .name{width:100%;} .grp{flex-wrap:wrap;} }
+  @media (prefers-reduced-motion: reduce){ *{scroll-behavior:auto!important;} }
+</style>
+
+<div class="wrap">
+  <div class="bar">
+    <div class="name">AI &amp; Agents <span>Round 2 · 2026-10-30</span></div>
+    <div class="grp"><span class="grp-k">Page</span>
+      <div class="seg" id="seg-p" role="group" aria-label="Page">
+        <button type="button" id="b-pg-main" data-p="main">Main page</button>
+        <button type="button" id="b-pg-mcp" data-p="mcp">MCP page</button>
+        <button type="button" id="b-pg-guide" data-p="guide">Style guide</button>
+      </div></div>
+    <div class="grp"><span class="grp-k">Version</span>
+      <div class="seg" id="seg-v" role="group" aria-label="Version"></div></div>
+    <div class="grp"><span class="grp-k">Theme</span>
+      <div class="seg" id="seg-t" role="group" aria-label="Theme">
+        <button type="button" id="b-light" data-t="light">Light</button>
+        <button type="button" id="b-dark" data-t="dark">Dark</button>
+      </div></div>
+    <label class="sl" id="sl-speed" for="in-speed"><span class="grp-k">Speed</span><input type="range" id="in-speed" min="0.5" max="1.5" step="0.05" value="1"><output id="out-speed">1.00×</output></label>
+    <label class="sl" id="sl-hk" for="in-hk"><span class="grp-k">Picture height</span><input type="range" id="in-hk" min="0.8" max="1.25" step="0.05" value="1"><output id="out-hk">100%</output></label>
+  </div>
+  <p class="why" id="why"></p>
+
+  <div class="stage" id="stage">
+    <div class="fr" id="fr-d"><div class="fr-k">Desktop 1440</div><div class="box" id="box-d"><iframe id="if-d" title="Desktop view" width="1440" height="900"></iframe></div></div>
+    <div class="fr" id="fr-p"><div class="fr-k">Phone 390</div><div class="box" id="box-p"><iframe id="if-p" title="Phone view" width="390" height="844"></iframe></div></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  /* each version: its hash token, button label, page, whether it has the animation, and one line on what it changes */
+  var V = {
+    'main-now': { p:'main', l:'Now', src:'now.html', anim:false,
+      why:"The main page today at the same spot: Use cases runs straight into News." },
+    'main-r1':  { p:'main', l:'Round 1 V1', src:'v1.html', anim:true,
+      why:"Round 1 as approved on 10-28: the two films as small chips inside the picture. Kept for comparison." },
+    'main-b1':  { p:'main', l:'B1 Tabs', src:'main.html?b=1', anim:true,
+      why:"Two buttons above the picture, each with its number, status, length and one sentence; the one playing is outlined and fills as it plays. Four more log events on the tracks (Certificate, Lock, Work · M1, Paid · M1). Timer, Stopwatch and Alarm cards under the animation, one infographic and one paragraph each." },
+    'main-b2':  { p:'main', l:'B2 Timeline', src:'main.html?b=2', anim:true,
+      why:"The two buttons sit under the ruler, each as wide as its part of the story, so Contract reads as the longer second half. Same log events and tool cards as B1." },
+    'main-b3':  { p:'main', l:'B3 Cards', src:'main.html?b=3', anim:true,
+      why:"The two films as two cards under the caption, each with a Play button that reads Playing while it runs. Same log events and tool cards as B1." },
+    'mcp-now':  { p:'mcp', l:'Now', src:'mcp/now.html', anim:false,
+      why:"mcp.clockchain.network today, captured full length. The live page has one light theme." },
+    'mcp-v1':   { p:'mcp', l:'V1 Manual', src:'mcp/index.html', anim:true,
+      why:"The main page set as a technical manual: numbered sections with contents on the left, V3 inside as Fig 3.1, the three tool infographics with their tool tables, repo files and notes for agents under every service, a reference chip on every claim, and 9 notes for Rasesh where a source is missing or two disagree." },
+    'guide':    { p:'guide', l:'V1', src:'mcp/style-guide.html', anim:false,
+      why:"The manual's own style guide: principles, colour, type, grid, every component live, writing rules and resource files." }
+  };
+  var FIRST = { main:'main-b1', mcp:'mcp-v1', guide:'guide' };
+  var st = { v:'main-b1', t:'light', speed:1, hk:1 };
+  var h = (location.hash || '').slice(1);
+  if (V[h]) st.v = h;
+  try{ if (matchMedia('(prefers-color-scheme: dark)').matches) st.t = 'dark'; }catch(e){}
+
+  var D = { w:1440, h:900 }, P = { w:390, h:844 }, GAP = 24;
+  var ifD = document.getElementById('if-d'), ifP = document.getElementById('if-p');
+  var boxD = document.getElementById('box-d'), boxP = document.getElementById('box-p');
+  var stage = document.getElementById('stage'), segV = document.getElementById('seg-v');
+
+  function post(msg){
+    [ifD, ifP].forEach(function(f){ try{ f.contentWindow.postMessage(Object.assign({ type:'cc-mock' }, msg), '*'); }catch(e){} });
+  }
+  function versions(){
+    var p = V[st.v].p;
+    segV.innerHTML = Object.keys(V).filter(function(k){ return V[k].p === p; }).map(function(k){
+      return '<button type="button" id="b-v-' + k + '" data-v="' + k + '">' + V[k].l + '</button>';
+    }).join('');
+  }
+  function pressed(){
+    document.querySelectorAll('#seg-p button').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.p === V[st.v].p ? 'true' : 'false'); });
+    segV.querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.v === st.v ? 'true' : 'false'); });
+    document.querySelectorAll('#seg-t button').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.t === st.t ? 'true' : 'false'); });
+    var off = !V[st.v].anim;
+    ['sl-speed','sl-hk'].forEach(function(id){ var el = document.getElementById(id); el.setAttribute('aria-disabled', off ? 'true' : 'false'); el.querySelector('input').disabled = off; });
+  }
+  function load(){
+    var v = V[st.v];
+    var src = v.src + (v.src.indexOf('?') > -1 ? '&' : '?') + 'theme=' + st.t + (v.p === 'main' && st.v !== 'main-now' ? '#agents' : '');
+    ifD.src = src; ifP.src = src;
+    document.getElementById('why').innerHTML = '<b>' + ({ main:'Main page', mcp:'MCP page', guide:'Style guide' }[v.p]) + ' · ' + v.l + '</b>' + v.why;
+    versions(); pressed();
+  }
+  [ifD, ifP].forEach(function(f){ f.addEventListener('load', function(){ post({ speed:st.speed, hk:st.hk }); }); });
+
+  function fit(boxEl, frame, size, s){
+    boxEl.style.width = Math.round(size.w * s) + 'px';
+    boxEl.style.height = Math.round(size.h * s) + 'px';
+    frame.style.transform = 'scale(' + s + ')';
+  }
+  function layout(){
+    var W = stage.clientWidth;
+    if (W >= 900){
+      stage.classList.remove('stack');
+      var sd = Math.min(1, (W - GAP) / (D.w + P.w * D.h / P.h));
+      fit(boxD, ifD, D, sd); fit(boxP, ifP, P, sd * D.h / P.h);
+    } else {
+      stage.classList.add('stack');
+      fit(boxP, ifP, P, Math.min(1, W / P.w));
+      fit(boxD, ifD, D, W / D.w);
+    }
+  }
+  function go(k){ st.v = k; try{ history.replaceState(null, '', '#' + k); }catch(err){} load(); }
+  document.getElementById('seg-p').onclick = function(e){ var b = e.target.closest('button'); if (b) go(FIRST[b.dataset.p]); };
+  segV.onclick = function(e){ var b = e.target.closest('button'); if (b) go(b.dataset.v); };
+  document.getElementById('seg-t').onclick = function(e){ var b = e.target.closest('button'); if (!b) return; st.t = b.dataset.t; pressed(); post({ theme:st.t }); };
+  var inS = document.getElementById('in-speed'), inH = document.getElementById('in-hk');
+  inS.oninput = function(){ st.speed = +inS.value; document.getElementById('out-speed').textContent = st.speed.toFixed(2) + '×'; post({ speed:st.speed }); };
+  inH.oninput = function(){ st.hk = +inH.value; document.getElementById('out-hk').textContent = Math.round(st.hk * 100) + '%'; post({ hk:st.hk }); };
+  window.addEventListener('resize', layout);
+  load(); layout();
+})();
+</script>

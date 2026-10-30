@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI &amp; Agents · Now</title>
+  <style>
+    /* Now = the real page today at the same spot (end of Use cases into News), captured, not rebuilt. */
+    html,body{margin:0;background:#fff;}
+    html.dark,html.dark body{background:#0b0f0c;}
+    img{display:none;width:100%;height:auto;}
+    html:not(.dark) .d-l, html.dark .d-d{display:block;}
+    @media(max-width:600px){
+      img{display:none!important;}
+      html:not(.dark) .p-l, html.dark .p-d{display:block!important;}
+    }
+  </style>
+  <script>(function(){var q=new URLSearchParams(location.search).get('theme');if(q==='dark')document.documentElement.className='dark';
+    addEventListener('message',function(e){var m=e.data;if(m&&m.type==='cc-mock'&&m.theme)document.documentElement.className=m.theme==='dark'?'dark':'';});})();</script>
+</head>
+<body>
+  <img class="d-l" src="assets/now-1440-light.png" alt="Main page today, light: Use cases ends and News begins" />
+  <img class="d-d" src="assets/now-1440-dark.png" alt="Main page today, dark: Use cases ends and News begins" />
+  <img class="p-l" src="assets/now-390-light.png" alt="Main page today on a phone, light" />
+  <img class="p-d" src="assets/now-390-dark.png" alt="Main page today on a phone, dark" />
+</body>
+</html>

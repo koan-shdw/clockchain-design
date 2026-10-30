@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Clockchain AI &amp; Agents</title>
+<style>body{margin:0;}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* Layout: one control row on top, then the version's desktop and phone frames side by side at one height (stacked on a phone). */
+  :root{
+    --bg:#eef1ee; --panel:#ffffff; --fg:#151815; --fg-2:#4c544c; --fg-3:#79817a;
+    --line:rgba(0,0,0,.10); --accent:#0a8a0a; --accent-soft:rgba(10,138,10,.10); --frame:#d9ded9;
+    --sans:'Inter',ui-sans-serif,system-ui,sans-serif; --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
+  }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+    --bg:#0e110e; --panel:#161a16; --fg:#f2f5f2; --fg-2:#b0b8b0; --fg-3:#79817a;
+    --line:rgba(255,255,255,.09); --accent:#00cc00; --accent-soft:rgba(0,204,0,.12); --frame:#262c26; color-scheme:dark;
+  }}
+  :root[data-theme="dark"]{
+    --bg:#0e110e; --panel:#161a16; --fg:#f2f5f2; --fg-2:#b0b8b0; --fg-3:#79817a;
+    --line:rgba(255,255,255,.09); --accent:#00cc00; --accent-soft:rgba(0,204,0,.12); --frame:#262c26; color-scheme:dark;
+  }
+  body{background:var(--bg);color:var(--fg);font:400 14px/1.5 var(--sans);-webkit-font-smoothing:antialiased;}
+  .wrap{padding-block:20px 32px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));max-width:1800px;margin:0 auto;}
+
+  .bar{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;}
+  .name{font-weight:600;font-size:15px;margin-right:auto;}
+  .name span{font-family:var(--mono);font-weight:400;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--fg-3);margin-left:10px;}
+  .grp{display:flex;align-items:center;gap:8px;}
+  .grp-k{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--fg-3);}
+  .seg{display:inline-flex;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px;}
+  .seg button{font:500 12.5px/1 var(--sans);color:var(--fg-2);background:none;border:0;border-radius:999px;padding:8px 13px;cursor:pointer;white-space:nowrap;}
+  .seg button:hover{color:var(--fg);}
+  .seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);}
+  .seg button:focus-visible{outline:2px solid var(--accent);outline-offset:1px;}
+  .sl{display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:6px 14px;}
+  .sl input{width:110px;accent-color:var(--accent);}
+  .sl output{font-family:var(--mono);font-size:11.5px;color:var(--fg-2);min-width:3.6ch;text-align:right;font-variant-numeric:tabular-nums;}
+  .why{margin:12px 0 18px;color:var(--fg-2);font-size:13.5px;max-width:90ch;}
+  .why b{color:var(--fg);font-weight:600;margin-right:6px;}
+
+  .stage{display:flex;gap:24px;align-items:flex-start;}
+  .fr{flex:none;min-width:0;}
+  .fr-k{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--fg-3);margin-bottom:8px;}
+  .box{position:relative;overflow:hidden;border:1px solid var(--frame);border-radius:10px;background:var(--frame);}
+  .box iframe{position:absolute;top:0;left:0;border:0;transform-origin:0 0;background:#fff;}
+  .stage.stack{flex-direction:column;}
+  .stage.stack #fr-p{order:-1;}
+  @media (max-width:700px){ .name{width:100%;} .grp{flex-wrap:wrap;} }
+</style>
+
+<div class="wrap">
+  <div class="bar">
+    <div class="name">AI &amp; Agents <span>Clockchain main page</span></div>
+    <div class="grp"><span class="grp-k">Version</span>
+      <div class="seg" id="seg-v" role="group" aria-label="Version">
+        <button type="button" id="b-now" data-v="now">Now</button>
+        <button type="button" id="b-v1" data-v="v1">V1</button>
+        <button type="button" id="b-v2" data-v="v2">V2</button>
+        <button type="button" id="b-v3" data-v="v3">V3</button>
+      </div></div>
+    <div class="grp"><span class="grp-k">Theme</span>
+      <div class="seg" id="seg-t" role="group" aria-label="Theme">
+        <button type="button" id="b-light" data-t="light">Light</button>
+        <button type="button" id="b-dark" data-t="dark">Dark</button>
+      </div></div>
+    <label class="sl" for="in-speed"><span class="grp-k">Speed</span><input type="range" id="in-speed" min="0.5" max="1.5" step="0.05" value="1"><output id="out-speed">1.00×</output></label>
+    <label class="sl" for="in-hk"><span class="grp-k">Picture height</span><input type="range" id="in-hk" min="0.8" max="1.25" step="0.05" value="1"><output id="out-hk">100%</output></label>
+  </div>
+  <p class="why" id="why"></p>
+
+  <div class="stage" id="stage">
+    <div class="fr" id="fr-d"><div class="fr-k">Desktop 1440</div><div class="box" id="box-d"><iframe id="if-d" title="Desktop view" width="1440" height="900"></iframe></div></div>
+    <div class="fr" id="fr-p"><div class="fr-k">Phone 390</div><div class="box" id="box-p"><iframe id="if-p" title="Phone view" width="390" height="844"></iframe></div></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var WHY = {
+    now: "The main page today at the same spot: Use cases runs straight into News, and the nav has no AI & Agents link.",
+    v1: "Time axis. The Use cases timeline in 3D: buyer and provider are two lanes on one clock, and every step lands on it with a timestamp.",
+    v2: "Globe. The hero's wireframe Earth: the two agents sit in two cities, and every anchored step lands on a ledger ring around it.",
+    v3: "Cards. The site's cards as floating 3D panels: each step flips one in, and green lines link them."
+  };
+  var st = { v:'v1', t:'light', speed:1, hk:1 };
+  var h = (location.hash || '').slice(1);
+  if(WHY[h]) st.v = h;
+  try{ var mq = matchMedia('(prefers-color-scheme: dark)'); if(mq.matches) st.t = 'dark'; }catch(e){}
+
+  var D = { w:1440, h:900 }, P = { w:390, h:844 }, GAP = 24;
+  var ifD = document.getElementById('if-d'), ifP = document.getElementById('if-p');
+  var boxD = document.getElementById('box-d'), boxP = document.getElementById('box-p');
+  var stage = document.getElementById('stage');
+
+  function post(msg){
+    [ifD, ifP].forEach(function(f){ try{ f.contentWindow.postMessage(Object.assign({ type:'cc-mock' }, msg), '*'); }catch(e){} });
+  }
+  function pressed(){
+    [['seg-v','v'],['seg-t','t']].forEach(function(p){
+      document.getElementById(p[0]).querySelectorAll('button').forEach(function(b){
+        b.setAttribute('aria-pressed', b.dataset[p[1]] === st[p[1]] ? 'true' : 'false');
+      });
+    });
+  }
+  function load(){
+    var src = (st.v === 'now' ? 'now.html' : st.v + '.html') + '?theme=' + st.t + (st.v === 'now' ? '' : '#agents');
+    ifD.src = src; ifP.src = src;
+    document.getElementById('why').innerHTML = '<b>' + (st.v === 'now' ? 'Now' : st.v.toUpperCase()) + '</b>' + WHY[st.v];
+    pressed();
+  }
+  [ifD, ifP].forEach(function(f){ f.addEventListener('load', function(){ post({ speed:st.speed, hk:st.hk }); }); });
+
+  function fit(boxEl, frame, size, s){
+    boxEl.style.width = Math.round(size.w * s) + 'px';
+    boxEl.style.height = Math.round(size.h * s) + 'px';
+    frame.style.transform = 'scale(' + s + ')';
+  }
+  function layout(){
+    var W = stage.clientWidth;
+    if(W >= 900){
+      stage.classList.remove('stack');
+      var sd = (W - GAP) / (D.w + P.w * D.h / P.h);
+      sd = Math.min(sd, 1);
+      fit(boxD, ifD, D, sd); fit(boxP, ifP, P, sd * D.h / P.h);
+    } else {
+      stage.classList.add('stack');
+      fit(boxP, ifP, P, Math.min(1, W / P.w));
+      fit(boxD, ifD, D, W / D.w);
+    }
+  }
+  document.getElementById('seg-v').onclick = function(e){ var b = e.target.closest('button'); if(!b) return; st.v = b.dataset.v; try{ history.replaceState(null, '', '#' + st.v); }catch(err){} load(); };
+  document.getElementById('seg-t').onclick = function(e){ var b = e.target.closest('button'); if(!b) return; st.t = b.dataset.t; pressed(); post({ theme:st.t }); };
+  var inS = document.getElementById('in-speed'), inH = document.getElementById('in-hk');
+  inS.oninput = function(){ st.speed = +inS.value; document.getElementById('out-speed').textContent = st.speed.toFixed(2) + '×'; post({ speed:st.speed }); };
+  inH.oninput = function(){ st.hk = +inH.value; document.getElementById('out-hk').textContent = Math.round(st.hk * 100) + '%'; post({ hk:st.hk }); };
+  window.addEventListener('resize', layout);
+  load(); layout();
+})();
+</script>

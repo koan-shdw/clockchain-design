@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MCP Page Now</title>
+  <!-- MOCKUP · round 2 · 2026-10-30. "Now" for the MCP page: mcp.clockchain.network captured as it is (tools/cap2.mjs mcpnow), full length.
+       The live page has one light theme, so dark shows the same capture with a note. -->
+  <style>
+    html,body{margin:0;background:#fff;}
+    img{display:block;width:100%;height:auto;}
+    .d{display:block;} .p{display:none;}
+    @media(max-width:600px){ .d{display:none;} .p{display:block;} }
+    .tag{position:fixed;z-index:2;top:12px;right:12px;display:none;padding:8px 12px;border-radius:999px;background:#1d1d1f;color:#fff;
+      font:500 11px/1 'JetBrains Mono',ui-monospace,monospace;letter-spacing:.1em;text-transform:uppercase;}
+    html[data-variant="eclipse"] .tag{display:block;}
+  </style>
+  <script>(function(){try{var q=new URLSearchParams(location.search).get('theme');if(q==='dark')document.documentElement.setAttribute('data-variant','eclipse');}catch(e){}})();</script>
+</head>
+<body>
+  <span class="tag">Live page has no dark mode</span>
+  <img class="d" src="assets/now-1440.jpg" alt="mcp.clockchain.network as it is today, desktop" />
+  <img class="p" src="assets/now-390.jpg" alt="mcp.clockchain.network as it is today, phone" />
+  <script>
+    window.addEventListener('message', (e) => { const m = e.data; if (m && m.type === 'cc-mock' && m.theme) document.documentElement.setAttribute('data-variant', m.theme === 'dark' ? 'eclipse' : 'daylight'); });
+  </script>
+</body>
+</html>

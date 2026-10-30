@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" data-variant="daylight" data-accent="bright" data-font="inter" data-bodyfont="inter"
+  data-headweight="light" data-bodyweight="light" data-density="comfortable">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI &amp; Agents · V3 Cards</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@100;200;300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="site/styles.css" />
+  <link rel="stylesheet" href="site/site.css" />
+  <link rel="stylesheet" href="agents/section.css" />
+  <!-- mockup: ?theme=light|dark wins over the remembered theme -->
+  <script>(function(){try{var q=new URLSearchParams(location.search).get('theme');var t=q?(q==='dark'?'eclipse':'daylight'):localStorage.getItem('cc-theme');if(t==='eclipse'||t==='daylight')document.documentElement.setAttribute('data-variant',t);}catch(e){}})();</script>
+  <script type="importmap">{ "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  } }</script>
+  <style>
+    /* mockup only: the neighbouring sections as captured from the real page */
+    .mk-slice img{display:none;width:100%;height:auto;}
+    :root[data-variant="daylight"] .mk-slice .d-l, :root[data-variant="eclipse"] .mk-slice .d-d{display:block;}
+    @media(max-width:600px){
+      :root[data-variant] .mk-slice img{display:none;}
+      :root[data-variant="daylight"] .mk-slice .p-l, :root[data-variant="eclipse"] .mk-slice .p-d{display:block;}
+    }
+  </style>
+</head>
+<body class="has-earth">
+  <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
+  <div id="site-nav"></div>
+  <main id="main-content" tabindex="-1">
+
+    <div class="mk-slice" aria-hidden="true">
+      <img class="d-l" src="assets/uc-bottom-1440-light.png" alt="" /><img class="d-d" src="assets/uc-bottom-1440-dark.png" alt="" />
+      <img class="p-l" src="assets/uc-bottom-390-light.png" alt="" /><img class="p-d" src="assets/uc-bottom-390-dark.png" alt="" />
+    </div>
+
+    <!-- ===== AI & AGENTS ===== -->
+    <section class="agents reveal" id="agents" data-screen-label="04b AI & Agents">
+      <div class="container">
+        <div class="ag-head">
+          <span class="tag">AI &amp; Agents</span>
+          <h2 class="h2">Trust the agent <em>on the other side.</em></h2>
+          <p class="body-lg">Before agents talk business, they prove who is present and what each side agreed to.</p>
+        </div>
+        <div data-ag-player></div>
+      </div>
+    </section>
+
+    <div class="mk-slice" aria-hidden="true">
+      <img class="d-l" src="assets/news-top-1440-light.png" alt="" /><img class="d-d" src="assets/news-top-1440-dark.png" alt="" />
+      <img class="p-l" src="assets/news-top-390-light.png" alt="" /><img class="p-d" src="assets/news-top-390-dark.png" alt="" />
+    </div>
+
+  </main>
+  <script src="site/components.js"></script>
+  <script src="site/app.js"></script>
+  <script src="agents/story.js"></script>
+  <script type="module">
+    import { mount } from './agents/player.js';
+    mount(document.querySelector('[data-ag-player]'), { scene: './scene-c.js' });
+  </script>
+</body>
+</html>
