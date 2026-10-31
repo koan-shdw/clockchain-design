@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment Methods · Clockchain App</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@100;200;300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="app.css?v=14" />
+  <script>(function(){try{if(localStorage.getItem('ccapp-theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
+</head>
+<body data-nav="payments">
+  <div class="shell">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main">
+      <header class="topbar" id="topbar" data-title="Payment Methods"></header>
+      <div class="content">
+
+        <div class="page-head">
+          <h1>Payment Methods</h1>
+          <p>Cards on file, and which card pays for each service.</p>
+          <div style="margin-top:12px;"><button class="btn btn-outline btn-sm" onclick="ccMock('Mockup: opens the Stripe customer portal')">Manage billing</button></div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3>Credit cards on file</h3><button class="btn btn-primary btn-sm" type="button" onclick="ccMock('Mockup: add a credit card')">Add Credit Card</button></div>
+          <p style="font-size:12.5px;color:var(--fg-3);margin-bottom:10px;">A card can't be deleted while it's the primary payment method for any service.</p>
+          <table class="table">
+            <thead><tr><th>Card</th><th>Expires</th><th></th><th></th></tr></thead>
+            <tbody>
+              <tr><td class="mono">Visa ending -9482</td><td>08/28</td><td><button class="kv-copy" onclick="ccMock('Mockup: card update')">Update</button></td><td></td></tr>
+              <tr><td class="mono">Visa ending -0046</td><td>01/27</td><td><button class="kv-copy" onclick="ccMock('Mockup: card update')">Update</button></td><td><button class="kv-copy" onclick="ccMock('Mockup: card deleted')">Delete</button></td></tr>
+              <tr><td class="mono">MC ending -9112</td><td>10/31</td><td><button class="kv-copy" onclick="ccMock('Mockup: card update')">Update</button></td><td><button class="kv-copy" onclick="ccMock('Mockup: card deleted')">Delete</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="section card">
+          <div class="card-head"><h3>Which card pays for each service</h3></div>
+          <div id="pm-groups"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <script src="app.js?v=13"></script>
+  <script>
+  (function(){
+    var CARDS = ['Visa ending -9482', 'Visa ending -0046', 'MC ending -9112'];
+    var GROUPS = [
+      { id:'logs', label:'Logs', primary:0 },
+      { id:'ts', label:'Time API', primary:0 },
+      { id:'sc', label:'Smart Contract Credits Autopay', primary:0 }
+    ];
+    function paint(){
+      var h = '';
+      GROUPS.forEach(function(g, gi){
+        h += '<div class="stat-k" style="margin:16px 0 6px;">' + g.label + '</div><table class="table"><tbody>';
+        CARDS.forEach(function(c, ci){
+          h += '<tr><td class="mono">' + c + '</td><td>'
+            + (g.primary === ci
+              ? '<span class="status-pill">Primary</span>'
+              : '<button class="kv-copy" onclick="pmPrimary(' + gi + ',' + ci + ')">Make primary for ' + g.label + '</button>')
+            + '</td></tr>';
+        });
+        h += '</tbody></table>';
+      });
+      document.getElementById('pm-groups').innerHTML = h;
+    }
+    window.pmPrimary = function(gi, ci){
+      GROUPS[gi].primary = ci;
+      paint();
+      ccToast('Mockup: primary card updated for ' + GROUPS[gi].label);
+    };
+    paint();
+  })();
+  </script>
+</body>
+</html>

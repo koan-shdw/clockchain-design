@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Certificate · Clockchain App</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
+  <script>(function(){try{if(localStorage.getItem('ccapp-theme')!=='light')document.documentElement.setAttribute('data-theme','dark');}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
+  <!-- Certificate B / Fine contour (Jeff 10-07, CLOCKCHAIN-CERTIFICATES-COLLAPSED-EXPANDED.pdf p.6-9),
+       on the Clockchain Brand Guide v0.2.0: Inter 400/500 + JetBrains Mono 400, brand colour tokens,
+       44px pill controls with a 2px focus ring, 4-64 spacing scale, 12px panels, light + dark page.
+       One layout for every record; status is Anchored (logs, Time API) or Scheduled / Executed (contracts).
+       The certificate artwork stays on white in both themes. -->
+  <style>
+    :root{
+      --green:#00CC00;--green-hover:#00B800;--green-text:#0A8A0A;
+      --ink:#1D1D1F;--ink-2:#57575C;--canvas:#FFFFFF;--alt:#F5F5F7;--rule:#E3E3E8;--edge:#D2D2D7;
+      --page:var(--alt);--page-ink:var(--ink);--page-ink-2:var(--ink-2);
+      --btn2-bg:var(--canvas);--btn2-edge:var(--edge);--btn2-hover:#A1A1A6;--ring:var(--ink);
+      --pend-bg:var(--alt);--pend-edge:var(--rule);--pend-ink:var(--ink-2);
+      --sans:Inter,system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,monospace;
+    }
+    :root[data-theme="dark"]{
+      --page:#131613;--page-ink:#F5F5F7;--page-ink-2:#A3A8A3;
+      --btn2-bg:#1C211C;--btn2-edge:#2E352E;--btn2-hover:#4A524A;--ring:#F5F5F7;
+      --pend-bg:#1C211C;--pend-edge:#2E352E;--pend-ink:#A3A8A3;
+    }
+    *{box-sizing:border-box;}
+    body{margin:0;background:var(--page);color:var(--page-ink);font:400 16px/1.55 var(--sans);-webkit-font-smoothing:antialiased;}
+
+    .bar{max-width:1200px;margin:24px auto 0;padding:0 24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+    .bar[hidden]{display:none;}
+    .bar .who{font-size:13px;line-height:1.4;color:var(--page-ink-2);margin-right:auto;}
+    .bar .who b{font-family:var(--mono);font-weight:400;color:var(--page-ink);}
+    .bar .msg{flex-basis:100%;text-align:right;font-size:13px;line-height:1.4;color:var(--page-ink-2);}
+    .bar .msg:empty{display:none;}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 24px;border-radius:999px;
+      font:500 15px/1.3 var(--sans);cursor:pointer;border:1px solid var(--btn2-edge);background:var(--btn2-bg);color:var(--page-ink);
+      transition:background-color .15s,border-color .15s;}
+    .btn:hover{border-color:var(--btn2-hover);}
+    .btn:focus-visible{outline:2px solid var(--ring);outline-offset:2px;}
+    .btn.primary{background:var(--green);border-color:var(--green);color:var(--ink);}
+    .btn.primary:hover{background:var(--green-hover);border-color:var(--green-hover);}
+    .btn.pending,.btn.pending:hover{background:var(--pend-bg);border-color:var(--pend-edge);color:var(--pend-ink);cursor:default;}
+
+    .sheet-wrap{padding:0 24px;}
+    .sheet{max-width:1200px;margin:16px auto 48px;background:var(--canvas);color:var(--ink);border-radius:12px;padding:32px;container-type:inline-size;}
+
+    .cert{--cut:48px;position:relative;padding:48px 48px 32px;}
+    .contour{position:absolute;left:0;top:0;pointer-events:none;overflow:visible;}
+    .c-head{display:flex;align-items:center;justify-content:space-between;gap:16px;}
+    .c-logo{height:32px;width:auto;display:block;}
+    .c-status{display:flex;align-items:center;gap:8px;font-size:18px;line-height:1.3;}
+    .c-status i{width:8px;height:8px;border-radius:50%;background:var(--green);display:block;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .c-title{font-weight:500;font-size:44px;line-height:1.12;letter-spacing:-.01em;text-align:center;margin:24px 0 0;}
+    .c-k{font-family:var(--mono);font-size:12px;line-height:1.4;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);}
+    .c-time{text-align:center;margin-top:24px;}
+    .c-big{font-family:var(--mono);font-size:64px;line-height:1.04;margin-top:8px;}
+    .c-date{font-family:var(--mono);font-size:16px;line-height:1.4;color:var(--ink-2);margin-top:8px;}
+    .c-rule{border-top:1px solid var(--rule);margin:32px 0;}
+    .c-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:24px 32px;}
+    .f{grid-column:span 6;min-width:0;}
+    .f.third{grid-column:span 4;}
+    .f.quarter{grid-column:span 3;}
+    .f.full{grid-column:span 12;}
+    .f .c-k{margin-bottom:8px;}
+    .v{font-size:18px;line-height:1.4;}
+    .v.num{font-family:var(--mono);font-size:24px;line-height:1.3;}
+    .v.hash{font-family:var(--mono);font-size:15px;line-height:1.5;word-break:break-all;}
+    .v.name{font-size:28px;line-height:1.2;}
+    .v .sub{display:block;font-family:var(--mono);font-size:13px;line-height:1.4;color:var(--ink-2);margin-top:4px;}
+    .v.t{font-family:var(--mono);font-size:22px;line-height:1.3;}
+    .att{width:100%;border-collapse:collapse;}
+    .att th{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);font-weight:400;text-align:left;padding:0 0 8px;border-bottom:1px solid var(--rule);}
+    .att td{font-family:var(--mono);font-size:14px;padding:12px 0;border-bottom:1px solid var(--rule);}
+    .att tr:last-child td{border-bottom:none;}
+    .att-head{display:flex;justify-content:space-between;gap:12px;margin-bottom:12px;}
+    .c-ver{display:flex;gap:32px;align-items:baseline;}
+    .c-ver .c-k{color:var(--green-text);flex:none;width:160px;}
+    .c-ver a{font-family:var(--mono);font-size:12px;line-height:1.4;color:var(--ink-2);word-break:break-all;text-decoration:none;border-radius:4px;}
+    .c-ver a:hover{color:var(--green-text);text-decoration:underline;}
+    .c-ver a:focus-visible{outline:2px solid var(--ink);outline-offset:2px;}
+    .c-gen{font-family:var(--mono);font-size:12px;line-height:1.4;color:var(--ink-2);margin-top:24px;}
+    .missing{max-width:560px;margin:64px auto;text-align:center;color:var(--page-ink-2);font-size:16px;padding:0 24px;}
+    .missing a{color:var(--green);}
+
+    /* print + PDF always use the desktop certificate, 1062px wide (one A4 landscape page) */
+    .sheet.fixed{width:1126px;max-width:none;margin:0;padding:32px;}
+    .sheet.fixed .cert{width:1062px;}
+
+    /* narrow sheets (phones): one column */
+    @container (max-width:700px){
+      .cert{--cut:24px;padding:24px 16px 16px;}
+      .c-logo{height:24px;}
+      .c-status{font-size:16px;}
+      .c-title{font-size:32px;margin-top:24px;}
+      .c-big{font-size:44px;line-height:1.08;}
+      .c-date{font-size:13px;}
+      .c-rule{margin:24px 0;}
+      .c-grid{gap:16px;}
+      .f,.f.third,.f.quarter{grid-column:span 12;}
+      .v{font-size:16px;}.v.num{font-size:20px;}.v.name{font-size:24px;}.v.t{font-size:18px;}
+      .v.hash{font-size:13px;}
+      .att th:nth-child(3),.att td:nth-child(3){display:none;}
+      .att td{font-size:12px;}
+      .c-ver{flex-direction:column;gap:4px;}
+    }
+    @media (max-width:700px){
+      .bar,.sheet-wrap{padding:0 16px;}
+      .bar .who{flex-basis:100%;}
+      .bar .btn{flex:1;}
+      .bar .msg{text-align:left;}
+      .sheet{padding:16px;}
+    }
+    @page{size:A4 landscape;margin:8mm;}
+    @media print{
+      body{background:#fff;}
+      .bar{display:none;}
+      .sheet-wrap{padding:0;}
+      .sheet,.sheet.fixed{width:auto;max-width:none;margin:0;padding:0;border-radius:0;background:none;}
+      .cert,.sheet.fixed .cert{width:1062px;margin:0 auto;break-inside:avoid;}
+    }
+  </style>
+</head>
+<body>
+  <div class="bar" id="bar" hidden>
+    <span class="who">Certificate · <b id="who-key"></b></span>
+    <button class="btn" type="button" onclick="window.print()">Print</button>
+    <button class="btn primary" type="button" id="dl" onclick="certPdf()">Download PDF</button>
+    <span class="msg" id="msg" role="status"></span>
+  </div>
+  <div class="sheet-wrap"><div class="sheet" id="sheet"></div></div>
+
+  <script src="search.js?v=5"></script>
+  <script>
+  (function(){
+    var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    var NOW = CCSearch.now;
+    /* chain + address as the Smart Contracts page knows them (it shows them shortened, 0x8d4f…22b1) */
+    var KNOWN = { 'escrow-release': ['Ethereum','0x8d4f','22b1'], 'option-expiry': ['Ethereum','0x3fb8','c052'], 'royalty-split': ['Polygon'] };
+
+    function esc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+    function two(n){ return String(n).padStart(2, '0'); }
+    function hms(ms){ var d = new Date(ms); return two(d.getUTCHours()) + ':' + two(d.getUTCMinutes()) + ':' + two(d.getUTCSeconds()); }
+    function dLong(ms){ var d = new Date(ms); return d.getUTCDate() + ' ' + MONTHS[d.getUTCMonth()] + ' ' + d.getUTCFullYear(); }
+    function dShort(ms){ var d = new Date(ms); return d.getUTCDate() + ' ' + MONTHS[d.getUTCMonth()].slice(0,3) + ' ' + d.getUTCFullYear(); }
+
+    var key = new URLSearchParams(location.search).get('key') || '';
+    var r = CCSearch.byKey(key);
+    var sheet = document.getElementById('sheet');
+    if(!r){
+      sheet.parentNode.outerHTML = '<p class="missing">No record matches this certificate link. <a href="search.html">Search the Clockchain</a> to find it again.</p>';
+      return;
+    }
+
+    /* fields the canned rows don't carry are made up, but fixed per record (seeded by its key) */
+    function hex(n, salt){
+      var h = CCSearch.seedOf(r.key + salt) || 1, out = '';
+      while(out.length < n){ h ^= h << 13; h >>>= 0; h ^= h >>> 17; h ^= h << 5; h >>>= 0; out += h.toString(16).padStart(8, '0'); }
+      return out.slice(0, n);
+    }
+    function uuid(salt){ var x = hex(32, salt); return x.slice(0,8)+'-'+x.slice(8,12)+'-'+x.slice(12,16)+'-'+x.slice(16,20)+'-'+x.slice(20); }
+    function f(cls, k, v){ return '<div class="f ' + cls + '"><div class="c-k">' + k + '</div>' + v + '</div>'; }
+    function tm(ms, label){ return '<div class="v t">' + hms(ms) + '<span class="sub">' + dShort(ms) + ' / ' + label + '</span></div>'; }
+
+    var t = CCSearch.timeOf(r), ms = t ? t.ms : NOW, zone = t ? t.label : 'Clockchain Time';
+    var block = r.block ? String(r.block) : null;
+    var event = ms, status, title, bigK, grid = '';
+
+    if(r.cat === 'contract'){
+      var known = KNOWN[r.cname] || ['Ethereum'];
+      var executed = r.status === 'Executed';
+      var trig = /(\d{4})-(\d\d)-(\d\d) (\d\d):(\d\d):(\d\d)/.exec(r.trigger || '');
+      var forMs = trig ? Date.UTC(+trig[1], trig[2]-1, +trig[3], +trig[4], +trig[5], +trig[6]) : ms;
+      var made = CCSearch.created(r);
+      if(!executed) event = made;
+      var addr = known[1] ? known[1] + hex(32, 'adr') + known[2] : '0x' + hex(40, 'adr');
+      status = r.status; title = 'Smart Contract'; bigK = executed ? 'Executed at' : 'Scheduled for';
+      grid += f('', 'Contract', '<div class="v name">' + esc(r.cname || r.detail) + '<span class="sub">' + known[0] + '</span></div>')
+        + f('', 'Certificate type', '<div class="v">Smart Contract Scheduling</div>')
+        + f('', 'Schedule ID', '<div class="v hash">' + uuid('sch') + '</div>')
+        + f('', 'Contract address', '<div class="v hash">' + addr + '</div>')
+        + (executed
+          ? f('full', 'Transaction hash', '<div class="v hash">0x' + hex(64, 'tx') + '</div>')
+          : f('full', 'Execution', '<div class="v">Awaiting execution</div>'))
+        + f('quarter', 'Created at', tm(made, 'UVT'))
+        + f('quarter', 'Scheduled at', tm(made, 'UVT'))
+        + f('quarter', 'Scheduled for', tm(forMs, 'UVT'))
+        + (executed && block ? f('quarter', 'Execution block height', '<div class="v num">' + block + '</div>') : '');
+    } else if(r.cat === 'api'){
+      var minute = Math.floor(ms / 6e4);
+      status = 'Anchored'; title = 'Proof of Time'; bigK = 'Trusted time';
+      var rows = [1,2,3].map(function(n){
+        return '<tr><td>' + uuid('node' + n) + '</td><td>' + hms(ms) + '</td><td>' + hms(ms + 6000) + '</td></tr>';
+      }).join('');
+      grid += f('', 'Event hash', '<div class="v hash">' + hex(64, 'evt') + '</div>')
+        + f('quarter', 'Block height', '<div class="v num">' + (block || '—') + '</div>')
+        + f('quarter', 'Required quorum', '<div class="v num">2</div>')
+        + f('', 'Endpoint', '<div class="v hash">' + esc(r.detail) + '<span class="sub">' + esc(r.code || r.status) + '</span></div>')
+        + f('quarter', 'Subnet ID', '<div class="v hash">subnet-' + hex(8, 'sub') + '</div>')
+        + f('quarter', 'Epoch reference', '<div class="v hash">epoch-' + minute + '</div>')
+        + f('', 'Ledger ID', '<div class="v hash">' + uuid('led') + '</div>')
+        + f('', 'Reference key', '<div class="v hash">' + esc(r.key) + '</div>')
+        + '<div class="f full"><div class="att-head"><span class="c-k">Validator node attestations / 3</span><span class="c-k">All times ' + zone + '</span></div>'
+        + '<table class="att"><thead><tr><th>Node ID</th><th>Trusted time</th><th>Attested at</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+    } else {
+      var sec = Math.floor(ms / 1000) * 1000;
+      status = 'Anchored'; title = 'Proof of Log'; bigK = 'Certified time';
+      var bid = hex(64, 'blk');
+      var named = r.name && r.name !== '—';
+      var meta = [r.assetId, r.ver ? 'version ' + r.ver : ''].filter(Boolean).join(' / ');
+      grid += f('third', 'Block height', '<div class="v num">' + (block || '—') + '</div>')
+        + f('third', 'Consensus source', '<div class="v">Clockchain Time</div>')
+        + f('third', 'Node participation', '<div class="v">3 validator signatures</div>')
+        + f('', 'Log record', named || meta
+            ? '<div class="v">' + esc(named ? r.name : 'Unnamed asset') + (meta ? '<span class="sub">' + esc(meta) + '</span>' : '') + '</div>'
+            : '<div class="v">Asset name and ID not provided.</div>')
+        + f('', 'Content hash / SHA-256', '<div class="v hash">' + esc(r.hash) + '</div>')
+        + f('', 'Block ID', '<div class="v hash">' + bid.slice(0,32) + '<br>' + bid.slice(32) + '</div>')
+        + f('', 'Epoch ID', '<div class="v hash">heartbeat-epoch-' + Math.floor(sec / 6e4) + '-' + sec + '</div>')
+        + f('', 'Certified time / Unix ms', '<div class="v num">' + sec + '</div>')
+        + f('', 'Reference key', '<div class="v hash">' + esc(r.key) + '</div>');
+    }
+
+    /* generated on the mock clock, so a pending contract is never "generated" after its trigger;
+       records newer than the mock clock (logs submitted this session) use the real one */
+    var gen = event > NOW ? Date.now() : NOW + (CCSearch.seedOf(r.key + 'g') % 60) * 1000;
+    var link = CCSearch.linkFor(r);
+    sheet.innerHTML = '<div class="cert"><svg class="contour" aria-hidden="true"><path fill="none" stroke="#00CC00" stroke-width="1"/></svg>'
+      + '<div class="c-head"><img class="c-logo" src="assets/clockchain-logo-full.png" alt="Clockchain" /><span class="c-status"><i></i>' + status + '</span></div>'
+      + '<h1 class="c-title">' + title + '</h1>'
+      + '<div class="c-time"><div class="c-k">' + bigK + '</div><div class="c-big">' + hms(ms) + '</div><div class="c-date">' + dLong(ms) + ' / ' + zone + '</div></div>'
+      + '<div class="c-rule"></div><div class="c-grid">' + grid + '</div><div class="c-rule"></div>'
+      + '<div class="c-ver"><span class="c-k">Verification</span><a href="' + esc(link) + '">' + esc(link) + '</a></div>'
+      + '<div class="c-gen">Generated: ' + dShort(gen) + ' / ' + hms(gen) + ' UTC</div></div>';
+    document.title = title + ' · ' + r.key + ' · Clockchain';
+    document.getElementById('who-key').textContent = r.key;
+    document.getElementById('bar').hidden = false;
+
+    /* the fine contour: one path sized to the certificate, so screen, print and PDF match
+       (cut corners at top-left and bottom-right, --cut on a 45 degree diagonal) */
+    var cert = sheet.querySelector('.cert'), svg = cert.querySelector('.contour');
+    function contour(){
+      var w = cert.offsetWidth, h = cert.offsetHeight;
+      var c = parseFloat(getComputedStyle(cert).getPropertyValue('--cut')) || 48;
+      svg.setAttribute('width', w); svg.setAttribute('height', h); svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+      svg.firstChild.setAttribute('d', 'M' + c + ' .5H' + (w - .5) + 'V' + (h - c) + 'L' + (w - c) + ' ' + (h - .5) + 'H.5V' + c + 'Z');
+    }
+    contour();
+    if(window.ResizeObserver) new ResizeObserver(contour).observe(cert);
+    if(document.fonts) document.fonts.ready.then(contour);
+    function desktop(on){ sheet.classList.toggle('fixed', on); contour(); }
+
+    /* print: the desktop certificate, shrunk to one A4 landscape page (725px of printable height) */
+    window.addEventListener('beforeprint', function(){
+      desktop(true); cert.style.zoom = '';
+      var h = cert.offsetHeight;
+      cert.style.zoom = h > 725 ? String(725 / h) : '';
+    });
+    window.addEventListener('afterprint', function(){ cert.style.zoom = ''; desktop(false); });
+
+    function load(src){
+      return new Promise(function(ok, no){
+        var s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = no; document.head.appendChild(s);
+      });
+    }
+    /* Download PDF: snapshot the desktop certificate, place it on one A4 landscape page */
+    window.certPdf = function(){
+      var btn = document.getElementById('dl'), msg = document.getElementById('msg');
+      if(btn.classList.contains('pending')) return;
+      btn.style.width = btn.offsetWidth + 'px';
+      btn.classList.add('pending'); btn.setAttribute('aria-busy', 'true'); btn.textContent = 'Preparing…';
+      msg.textContent = '';
+      function done(){ btn.classList.remove('pending'); btn.removeAttribute('aria-busy'); btn.textContent = 'Download PDF'; btn.style.width = ''; }
+      var libs = window.html2canvas && window.jspdf ? Promise.resolve() : Promise.all([
+        load('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js'),
+        load('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js')
+      ]);
+      libs.then(function(){ return document.fonts.ready; }).then(function(){
+        desktop(true);
+        return html2canvas(cert, { scale: 2, backgroundColor: '#ffffff', windowWidth: 1200, useCORS: true });
+      }).then(function(c){
+        desktop(false);
+        var pdf = new jspdf.jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+        var W = 297, H = 210, m = 10, iw = W - 2 * m, ih = iw * c.height / c.width;
+        if(ih > H - 2 * m){ ih = H - 2 * m; iw = ih * c.width / c.height; }
+        pdf.addImage(c.toDataURL('image/jpeg', 0.95), 'JPEG', (W - iw) / 2, (H - ih) / 2, iw, ih);
+        pdf.save('clockchain-certificate-' + r.key + '.pdf');
+        done();
+      }).catch(function(){
+        desktop(false); done();
+        msg.textContent = 'The PDF could not be built. Use Print and choose Save as PDF.';
+      });
+    };
+
+    if(new URLSearchParams(location.search).get('print')) document.fonts.ready.then(function(){ setTimeout(function(){ window.print(); }, 150); });
+  })();
+  </script>
+</body>
+</html>

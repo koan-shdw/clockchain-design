@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Search &amp; Verify · Clockchain App</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@100;200;300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="app.css?v=14" />
+  <script>(function(){try{if(localStorage.getItem('ccapp-theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
+</head>
+<body data-nav="search">
+  <div class="shell">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main">
+      <header class="topbar" id="topbar" data-title="Search &amp; Verify"></header>
+      <div class="content">
+
+        <div class="page-head">
+          <h1>Search &amp; Verify</h1>
+          <p>To verify information on the Clockchain, search below. Enter a block height, hash, asset ID, or user ID to narrow the search. You can also enter a quicklink you've been given.</p>
+        </div>
+
+        <div class="card">
+          <div class="search-big">
+            <input type="text" id="sv-q" placeholder="0x…, #block, asset ID, or CC-XXXX-XXXX" autocomplete="off" spellcheck="false"
+              onkeydown="if(event.key==='Enter')svRun()" />
+            <button class="btn btn-primary" type="button" onclick="svRun()">Search Clockchain</button>
+          </div>
+          <div style="text-align:right;margin-top:12px;">
+            <button class="btn btn-outline btn-sm" type="button" id="sv-adv-btn" onclick="svToggleAdv()">Advanced search</button>
+          </div>
+
+          <div id="sv-adv" hidden>
+            <div class="cl-divider"></div>
+            <div class="tabs">
+              <button class="tabbtn active" type="button" onclick="svTab('log',this)">Logs</button>
+              <button class="tabbtn" type="button" onclick="svTab('api',this)">Block/Time conversion</button>
+              <button class="tabbtn" type="button" onclick="svTab('contract',this)">Smart Contracts</button>
+            </div>
+
+            <div class="tabpane" id="sv-p-log">
+              <div class="cl-grid" style="margin-top:8px;">
+                <div class="field"><label>Hash</label><input type="text" id="as-hash" class="mono" placeholder="0x…" /></div>
+                <div class="field">
+                  <label>Unhashed content</label>
+                  <input type="text" id="as-content" placeholder="Text that was hashed" />
+                  <!-- pending Satish: may not be searchable system-side -->
+                </div>
+                <div class="field"><label>User ID</label><input type="text" id="as-user" class="mono" placeholder="usr_…" /></div>
+                <div class="field"><label>Asset ID</label><input type="text" id="as-asset" /></div>
+                <div class="field"><label>Asset Name</label><input type="text" id="as-name" /></div>
+                <div class="field"><label>Block Height</label><input type="text" id="as-block" class="mono" placeholder="#…" /></div>
+                <div class="field"><label>Version #</label><input type="text" id="as-ver" inputmode="numeric" /></div>
+                <div class="field"><label>Hash Type</label><select id="as-type"><option>Any</option><option>SHA-256</option></select></div>
+              </div>
+            </div>
+
+            <div class="tabpane" id="sv-p-api" hidden>
+              <p style="font-size:13px;color:var(--fg-2);margin:8px 0 12px;">Convert between block height and Clockchain Time. Fill a date and time to find the block, or a block to find the time.</p>
+              <div class="cl-grid">
+                <div class="field"><label>Date</label><input type="date" id="ts-date" class="date-in" /></div>
+                <div class="field"><label>Time <i style="text-transform:none;letter-spacing:0;">(to the second)</i></label><input type="time" id="ts-time" class="date-in" step="1" /></div>
+                <div class="field"><label>Block Height</label><input type="text" id="ts-block" class="mono" placeholder="#…" /></div>
+              </div>
+              <a class="more" href="docs/timestamp-api.html">Using the Timestamp API →</a>
+            </div>
+
+            <div class="tabpane" id="sv-p-contract" hidden>
+              <p style="font-size:12px;color:var(--fg-3);margin:8px 0 12px;"><span class="tpill tpill-contract">Draft</span> Search fields for Smart Contracts are pending the team.</p>
+              <div class="cl-grid">
+                <div class="field"><label>Contract name</label><input type="text" id="sc-name" /></div>
+                <div class="field"><label>Status</label><select id="sc-status"><option>Any</option><option>Scheduled</option><option>Executed</option><option>Canceled</option></select></div>
+                <div class="field"><label>Trigger from</label><input type="date" id="sc-from" class="date-in" /></div>
+                <div class="field"><label>Trigger to</label><input type="date" id="sc-to" class="date-in" /></div>
+              </div>
+            </div>
+
+            <div style="margin-top:14px;">
+              <button class="btn btn-primary" type="button" onclick="svAdvRun()">Search Clockchain</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="section card accent" id="sv-conv" hidden>
+          <div class="card-head"><h3>Block ↔ Time</h3><span style="font-size:11px;color:var(--fg-3);">estimated</span></div>
+          <div class="stat-v mono" id="sv-conv-out" style="font-size:18px;">—</div>
+        </div>
+
+        <div class="section card accent" id="sv-receipt" hidden>
+          <div class="card-head"><h3 id="rc-type">Log</h3><span class="status-pill" id="rc-status">Verified</span></div>
+          <div class="cl-rec-label">Hash</div>
+          <div class="cl-hashrow" style="margin-top:0;" id="rc-hashrow">
+            <span class="cl-hash" id="rc-hash">—</span>
+            <span style="flex:none;color:var(--fg-3);font-size:11px;">SHA-256</span>
+          </div>
+          <div class="kv" id="rc-public" style="margin-top:18px;"></div>
+          <div class="cl-rec-label">Anchor</div>
+          <table class="table">
+            <tbody>
+              <tr><td>Block</td><td class="mono" id="rc-block">—</td><td></td></tr>
+              <tr><td>Consensus time</td><td class="mono" id="rc-time">—</td><td></td></tr>
+              <tr><td>Reference key</td><td class="mono" id="rc-key">—</td>
+                <td><button class="kv-copy" type="button" onclick="svCopyLink()">Copy link</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="section card">
+          <div class="card-head"><h3>Results</h3></div>
+          <div class="filters">
+            <span class="flt-label">Filters</span>
+            <label><input type="checkbox" data-cat="log" autocomplete="off" checked onchange="svRun()" /> Logging</label>
+            <label><input type="checkbox" data-cat="api" autocomplete="off" checked onchange="svRun()" /> Time Calls</label>
+            <label><input type="checkbox" data-cat="contract" autocomplete="off" onchange="svRun()" /> Smart Contracts</label>
+            <input type="checkbox" id="sv-global" hidden />
+            <span class="tabs" style="margin-left:auto;margin-bottom:0;">
+              <button class="tabbtn active" type="button" id="sv-scope-mine" onclick="svScope(false)">My data</button>
+              <button class="tabbtn" type="button" id="sv-scope-all" onclick="svScope(true)">Entire chain</button>
+            </span>
+          </div>
+          <div class="filters">
+            <span class="flt-label">Date</span>
+            <label><input type="radio" name="sv-date" checked /> Today</label>
+            <label><input type="radio" name="sv-date" /> Last 30 days</label>
+            <label><input type="radio" name="sv-date" /> All time</label>
+            <label><input type="radio" name="sv-date" /> Custom</label>
+            <input class="date-in" type="date" value="2026-08-25" aria-label="From" />
+            <input class="date-in" type="date" value="2026-08-25" aria-label="To" />
+          </div>
+          <!-- every column sorts; newest Created first by default (Jeff 10-08) -->
+          <div class="tscroll">
+          <table class="table" data-sort="5,-1">
+            <thead><tr><th>Type</th><th>Detail</th><th>Block</th><th>UVT</th><th>Status</th><th>Created</th><th data-nosort>Proof</th><th></th></tr></thead>
+            <tbody id="sv-rows"></tbody>
+          </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <script src="app.js?v=13"></script>
+  <script src="search.js?v=5"></script>
+  <script>
+  (function(){
+    var current = null, tab = 'log';
+    window.svScope = function(all){
+      document.getElementById('sv-global').checked = all;
+      document.getElementById('sv-scope-mine').classList.toggle('active', !all);
+      document.getElementById('sv-scope-all').classList.toggle('active', all);
+      svRun();
+    };
+    window.svToggleAdv = function(){
+      var p = document.getElementById('sv-adv'), b = document.getElementById('sv-adv-btn');
+      p.hidden = !p.hidden;
+      b.textContent = p.hidden ? 'Advanced search' : '← Simple search';
+    };
+    window.svTab = function(t, btn){
+      tab = t;
+      document.querySelectorAll('#sv-adv .tabbtn').forEach(function(b){ b.classList.toggle('active', b === btn); });
+      ['log','api','contract'].forEach(function(k){ document.getElementById('sv-p-' + k).hidden = (k !== t); });
+    };
+    function setCats(only){
+      document.querySelectorAll('.filters input[data-cat]').forEach(function(c){
+        c.checked = only ? c.getAttribute('data-cat') === only : c.checked;
+      });
+    }
+    window.svRun = function(){
+      var q = document.getElementById('sv-q').value;
+      document.getElementById('sv-conv').hidden = true;
+      var hit = CCSearch.byKey(q);
+      var panel = document.getElementById('sv-receipt');
+      if(hit){
+        current = hit;
+        document.getElementById('rc-type').textContent = hit.type + (hit.name ? ' · ' + hit.name : '');
+        document.getElementById('rc-status').textContent = hit.status;
+        document.getElementById('rc-hashrow').style.display = hit.hash ? '' : 'none';
+        document.getElementById('rc-hash').textContent = hit.hash || '';
+        var box = document.getElementById('rc-public'); box.innerHTML = '';
+        var fields = hit.detail && !hit.name
+          ? [['Detail', hit.detail]]
+          : [['Asset Name', hit.name], ['Asset ID', hit.assetId], ['Version #', hit.ver]].filter(function(p){ return p[1]; });
+        fields.forEach(function(p){
+          var r = document.createElement('div'); r.className = 'kv-row';
+          r.innerHTML = '<span class="kv-k"></span><span class="kv-v"><span></span></span>';
+          r.querySelector('.kv-k').textContent = p[0];
+          r.querySelector('.kv-v span').textContent = p[1];
+          box.appendChild(r);
+        });
+        document.getElementById('rc-block').textContent = hit.block ? '#' + hit.block.toLocaleString() : 'scheduled';
+        document.getElementById('rc-time').textContent = CCSearch.consensus(hit);
+        document.getElementById('rc-key').textContent = hit.key;
+        panel.hidden = false;
+        CCSearch.render([hit], document.getElementById('sv-rows'));
+        return;
+      }
+      current = null;
+      panel.hidden = true;
+      CCSearch.render(CCSearch.basic(q), document.getElementById('sv-rows'));
+    };
+    window.svAdvRun = function(){
+      document.getElementById('sv-receipt').hidden = true;
+      var conv = document.getElementById('sv-conv');
+      conv.hidden = true;
+      setCats(tab);
+      if(tab === 'api'){
+        var b = document.getElementById('ts-block').value.replace(/[#,]/g, '').trim();
+        var d = document.getElementById('ts-date').value, t = document.getElementById('ts-time').value;
+        if(b){
+          document.getElementById('sv-conv-out').textContent = 'Block #' + parseInt(b,10).toLocaleString() + ' → ' + CCSearch.blockToTime(parseInt(b,10));
+          conv.hidden = false;
+        } else if(d){
+          var blk = CCSearch.timeToBlock(d, t);
+          document.getElementById('sv-conv-out').textContent = d + ' ' + (t || '00:00:00') + ' → Block #' + blk.toLocaleString();
+          conv.hidden = false;
+        }
+        CCSearch.render(CCSearch.advanced('api', {}), document.getElementById('sv-rows'));
+        return;
+      }
+      var f = tab === 'log' ? {
+        hash: document.getElementById('as-hash').value.trim(),
+        content: document.getElementById('as-content').value.trim(),
+        userId: document.getElementById('as-user').value.trim(),
+        assetId: document.getElementById('as-asset').value.trim(),
+        assetName: document.getElementById('as-name').value.trim(),
+        block: document.getElementById('as-block').value.trim(),
+        ver: document.getElementById('as-ver').value.trim()
+      } : {
+        cname: document.getElementById('sc-name').value.trim(),
+        cstatus: document.getElementById('sc-status').value
+      };
+      CCSearch.render(CCSearch.advanced(tab, f), document.getElementById('sv-rows'));
+    };
+    window.svCopyLink = function(){
+      if(!current) return;
+      var url = location.origin + location.pathname + '?q=' + encodeURIComponent(current.key);
+      navigator.clipboard.writeText(url).then(function(){ ccToast('Quicklink copied'); })
+        .catch(function(){ ccToast('Copy failed'); });
+    };
+    /* ?q= a quicklink or query; ?cat= one result type only (Smart Contracts' See more) */
+    var params = new URLSearchParams(location.search), q = params.get('q');
+    if(q) document.getElementById('sv-q').value = q;
+    if(params.get('cat')) setCats(params.get('cat'));
+    svRun();
+  })();
+  </script>
+</body>
+</html>

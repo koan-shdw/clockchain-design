@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pricing · Clockchain App</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@100;200;300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="app.css?v=14" />
+  <script>(function(){try{if(localStorage.getItem('ccapp-theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
+</head>
+<body data-nav="pricing">
+  <div class="shell">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main">
+      <header class="topbar" id="topbar" data-title="Pricing"></header>
+      <div class="content">
+
+        <div class="page-head">
+          <h1>Pricing</h1>
+          <p>Pricing is managed separately for each of our three services: Logs, Timestamp API calls, and Contract Scheduling. On <a href="account.html" style="color:var(--accent);">Billing &amp; Usage</a> you configure how you pay for each. Pay in USD, or in CCTT (rates vary with the current CCTT value in USD).</p>
+        </div>
+
+        <div class="section cards c2">
+          <div class="card">
+            <div class="card-head"><h3>Prepaid blocks · Logs</h3></div>
+            <p style="font-size:13px;color:var(--fg-2);margin-bottom:12px;">Buy a set number up front. The more you buy, the less each one costs. USD rates are fixed; CCTT rates float with the token.</p>
+            <table class="table">
+              <thead><tr><th>Logs</th><th>USD</th><th>CCTT</th></tr></thead>
+              <tbody>
+                <tr><td class="mono">1,000</td><td>$2</td><td class="mono">40</td></tr>
+                <tr><td class="mono">10,000</td><td>$19</td><td class="mono">380</td></tr>
+                <tr><td class="mono">25,000</td><td>$39</td><td class="mono">780</td></tr>
+                <tr><td class="mono">50,000</td><td>$69</td><td class="mono">1,380</td></tr>
+                <tr><td class="mono">75,000</td><td>$89</td><td class="mono">1,780</td></tr>
+                <tr><td class="mono">100,000</td><td>$99</td><td class="mono">1,980</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Prepaid blocks · Timestamp API</h3></div>
+            <p style="font-size:13px;color:var(--fg-2);margin-bottom:12px;">Same arrangement for API calls.</p>
+            <table class="table">
+              <thead><tr><th>Calls</th><th>USD</th><th>CCTT</th></tr></thead>
+              <tbody>
+                <tr><td class="mono">10,000</td><td>$5</td><td class="mono">100</td></tr>
+                <tr><td class="mono">50,000</td><td>$20</td><td class="mono">400</td></tr>
+                <tr><td class="mono">100,000</td><td>$35</td><td class="mono">700</td></tr>
+                <tr><td class="mono">250,000</td><td>$80</td><td class="mono">1,600</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Subscriptions</h2>
+          <div class="cards c3">
+            <div class="card">
+              <div class="stat-k">Log · Basic</div>
+              <div class="stat-v" style="font-size:20px;">$22<span style="font-size:12px;color:var(--fg-3);"> /mo · 440 CCTT</span></div>
+              <div class="stat-sub">15,000 logs per month</div>
+            </div>
+            <div class="card accent">
+              <div class="stat-k">Log · Pro</div>
+              <div class="stat-v" style="font-size:20px;">$65<span style="font-size:12px;color:var(--fg-3);"> /mo · 1,300 CCTT</span></div>
+              <div class="stat-sub">55,000 logs per month</div>
+            </div>
+            <div class="card">
+              <div class="stat-k">Log · Enterprise</div>
+              <div class="stat-v" style="font-size:20px;">Custom</div>
+              <div class="stat-sub">a plan built for your organization · <a href="#" onclick="ccMock('Mockup: contact form');return false;" style="color:var(--accent);">contact us</a></div>
+            </div>
+          </div>
+          <div class="cards c3" style="margin-top:16px;">
+            <div class="card">
+              <div class="stat-k">TS · Basic</div>
+              <div class="stat-v" style="font-size:20px;">$19<span style="font-size:12px;color:var(--fg-3);"> /mo · 380 CCTT</span></div>
+              <div class="stat-sub">100,000 API requests per month, basic timestamp verification, standard support, docs access</div>
+            </div>
+            <div class="card accent">
+              <div class="stat-k">TS · Pro</div>
+              <div class="stat-v" style="font-size:20px;">$65<span style="font-size:12px;color:var(--fg-3);"> /mo · 1,300 CCTT</span></div>
+              <div class="stat-sub">500,000 API requests per month, advanced verification, priority support, webhooks, custom rate limits</div>
+            </div>
+            <div class="card">
+              <div class="stat-k">TS · Enterprise</div>
+              <div class="stat-v" style="font-size:20px;">Custom</div>
+              <div class="stat-sub">a plan built for your organization · <a href="#" onclick="ccMock('Mockup: contact form');return false;" style="color:var(--accent);">contact us</a></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section cards c2">
+          <div class="card">
+            <div class="card-head"><h3>Per-use billing</h3></div>
+            <p style="font-size:13px;color:var(--fg-2);margin-bottom:12px;">Pay as you go, per event. Per-use billing runs on a CCTT balance; rates track the current CCTT/USD price.</p>
+            <table class="table">
+              <tbody>
+                <tr><td>Log</td><td>$0.0025</td><td class="mono">0.05 CCTT</td></tr>
+                <tr><td>Timestamp API call</td><td>$0.00055</td><td class="mono">0.01 CCTT</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Smart Contract Scheduling</h3></div>
+            <p style="font-size:13px;color:var(--fg-2);">When you schedule a contract we quote a cost range and charge the mid-range estimate. After execution you're credited or debited the difference against your CCTT balance. Canceled contracts refund minus a 15% fee.</p>
+            <div class="docs-note">Worried about overage? Set up auto-pay to top up CCTT automatically. Unpaid overage can put future schedulings on hold.</div>
+          </div>
+        </div>
+
+        <p style="font-size:12px;color:var(--fg-3);margin-top:22px;">All numbers are placeholder rates for the mockup.</p>
+
+      </div>
+    </div>
+  </div>
+  <script src="app.js?v=13"></script>
+</body>
+</html>

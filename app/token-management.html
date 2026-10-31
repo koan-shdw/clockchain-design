@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Token Management · Clockchain App</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@100;200;300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="app.css?v=14" />
+  <script>(function(){try{if(localStorage.getItem('ccapp-theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
+  <style>
+    /* ===== Token Management (Jeff's token_management_0_2_22Oct26.pdf, Alex's pick V3 "side by side"):
+       Buy (5/12, sticky) beside Auto-Purchase (7/12) from 1100px, stacked below with Buy first ===== */
+    .tm-grid{grid-template-columns:minmax(0,5fr) minmax(0,7fr);align-items:start;}
+    @media(min-width:1100px){
+      .tm-buy{position:sticky;top:calc(var(--tb-h,64px) + 16px);}
+    }
+    @media(max-width:1099.98px){.tm-grid{grid-template-columns:minmax(0,1fr);}}
+
+    /* labels: the app's form-label voice */
+    .tm-lab{display:block;font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--fg-3);font-weight:400;line-height:1.4;}
+
+    /* one control: 40px box, value in mono, unit inside the field */
+    .tm-in{
+      display:flex;align-items:center;gap:6px;width:168px;max-width:100%;height:40px;
+      background:var(--bg);border:1px solid var(--line-2);border-radius:9px;padding:0 12px;
+      transition:border-color .15s,opacity .15s;
+    }
+    .tm-in:focus-within{border-color:var(--accent-line);}
+    .tm-in input,.tm-in select{
+      flex:1;min-width:0;height:100%;background:transparent;border:0;outline:0;
+      font-family:var(--f-mono);font-size:14px;color:var(--fg);font-variant-numeric:tabular-nums;
+    }
+    .tm-in input::placeholder{color:var(--fg-3);opacity:.7;}
+    .tm-pre{font-family:var(--f-mono);font-size:14px;color:var(--fg-3);flex:none;}
+    .tm-unit{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;color:var(--fg-3);flex:none;}
+    .tm-in.bad{border-color:#e5484d;}
+    /* the schedule select, same box, own chevron */
+    .tm-in.tm-selbox{padding:0 10px 0 0;position:relative;}
+    .tm-in select{appearance:none;-webkit-appearance:none;padding:0 26px 0 12px;cursor:pointer;font-family:var(--f-body);font-size:13.5px;}
+    .tm-in select option{background:var(--surface);color:var(--fg);}
+    .tm-chev{position:absolute;right:11px;top:50%;width:14px;height:14px;margin-top:-7px;fill:none;stroke:var(--fg-3);stroke-width:2;pointer-events:none;}
+
+    /* ---- Buy Tokens ---- */
+    .tm-bq{container-type:inline-size;}
+    .tm-quote{display:flex;align-items:flex-start;flex-wrap:wrap;gap:10px 16px;margin-top:8px;}
+    .tm-res{min-width:0;}
+    .tm-usd{font-family:var(--f-mono);font-size:22px;font-weight:500;line-height:40px;color:var(--fg);white-space:nowrap;font-variant-numeric:tabular-nums;letter-spacing:-0.01em;}
+    .tm-usd .tm-eq{color:var(--fg-3);font-weight:400;margin-right:2px;}
+    .tm-usd .tm-u{font-size:13px;color:var(--fg-2);font-weight:400;letter-spacing:.04em;}
+    .tm-usd #b-usd{border-radius:6px;}
+    .tm-rate{display:flex;align-items:center;gap:8px;margin-top:1px;font-family:var(--f-mono);font-size:11.5px;color:var(--fg-3);white-space:nowrap;font-variant-numeric:tabular-nums;}
+    @keyframes tmFlash{0%{color:var(--accent);background:var(--accent-soft);}100%{color:var(--fg);background:transparent;}}
+    .tm-usd.flash #b-usd{animation:tmFlash .9s ease-out;}
+
+    /* footer of each card: payment row (+ note), then the action */
+    .tm-foot{border-top:1px solid var(--line);margin-top:20px;padding-top:12px;}
+    .tm-pay{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 12px;}
+    .tm-pay-v{display:inline-flex;align-items:baseline;flex-wrap:wrap;gap:4px 10px;}
+    .tm-card{font-family:var(--f-mono);font-size:12.5px;color:var(--fg);}
+    .tm-note{font-size:12px;line-height:1.5;color:var(--fg-3);margin-top:10px;max-width:60ch;}
+    .tm-foot .sc-actions,.tm-bact .sc-actions{margin-top:16px;}
+    .tm-done{display:flex;gap:10px;align-items:flex-start;margin:16px 0 0;}
+    .tm-done svg{width:16px;height:16px;flex:none;margin-top:2px;fill:none;stroke:var(--accent);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
+    .tm-done[hidden]{display:none;}
+
+    /* wide Buy card (stacked layout, 900 to 1099): quote left, payment + note right */
+    @container (min-width:600px){
+      .tm-bgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:36px;align-items:start;}
+      .tm-bgrid .tm-foot{border-top:0;margin-top:0;padding-top:0;border-left:1px solid var(--line);padding-left:28px;}
+      .tm-bgrid .tm-pay{margin-top:0;}
+      .tm-bact{grid-column:1 / -1;}
+    }
+
+    /* ---- Manage Token Auto-Purchase ---- */
+    .tm-status{
+      background:var(--bg);border:1px solid var(--line);border-radius:11px;padding:12px 14px 13px;
+      transition:background .25s,border-color .25s;
+    }
+    .tm-status[data-state="on"]{background:var(--accent-soft);border-color:var(--accent-line);}
+    /* the switch follows its label (rule 2, Jeff 10-08 "button by its value") */
+    .tm-st-row{display:flex;align-items:center;justify-content:flex-start;gap:8px 14px;flex-wrap:wrap;}
+    .tm-st-line{font-size:13.5px;color:var(--fg-2);margin-top:6px;line-height:1.5;text-wrap:pretty;}
+    .tm-st-line b,.tm-sum b{color:var(--fg);font-weight:500;}
+    @keyframes tmPulse{0%{box-shadow:0 0 0 3px var(--accent-line);}100%{box-shadow:0 0 0 0 transparent;}}
+    .tm-status.pulse{animation:tmPulse 1s ease-out;}
+    .tm-sw{display:inline-flex;align-items:center;font-size:12.5px;color:var(--fg-3);user-select:none;}
+    .tm-sw .sw{margin:0 9px;}
+    .tm-sw .sw:disabled{opacity:.45;cursor:not-allowed;}
+    /* each word sets its own state; only the switch itself toggles */
+    .tm-sw [data-v]{cursor:pointer;}
+    .tm-sw.is-dis,.tm-sw.is-dis [data-v]{cursor:not-allowed;}
+    .tm-sw.is-on .tm-on{color:var(--accent);font-weight:500;}
+    .tm-sw.is-off .tm-off{color:var(--fg);font-weight:500;}
+
+    .tm-form{container-type:inline-size;margin-top:16px;}
+    .tm-groups{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;}
+    @container (min-width:480px){
+      .tm-groups{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 28px;}
+    }
+    .tm-grp .tm-lab{margin-bottom:12px;}
+    .tm-opts{display:flex;flex-direction:column;gap:10px;}
+    .tm-opt{display:grid;grid-template-columns:14px minmax(0,1fr);column-gap:10px;align-items:start;}
+    .tm-opt input[type=radio]{accent-color:var(--accent);width:14px;height:14px;margin:3px 0 0;cursor:pointer;}
+    .tm-opt > label{font-size:13.5px;line-height:1.45;color:var(--fg-2);cursor:pointer;text-wrap:balance;}
+    .tm-opt.on > label{color:var(--fg);}
+    .tm-opt .tm-in,.tm-opt .tm-err{grid-column:2;}
+    .tm-opt .tm-in{margin-top:7px;}
+    .tm-opt:not(.on) .tm-in{opacity:.5;}
+    .tm-opt:not(.on) .tm-in:hover{opacity:.8;}
+    .tm-err{font-size:12px;color:#e5484d;margin-top:5px;}
+    .tm-err:empty{display:none;}
+    /* on the group's own left edge (with its label and radios), so it reads as the whole group's note, not the select's caption */
+    .tm-hint{font-size:12px;color:var(--fg-3);margin-top:14px;line-height:1.5;}
+    .tm-hint .mono{font-size:11.5px;color:var(--fg-2);white-space:nowrap;}
+
+    .tm-preview{margin-top:20px;}
+    .tm-preview[hidden],.tm-form[hidden]{display:none;}
+    .tm-sum{
+      margin-top:10px;background:var(--bg);border:1px solid var(--line);border-left:3px solid var(--accent);
+      border-radius:10px;padding:14px 16px;font-size:13.5px;line-height:1.6;color:var(--fg-2);max-width:70ch;
+    }
+    .tm-preview .sc-actions{margin-top:16px;}
+
+    .tm-anchor{scroll-margin-top:calc(var(--tb-h,64px) + 16px);}
+    @media(prefers-reduced-motion:reduce){
+      .tm-usd.flash #b-usd,.tm-status.pulse{animation:none;}
+    }
+  </style>
+</head>
+<body data-nav="tokens">
+  <div class="shell">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main">
+      <header class="topbar" id="topbar" data-title="Token Management"></header>
+      <div class="content">
+
+        <div class="page-head">
+          <h1>Token Management</h1>
+          <p>Buy CCTT now with a card, or let Auto-Purchase top up your balance for you.</p>
+        </div>
+
+        <div class="cards tm-grid">
+
+          <!-- 1. Buy Tokens -->
+          <section class="card tm-buy tm-anchor" id="tm-buy" aria-labelledby="tm-buy-h">
+            <div class="card-head"><h3 id="tm-buy-h">Buy Tokens</h3></div>
+            <div class="tm-bq">
+              <div class="tm-bgrid">
+                <div class="tm-bmain">
+                  <label class="tm-lab" for="b-count">Enter number of tokens to purchase</label>
+                  <div class="tm-quote">
+                    <div class="tm-in"><input id="b-count" type="text" inputmode="numeric" autocomplete="off" value="5,000" aria-describedby="b-usd-line b-rate-line" /><span class="tm-unit">CCTT</span></div>
+                    <div class="tm-res">
+                      <div class="tm-usd" id="b-usd-line"><span class="tm-eq">=</span> <span id="b-usd">$250.00</span> <span class="tm-u">USD</span></div>
+                      <div class="tm-rate" id="b-rate-line"><span class="live-dot" aria-hidden="true"></span><span>1 CCTT = <span id="b-rate">$0.0500</span> USD</span></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="tm-foot">
+                  <div class="tm-pay">
+                    <span class="tm-lab">Payment Method</span>
+                    <span class="tm-pay-v"><span class="tm-card">Credit card ending in -9482</span><a class="lnk" href="payment-methods.html">Change</a></span>
+                  </div>
+                  <p class="tm-note">The final amount of your purchase may vary slightly as the exchange rate is constantly changing.</p>
+                </div>
+                <div class="tm-bact">
+                  <div class="sc-actions"><button class="btn btn-primary" id="b-buy" type="button">Purchase Tokens</button></div>
+                  <div class="docs-note tm-done" id="b-done" role="status" hidden></div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 2. Manage Token Auto-Purchase -->
+          <section class="card tm-auto tm-anchor" id="tm-auto" aria-labelledby="tm-auto-h">
+            <div class="card-head"><h3 id="tm-auto-h">Manage Token Auto-Purchase</h3></div>
+
+            <div class="tm-status tm-anchor" id="a-status" data-state="none">
+              <div class="tm-st-row">
+                <span class="stat-k" id="a-sw-lab">Token Auto-Purchase</span>
+                <span class="tm-sw" id="a-sw-wrap"><span class="tm-off" data-v="0" aria-hidden="true">Off</span><input type="checkbox" class="sw" id="a-sw" aria-labelledby="a-sw-lab" /><span class="tm-on" data-v="1" aria-hidden="true">On</span></span>
+              </div>
+              <p class="tm-st-line" id="a-line" role="status">You currently do not have <span class="nw">Auto-Purchase</span> set up on this account.</p>
+            </div>
+
+            <div class="tm-form tm-anchor" id="a-form">
+              <div class="tm-groups">
+                <div class="tm-grp" role="radiogroup" aria-labelledby="g-amt">
+                  <span class="tm-lab" id="g-amt">Enter number of tokens to purchase</span>
+                  <div class="tm-opts">
+                    <div class="tm-opt" data-for="amt">
+                      <input type="radio" name="a-amt" id="r-amt-c" value="cctt" />
+                      <label for="r-amt-c">A fixed number of tokens <span class="nw">(min. 100 CCTT)</span></label>
+                      <div class="tm-in"><input id="v-amt-c" type="text" inputmode="numeric" autocomplete="off" aria-label="Number of tokens" /><span class="tm-unit">CCTT</span></div>
+                      <div class="tm-err" id="e-amt-c"></div>
+                    </div>
+                    <div class="tm-opt" data-for="amt">
+                      <input type="radio" name="a-amt" id="r-amt-u" value="usd" />
+                      <label for="r-amt-u">A fixed US Dollar amount <span class="nw">(min. $5 USD)</span></label>
+                      <div class="tm-in"><span class="tm-pre">$</span><input id="v-amt-u" type="text" inputmode="decimal" autocomplete="off" aria-label="US Dollar amount" /><span class="tm-unit">USD</span></div>
+                      <div class="tm-err" id="e-amt-u"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="tm-grp" role="radiogroup" aria-labelledby="g-when">
+                  <span class="tm-lab" id="g-when">Enter when to purchase tokens</span>
+                  <div class="tm-opts">
+                    <div class="tm-opt" data-for="trig">
+                      <input type="radio" name="a-trig" id="r-thr-c" value="cctt" />
+                      <label for="r-thr-c">When CCTT balance falls below this threshold</label>
+                      <div class="tm-in"><input id="v-thr-c" type="text" inputmode="numeric" autocomplete="off" aria-label="CCTT threshold" /><span class="tm-unit">CCTT</span></div>
+                      <div class="tm-err" id="e-thr-c"></div>
+                    </div>
+                    <div class="tm-opt" data-for="trig">
+                      <input type="radio" name="a-trig" id="r-thr-u" value="usd" />
+                      <label for="r-thr-u">When USD value of CCTT balance falls below this threshold</label>
+                      <div class="tm-in"><span class="tm-pre">$</span><input id="v-thr-u" type="text" inputmode="decimal" autocomplete="off" aria-label="USD threshold" /><span class="tm-unit">USD</span></div>
+                      <div class="tm-err" id="e-thr-u"></div>
+                    </div>
+                    <div class="tm-opt" data-for="trig">
+                      <input type="radio" name="a-trig" id="r-sched" value="sched" />
+                      <label for="r-sched">On a recurring schedule starting today</label>
+                      <div class="tm-in tm-selbox">
+                        <select id="v-freq" aria-label="How often">
+                          <option value="">Select…</option>
+                          <option value="Daily">Daily</option>
+                          <option value="Weekly">Weekly</option>
+                          <option value="Monthly">Monthly</option>
+                          <option value="Yearly">Yearly</option>
+                        </select>
+                        <svg class="tm-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                      </div>
+                      <div class="tm-err" id="e-freq"></div>
+                    </div>
+                  </div>
+                  <p class="tm-hint">Your balance now: <span class="nw"><span class="mono" id="a-bal">4,335.0921 CCTT</span> <span class="mono" id="a-bal-usd">($216.75 USD)</span></span></p>
+                </div>
+              </div>
+
+              <div class="tm-foot">
+                <div class="tm-pay">
+                  <span class="tm-lab">Payment Method</span>
+                  <span class="tm-pay-v"><span class="tm-card">Credit card ending in -9482</span><a class="lnk" href="payment-methods.html">Change</a></span>
+                </div>
+                <div class="sc-actions"><button class="btn btn-primary" id="a-prev" type="button">Preview</button></div>
+              </div>
+            </div>
+
+            <div class="tm-preview tm-anchor" id="a-preview" hidden>
+              <div class="stat-k">Preview</div>
+              <p class="tm-sum" id="a-sum"></p>
+              <div class="sc-actions">
+                <button class="btn btn-primary" id="a-go" type="button">Activate</button>
+                <button class="btn btn-outline" id="a-mod" type="button">Modify</button>
+                <button class="btn btn-outline" id="a-cancel" type="button">Cancel</button>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <script src="app.js?v=13"></script>
+  <script>
+  (function(){
+    /* demo states: ?state=none|on|off = Auto-Purchase not set up (default) / on / suspended */
+    var STATE = new URLSearchParams(location.search).get('state') || 'none';
+    if(['none','on','off'].indexOf(STATE) < 0) STATE = 'none';
+
+    function $(id){ return document.getElementById(id); }
+    var REDUCED = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var CARD = 'credit card ending <span class="nw">in -9482</span>';
+    var AP = '<span class="nw">Auto-Purchase</span>';
+    var TODAY = new Date();
+
+    /* ---- numbers ---- */
+    function grp(s){ return s.replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+    function fmtInt(n){ return grp(String(Math.round(n))); }
+    function fmtUsd(n){ var f = (Math.round(n * 100) / 100).toFixed(2).split('.'); return '$' + grp(f[0]) + '.' + f[1]; }
+    function fmt4(n){ var f = n.toFixed(4).split('.'); return grp(f[0]) + '.' + f[1]; }
+    function fmtDate(d){ return d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }); }
+    function val(el){ var v = el.value.replace(/[^0-9.]/g, ''); return v === '' || v === '.' ? NaN : parseFloat(v); }
+    /* thousands separators while typing; whole tokens, or dollars with up to 2 decimals; caret kept */
+    function liveFormat(el, decimals){
+      var orig = el.value, v = orig, pos = el.selectionStart == null ? v.length : el.selectionStart;
+      /* whole tokens: a decimal part ('1,000.50' pasted) is dropped, never joined on; caret clamped */
+      if(!decimals){
+        var shift = 0;
+        v = v.replace(/\.\d*/g, function(m, i){ if(i < pos) shift += Math.min(m.length, pos - i); return ''; });
+        pos -= shift;
+      }
+      var keep = decimals ? /[0-9.]/ : /[0-9]/;
+      var before = 0;
+      for(var i = 0; i < pos; i++) if(keep.test(v[i])) before++;
+      var raw = '';
+      for(var j = 0; j < v.length; j++) if(keep.test(v[j])) raw += v[j];
+      var ip = raw, dp = '';
+      if(decimals && raw.indexOf('.') >= 0){ ip = raw.slice(0, raw.indexOf('.')); dp = '.' + raw.slice(raw.indexOf('.') + 1).replace(/\./g, '').slice(0, 2); }
+      var lead = ip.length; ip = ip.replace(/^0+(?=\d)/, ''); before -= Math.min(before, lead - ip.length);
+      ip = ip.slice(0, 9);
+      var out = grp(ip) + dp;
+      if(out !== orig) el.value = out;
+      var k = 0, n = 0;
+      while(k < out.length && n < before){ if(keep.test(out[k])) n++; k++; }
+      if(document.activeElement === el) try{ el.setSelectionRange(k, k); }catch(e){}
+    }
+
+    /* ---- live rate: 1 CCTT = $0.0500 USD at first paint, drifts within $0.0490..$0.0510 ---- */
+    var rate = 0.05;
+    function balNum(){ return window.ccWalletBalNum ? ccWalletBalNum() : 4335.0921; }
+    function paintBal(){
+      var b = balNum();
+      $('a-bal').textContent = fmt4(b) + ' CCTT';
+      $('a-bal-usd').textContent = '(' + fmtUsd(b * rate) + ' USD)';
+    }
+
+    /* ---- Buy Tokens ---- */
+    var bCount = $('b-count'), bBtn = $('b-buy'), busy = false;
+    function count(){ var n = val(bCount); return isNaN(n) ? 0 : Math.floor(n); }
+    function paintBuy(flash){
+      var t = fmtUsd(count() * rate), el = $('b-usd');
+      var changed = el.textContent !== t;
+      el.textContent = t;
+      $('b-rate').textContent = '$' + rate.toFixed(4);
+      if(!busy) bBtn.disabled = count() <= 0;
+      if(flash && changed && !REDUCED){
+        var line = $('b-usd-line'); line.classList.remove('flash'); void line.offsetWidth; line.classList.add('flash');
+      }
+    }
+    /* a new count is a new quote: the last receipt goes */
+    bCount.addEventListener('input', function(){ $('b-done').hidden = true; liveFormat(bCount, false); paintBuy(false); });
+    bBtn.addEventListener('click', function(){
+      var n = count(); if(n <= 0 || busy) return;
+      busy = true; bBtn.disabled = true; bBtn.textContent = 'Purchasing…';
+      setTimeout(function(){
+        var usd = n * rate;
+        if(window.ccWalletBal) ccWalletBal(fmt4(balNum() + n) + ' CCTT');
+        var done = $('b-done');
+        done.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7"/></svg><span></span>';
+        done.querySelector('span').innerHTML = fmtInt(n) + ' CCTT purchased for ' + fmtUsd(usd) + ' USD with ' + CARD + '.';
+        done.hidden = false;
+        busy = false; bBtn.textContent = 'Purchase Tokens'; bBtn.disabled = count() <= 0;
+        paintBal();
+        ccToast('Tokens purchased');
+      }, 900);
+    });
+
+    setInterval(function(){
+      var step = (Math.random() < 0.5 ? -1 : 1) * (1 + Math.floor(Math.random() * 2)) / 10000;
+      var r = Math.round((rate + step) * 10000) / 10000;
+      if(r > 0.051 || r < 0.049) r = Math.round((rate - step) * 10000) / 10000;
+      rate = r;
+      paintBuy(true);
+      paintBal();
+    }, 4200);
+
+    /* ---- Auto-Purchase ---- */
+    var DEFAULTS = { amt:'cctt', amtC:1000, amtU:NaN, trig:'cctt', thrC:2000, thrU:NaN, freq:'', start:TODAY };
+    function copy(s){ var o = {}; for(var k in s) o[k] = s[k]; return o; }
+    var state = STATE;
+    var saved = state === 'none' ? null : copy(DEFAULTS);
+
+    var sw = $('a-sw'), swWrap = $('a-sw-wrap');
+    var F = {
+      rAmtC:$('r-amt-c'), rAmtU:$('r-amt-u'), rThrC:$('r-thr-c'), rThrU:$('r-thr-u'), rSched:$('r-sched'),
+      amtC:$('v-amt-c'), amtU:$('v-amt-u'), thrC:$('v-thr-c'), thrU:$('v-thr-u'), freq:$('v-freq')
+    };
+    function setNum(el, n, money){ el.value = isNaN(n) || n == null ? '' : money ? fmtUsd(n).slice(1) : fmtInt(n); }
+    /* a field shows its message only once used (typed in, or left while its radio is chosen) */
+    var touched = {};
+    function fill(s){
+      touched = {};
+      F.rAmtC.checked = s.amt === 'cctt'; F.rAmtU.checked = s.amt === 'usd';
+      F.rThrC.checked = s.trig === 'cctt'; F.rThrU.checked = s.trig === 'usd'; F.rSched.checked = s.trig === 'sched';
+      setNum(F.amtC, s.amtC); setNum(F.amtU, s.amtU, true);
+      setNum(F.thrC, s.thrC); setNum(F.thrU, s.thrU, true);
+      F.freq.value = s.freq || '';
+      check();
+    }
+    function read(){
+      return {
+        amt: F.rAmtU.checked ? 'usd' : 'cctt',
+        amtC: val(F.amtC), amtU: val(F.amtU),
+        trig: F.rThrU.checked ? 'usd' : F.rSched.checked ? 'sched' : 'cctt',
+        thrC: val(F.thrC), thrU: val(F.thrU),
+        freq: F.freq.value, start: (saved && saved.trig === 'sched' && saved.freq === F.freq.value) ? saved.start : TODAY
+      };
+    }
+    function err(id, input, msg){
+      $(id).textContent = msg || '';
+      input.closest('.tm-in').classList.toggle('bad', !!msg);
+    }
+    function rule(k, id, input, m){ err(id, input, touched[k] ? m : ''); return !m; }
+    function check(){
+      var s = read(), ok = true;
+      /* selected option drives the look */
+      document.querySelectorAll('.tm-opt').forEach(function(o){ o.classList.toggle('on', o.querySelector('input[type=radio]').checked); });
+      /* Preview stays disabled while anything is invalid, shown or not */
+      ok = rule('amtC', 'e-amt-c', F.amtC, s.amt === 'cctt' && !(s.amtC >= 100) ? 'Minimum 100 CCTT' : '') && ok;
+      ok = rule('amtU', 'e-amt-u', F.amtU, s.amt === 'usd' && !(s.amtU >= 5) ? 'Minimum $5 USD' : '') && ok;
+      ok = rule('thrC', 'e-thr-c', F.thrC, s.trig === 'cctt' && !(s.thrC > 0) ? 'Enter a threshold' : '') && ok;
+      ok = rule('thrU', 'e-thr-u', F.thrU, s.trig === 'usd' && !(s.thrU > 0) ? 'Enter a threshold' : '') && ok;
+      ok = rule('freq', 'e-freq', F.freq, s.trig === 'sched' && !s.freq ? 'Choose how often' : '') && ok;
+      $('a-prev').disabled = !ok;
+      return ok;
+    }
+    /* an input selects its own radio when used: pressed with a mouse, tapped, typed in or picked.
+       Tab alone changes nothing (keyboard users pick with the arrow keys); a finger that starts
+       a scroll on a box changes nothing either. */
+    function pickOn(box, radio){
+      function pick(){ if(!radio.checked){ radio.checked = true; check(); } }
+      box.addEventListener('pointerdown', function(e){ if(e.pointerType === 'mouse') pick(); });
+      box.addEventListener('click', pick);
+    }
+    [[F.amtC, F.rAmtC, false, 'amtC'], [F.amtU, F.rAmtU, true, 'amtU'], [F.thrC, F.rThrC, false, 'thrC'], [F.thrU, F.rThrU, true, 'thrU']].forEach(function(t){
+      pickOn(t[0].closest('.tm-in'), t[1]);
+      t[0].addEventListener('input', function(){ t[1].checked = true; touched[t[3]] = true; liveFormat(t[0], t[2]); check(); });
+      t[0].addEventListener('blur', function(){
+        var n = val(t[0]); if(t[2] && !isNaN(n)) t[0].value = fmtUsd(n).slice(1);
+        if(t[1].checked && !touched[t[3]]){ touched[t[3]] = true; check(); }
+      });
+    });
+    pickOn(F.freq.closest('.tm-in'), F.rSched);
+    F.freq.addEventListener('change', function(){ F.rSched.checked = true; touched.freq = true; check(); });
+    F.freq.addEventListener('blur', function(){ if(F.rSched.checked && !touched.freq){ touched.freq = true; check(); } });
+    [F.rAmtC, F.rAmtU, F.rThrC, F.rThrU, F.rSched].forEach(function(r){ r.addEventListener('change', check); });
+
+    var EVERY = { Daily:'day', Weekly:'week', Monthly:'month', Yearly:'year' };
+    function amtText(s){ return s.amt === 'usd' ? fmtUsd(s.amtU) + ' USD of CCTT' : fmtInt(s.amtC) + ' CCTT'; }
+    function trigText(s, preview){
+      if(s.trig === 'usd') return 'whenever the USD value of your balance falls below <b>' + fmtUsd(s.thrU) + ' USD</b>';
+      /* the preview says "today" only when the start is today, and closes the date with a comma */
+      if(s.trig === 'sched') return '<b>every ' + EVERY[s.freq] + '</b> starting '
+        + (preview && s.start.toDateString() === new Date().toDateString() ? 'today, ' : '') + fmtDate(s.start) + (preview ? ',' : '');
+      return 'whenever your balance falls below <b>' + fmtInt(s.thrC) + ' CCTT</b>';
+    }
+    function paintStatus(pulse){
+      var st = $('a-status'), line = $('a-line');
+      st.setAttribute('data-state', state);
+      if(state === 'none') line.innerHTML = 'You currently do not have ' + AP + ' set up on this account.';
+      else if(state === 'on') line.innerHTML = AP + ' is on: <b>' + amtText(saved) + '</b> ' + trigText(saved) + ', paid with ' + CARD + '.';
+      else line.innerHTML = AP + ' is suspended. When on, it buys <b>' + amtText(saved) + '</b> ' + trigText(saved) + ', paid with ' + CARD + '.';
+      sw.checked = state === 'on';
+      sw.disabled = state === 'none';
+      swWrap.title = state === 'none' ? 'Set up Auto-Purchase first' : '';
+      swWrap.classList.toggle('is-dis', state === 'none');
+      swWrap.classList.toggle('is-on', state === 'on');
+      swWrap.classList.toggle('is-off', state === 'off');
+      if(pulse && !REDUCED){ st.classList.remove('pulse'); void st.offsetWidth; st.classList.add('pulse'); }
+    }
+    sw.addEventListener('change', function(){
+      if(state === 'none'){ sw.checked = false; return; }
+      state = sw.checked ? 'on' : 'off';
+      paintStatus(true);
+      ccToast(state === 'on' ? 'Auto-Purchase resumed' : 'Auto-Purchase suspended');
+    });
+    /* the words set a state ("Off" turns it off, "On" turns it on); clicking the current one does nothing */
+    swWrap.querySelectorAll('[data-v]').forEach(function(w){
+      w.addEventListener('click', function(){
+        var want = w.getAttribute('data-v') === '1';
+        if(sw.disabled || sw.checked === want) return;
+        sw.checked = want;
+        sw.dispatchEvent(new Event('change'));
+      });
+    });
+
+    /* keep the swapped panel in view when it lands above the fold (phone) */
+    function reveal(el){
+      var top = el.getBoundingClientRect().top, tb = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--tb-h')) || 64;
+      if(top < tb + 8 || top > window.innerHeight - 80) el.scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block:'start' });
+    }
+    function show(which){
+      $('a-form').hidden = which !== 'form';
+      $('a-preview').hidden = which !== 'preview';
+    }
+    $('a-prev').addEventListener('click', function(){
+      if(!check()) return;
+      var s = read(), btn = state === 'none' ? 'Activate' : 'Save Changes';
+      $('a-go').textContent = btn;
+      $('a-sum').innerHTML = 'By selecting “' + btn + '” below you are agreeing to authorize the ongoing <span class="nw">auto-purchase</span> of <b>'
+        + amtText(s) + '</b> ' + trigText(s, true) + ' using the ' + CARD
+        + '. You may modify or suspend this at any time on the <span class="nw">Token Management</span> page.';
+      show('preview');
+      reveal($('a-preview'));
+    });
+    $('a-go').addEventListener('click', function(){
+      saved = read();
+      var first = state === 'none';
+      if(first) state = 'on';
+      fill(saved);
+      show('form');
+      paintStatus(true);
+      reveal($('a-status'));
+      ccToast(first ? 'Auto-Purchase activated' : 'Auto-Purchase updated');
+    });
+    $('a-mod').addEventListener('click', function(){ show('form'); reveal($('a-form')); });
+    $('a-cancel').addEventListener('click', function(){
+      fill(saved || DEFAULTS);
+      show('form');
+      reveal($('a-form'));
+    });
+
+    fill(saved || DEFAULTS);
+    paintStatus(false);
+    paintBuy(false);
+    paintBal();
+  })();
+  </script>
+</body>
+</html>

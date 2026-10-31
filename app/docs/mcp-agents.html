@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MCP: Agents · Clockchain Docs</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@100;200;300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../app.css?v=17" />
+  <link rel="stylesheet" href="../agents/section.css?v=1" />
+  <link rel="stylesheet" href="../agents/r2.css?v=1" />
+  <script>(function(){try{if(localStorage.getItem('ccapp-theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
+  <script type="importmap">{ "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  } }</script>
+</head>
+<!-- MCP docs, page 3 of 10: Agents. Content from the MCP technical manual (approved 10-30), section 03.
+     Fig 3.1 is the V3 animation: agents/scene-c.js run by agents/player.js (copied from the design repo, theme read from data-theme). -->
+<body data-nav="mcp" data-docs>
+  <div class="shell">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main">
+      <header class="topbar" id="topbar" data-title="Documentation"></header>
+      <div class="content">
+        <div class="docs-layout">
+
+          <nav class="docs-toc" id="docs-toc" aria-label="Docs"></nav>
+
+          <article class="docs-body">
+            <div class="docs-mnav" id="docs-mnav"></div>
+            <span class="tag">AI Agents · MCP</span>
+            <h1 style="margin-top:12px;">Trust the agent on the other side.</h1>
+            <p class="lead">Before agents talk business, they prove who is present and what each side agreed to. Signing happens on each agent's own machine, and the outcome is anchored where anyone can re-verify it. <a class="docs-ref" href="mcp-references.html#r-1">R1</a></p>
+
+            <figure class="docs-fig">
+              <div class="docs-anim"><div data-ag-player></div></div>
+              <figcaption><b>Fig 3.1</b>The two animations: Agent Handshake, live on testnet, and Agent Contract, in development. The same story as the main page, drawn as cards.</figcaption>
+            </figure>
+
+            <!-- Standalone Handshake -->
+            <h2 id="standalone">Standalone Handshake</h2>
+            <div class="docs-meta"><span class="status-pill"><span class="live-dot"></span>Live on testnet</span></div>
+            <p>Two strangers run identity, authority and capability checks, sign consent to a stated purpose and scope, then talk in a witnessed channel whose opening and closing are anchored. <a class="docs-ref" href="mcp-references.html#r-1">R1</a></p>
+            <dl class="docs-spec">
+              <div><dt>Endpoint</dt><dd><span class="mono-inline">/connect/mcp</span></dd></div>
+              <div><dt>Key</dt><dd>None</dd></div>
+              <div><dt>Scope</dt><dd>Consent covers communication only. It is not an agreement and never authorizes a transaction. <a class="docs-ref" href="mcp-references.html#r-1">R1</a></dd></div>
+            </dl>
+            <div class="code"><button class="cpy" onclick="ccCopyEl(this)">Copy</button><pre><code>claude mcp add clockchain-handshake --transport http \
+  https://mcp.clockchain.network/connect/mcp</code></pre></div>
+
+            <!-- Agent Handshake -->
+            <h2 id="agent-handshake">Agent Handshake</h2>
+            <div class="docs-meta"><span class="status-pill"><span class="live-dot"></span>Live on testnet</span></div>
+            <p>Two independently controlled agents prove live signing-key control in a bounded session and sign the same ordered exchange. The output is a VERIFIED certificate binding both identities, the session, message digests, ordering and freshness. <a class="docs-ref" href="mcp-references.html#r-5">R5</a></p>
+            <dl class="docs-spec">
+              <div><dt>Endpoint</dt><dd><span class="mono-inline">/next/handshake/mcp</span>, no auth, capability per call</dd></div>
+              <div><dt>Protocol</dt><dd><span class="mono-inline">clockchain.agent-handshake/v2</span> · helper 2.1.8</dd></div>
+              <div><dt>Local adapter</dt><dd><span class="mono-inline">npx -y @d4d.group/local-adapter</span> · Node.js 24 · keys never leave the machine</dd></div>
+              <div><dt>Pass</dt><dd>Three ordered anchors: proposal, acceptance, acknowledgment</dd></div>
+              <div><dt>Scope</dt><dd>Authorizes nothing downstream. externalBusinessActionPerformed is always false.</dd></div>
+              <div><dt>Limits</dt><dd>Invites are single-use, short-lived and capped at 5 per hour</dd></div>
+            </dl>
+            <p>Full steps: <a href="https://mcp.clockchain.network/handshake/sop">Handshake SOP</a> <a class="docs-ref" href="mcp-references.html#r-5">R5</a></p>
+
+            <!-- Agent Contract -->
+            <h2 id="contract">Agent Contract</h2>
+            <div class="docs-meta"><span class="status-pill is-dev">In development</span><a class="docs-ref" href="mcp-references.html#r-28">R28</a><a class="docs-ref" href="mcp-references.html#r-23">R23</a></div>
+            <p>Two agents agree terms, an outside settlement provider holds the funds, and payment follows verified work. The film shows a family agent and a travel agency, with all six milestones anchored on Clockchain. <a class="docs-ref" href="mcp-references.html#r-28">R28</a></p>
+            <span class="docs-sub">Repo files</span>
+            <ul class="docs-files">
+              <li><a href="https://github.com/thetangstr/clockchain-developer-tools/tree/main/docs/agent-contract">docs/agent-contract/</a><span>Build briefs N4A to N7C, the milestone log, runbooks</span></li>
+              <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/docs/agent-contract/MILESTONE-LOG.md">docs/agent-contract/MILESTONE-LOG.md</a><span>Milestone log</span></li>
+              <li><a href="https://github.com/thetangstr/clockchain-developer-tools/tree/main/packages/mcp-server/src/agent-contract">packages/mcp-server/src/agent-contract/</a><span>Approval, settlement rail, milestone log, certificate</span></li>
+            </ul>
+            <div class="docs-note is-rasesh">
+              <b>Note for Rasesh · N5 <a href="mcp-notes.html#n-5">All notes</a></b>
+              Agent Contract has no public page, endpoint or tool list yet. The repo holds build briefs and source only <a class="docs-ref" href="mcp-references.html#r-23">R23</a><a class="docs-ref" href="mcp-references.html#r-24">R24</a>. Which doc can be public, and what endpoint and status line belong here?
+            </div>
+
+            <div class="docs-prevnext" id="docs-pn"></div>
+          </article>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="../agents/story.js?v=1"></script>
+  <script src="../app.js?v=15"></script>
+  <script type="module">
+    import { mount } from '../agents/player.js?v=2';
+    mount(document.querySelector('[data-ag-player]'), { scene: './scene-c.js', ui: 'tabs' });
+  </script>
+</body>
+</html>

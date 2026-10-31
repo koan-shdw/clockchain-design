@@ -4,11 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard · Clockchain App</title>
-  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@100;200;300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="app.css?v=1" />
+  <link rel="stylesheet" href="app.css?v=14" />
+  <script>(function(){try{if(localStorage.getItem('ccapp-theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
 </head>
 <body data-nav="dashboard">
   <div class="shell">
@@ -22,81 +23,33 @@
           <p>One account, three services. Everything below runs against the live testnet.</p>
         </div>
 
-        <div class="cards c4">
-          <div class="card">
-            <div class="stat-k">Block height</div>
-            <div class="stat-v" data-live="height">#—</div>
-            <div class="stat-sub"><span class="live-dot" style="width:5px;height:5px;"></span> anchoring every second</div>
-          </div>
-          <div class="card">
-            <div class="stat-k">API requests · 30d</div>
-            <div class="stat-v">12,408</div>
-            <div class="stat-sub">64% of plan quota</div>
-          </div>
-          <div class="card">
-            <div class="stat-k">Active keys</div>
-            <div class="stat-v">2</div>
-            <div class="stat-sub">1 production · 1 test</div>
-          </div>
-          <div class="card">
-            <div class="stat-k">Plan</div>
-            <div class="stat-v">Developer</div>
-            <div class="stat-sub">renews Aug 1, 2026</div>
-          </div>
-        </div>
-
-        <div class="section cards c2">
-          <div class="card">
-            <div class="card-head"><h3>API information</h3><a class="more" href="docs/timestamp-api.html">API reference →</a></div>
-            <div class="kv">
-              <div class="kv-row">
-                <span class="kv-k">Base URL</span>
-                <span class="kv-v"><span>https://node.clockchain.network/</span><button class="kv-copy" onclick="ccCopy('https://node.clockchain.network/')">Copy</button></span>
-              </div>
-              <div class="kv-row">
-                <span class="kv-k">Client ID</span>
-                <span class="kv-v"><span>alexander@example.com</span><button class="kv-copy" onclick="ccCopy('alexander@example.com')">Copy</button></span>
-              </div>
-              <div class="kv-row">
-                <span class="kv-k">API key</span>
-                <span class="kv-v"><span id="api-key">••••••••••••••••••••••••</span><button class="kv-copy" onclick="var k=document.getElementById('api-key');k.textContent=k.textContent[0]==='•'?'cc_test_4f8a2b9c1d7e3f6a0b5c':'••••••••••••••••••••••••'">Reveal</button><button class="kv-copy" onclick="ccCopy('cc_test_4f8a2b9c1d7e3f6a0b5c')">Copy</button></span>
+        <div class="section" style="margin-top:0;">
+          <h2>My Plans</h2>
+          <div class="plan-grid">
+            <div class="card">
+              <div class="card-head"><h3>Logging</h3><a class="more" href="logging.html">Go to Logging →</a></div>
+              <div class="kv">
+                <div class="kv-row"><span class="kv-k">Plan Type</span><span class="kv-v"><span>Prepaid</span><a class="kv-copy" href="account.html#logs" style="text-decoration:none;">Manage Plan</a></span></div>
+                <div class="kv-row"><span class="kv-k">Prepaid Logs Remaining</span><span class="kv-v"><span class="mono">5,363</span><button class="kv-copy" onclick="ccBuy('Buy more logs')">Buy More</button></span></div>
               </div>
             </div>
-            <div style="margin-top:16px;"><button class="btn btn-primary btn-sm" onclick="ccMock('Mockup: key generation simulated')">Generate new key</button></div>
-          </div>
 
-          <div class="card accent">
-            <div class="card-head"><h3>Live benchmarking</h3><a class="more" href="benchmarking.html">Full view →</a></div>
-            <table class="table">
-              <thead><tr><th>Source</th><th>Time</th><th>Precision</th></tr></thead>
-              <tbody>
-                <tr class="is-cc"><td>Clockchain</td><td data-live="time">—</td><td>±1 µs</td></tr>
-                <tr><td>UTC</td><td data-live="time-utc">—</td><td>±100 ms</td></tr>
-                <tr><td>Google NTP</td><td data-live="time-ntp">—</td><td>±10 ms</td></tr>
-                <tr><td>TAI</td><td data-live="time-tai">—</td><td>±100 ms</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+            <div class="card">
+              <div class="card-head"><h3>Smart Contracts</h3><a class="more" href="contracts.html">Go to Smart Contracts →</a></div>
+              <div class="kv">
+                <div class="kv-row"><span class="kv-k">Smart Contract Credit Balance</span><span class="kv-v"><span class="mono">$31.23</span><button class="kv-copy" onclick="ccBuy('Buy Smart Contract credits')">Buy More</button></span></div>
+                <div class="kv-row"><span class="kv-k">Autopay</span><span class="kv-v"><span>On</span><a class="kv-copy" href="account.html#smart-contracts" style="text-decoration:none;">Manage</a></span></div>
+                <div class="kv-row"><span class="kv-k">Scheduled Contracts</span><span class="kv-v"><span class="mono">14</span></span></div>
+              </div>
+            </div>
 
-        <div class="section cards c3">
-          <div class="card">
-            <div class="card-head"><h3>Logging</h3><a class="more" href="logging.html">Open →</a></div>
-            <p style="font-size:13px;color:var(--fg-2);margin-bottom:14px;">Hash and anchor any asset. Search and audit your full history.</p>
-            <div class="stat-k">Logs remaining</div>
-            <div class="stat-v" style="font-size:20px;">1,000</div>
-          </div>
-          <div class="card">
-            <div class="card-head"><h3>Smart Contracts</h3><a class="more" href="contracts.html">Open →</a></div>
-            <p style="font-size:13px;color:var(--fg-2);margin-bottom:14px;">Schedule and execute with verifiable time triggers.</p>
-            <div class="stat-k">Scheduled</div>
-            <div class="stat-v" style="font-size:20px;">3</div>
-          </div>
-          <div class="card">
-            <div class="card-head"><h3>Timestamp API</h3><a class="more" href="timestamp.html">Open →</a></div>
-            <p style="font-size:13px;color:var(--fg-2);margin-bottom:14px;">Verified timestamps for UTC, GPS, TAI, ISO 8601, RFC 3339.</p>
-            <div class="stat-k">Requests · 24h</div>
-            <div class="stat-v" style="font-size:20px;">418</div>
+            <div class="card">
+              <div class="card-head"><h3>Time API</h3><a class="more" href="timestamp.html">Go to Time API →</a></div>
+              <div class="kv">
+                <div class="kv-row"><span class="kv-k">Plan Type</span><span class="kv-v"><span>Subscription</span><a class="kv-copy" href="account.html#time-services" style="text-decoration:none;">Manage</a></span></div>
+                <div class="kv-row"><span class="kv-k">Monthly Calls Remaining</span><span class="kv-v"><span class="mono">12,032</span><button class="kv-copy" onclick="ccMock('Mockup: plan picker')">Modify Plan</button></span></div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -107,8 +60,8 @@
             <tbody>
               <tr><td>Log</td><td class="mono">0x9f3c…a71e · Q3 board resolution</td><td>#36,041,882</td><td><span class="status-pill">Verified</span></td><td>2 min ago</td></tr>
               <tr><td>API call</td><td class="mono">GET api/time/timestamp</td><td>#36,041,367</td><td><span class="status-pill">200</span></td><td>10 min ago</td></tr>
-              <tr><td>Contract</td><td class="mono">escrow-release · trigger 2026-07-04T00:00Z</td><td>scheduled</td><td><span class="status-pill">Pending</span></td><td>1 h ago</td></tr>
-              <tr><td>Log</td><td class="mono">0x4b21…09dd · supplier-manifest.pdf</td><td>#36,038,554</td><td><span class="status-pill">Verified</span></td><td>3 h ago</td></tr>
+              <tr><td>Contract</td><td class="mono">escrow-release · trigger 2026-07-04 00:00:00 UVT</td><td>scheduled</td><td><span class="status-pill">Scheduled</span></td><td>1 h ago</td></tr>
+              <tr><td>Log</td><td class="mono">0x4b21…09dd · supplier-manifest.pdf</td><td>#36,037,794</td><td><span class="status-pill">Verified</span></td><td>3 h ago</td></tr>
             </tbody>
           </table>
         </div>
@@ -116,6 +69,6 @@
       </div>
     </div>
   </div>
-  <script src="app.js?v=1"></script>
+  <script src="app.js?v=13"></script>
 </body>
 </html>

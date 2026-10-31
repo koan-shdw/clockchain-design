@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MCP: Install · Clockchain Docs</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@100;200;300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../app.css?v=17" />
+  <script>(function(){try{if(localStorage.getItem('ccapp-theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
+</head>
+<!-- MCP docs, page 6 of 10: Install. Content from the MCP technical manual (approved 10-30), section 06. -->
+<body data-nav="mcp" data-docs>
+  <div class="shell">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main">
+      <header class="topbar" id="topbar" data-title="Documentation"></header>
+      <div class="content">
+        <div class="docs-layout">
+
+          <nav class="docs-toc" id="docs-toc" aria-label="Docs"></nav>
+
+          <article class="docs-body">
+            <div class="docs-mnav" id="docs-mnav"></div>
+            <span class="tag">AI Agents · MCP</span>
+            <h1 style="margin-top:12px;">Add Clockchain to your agent.</h1>
+            <p class="lead">Hosted endpoint. Any MCP client connects in under a minute. <a class="docs-ref" href="mcp-references.html#r-1">R1</a><a class="docs-ref" href="mcp-references.html#r-8">R8</a></p>
+
+            <h2 id="token">1. Get a testnet token</h2>
+            <p>A delegated testnet token: writes spend Clockchain's testnet credits. No signup. <a class="docs-ref" href="mcp-references.html#r-7">R7</a></p>
+            <div class="code"><button class="cpy" onclick="ccCopyEl(this)">Copy</button><pre><code>curl -X POST https://mcp.clockchain.network/token</code></pre></div>
+            <p>Or bring your own Clockchain API key; writes then spend your credits. Send it in the x-clockchain-* headers, not in x-api-key, which is for MCP tokens only. <a class="docs-ref" href="mcp-references.html#r-1">R1</a></p>
+            <div class="docs-note is-rasesh">
+              <b>Note for Rasesh · N7 <a href="mcp-notes.html#n-7">All notes</a></b>
+              "How to get one" for an API key links to the clockchain.network home page <a class="docs-ref" href="mcp-references.html#r-1">R1</a>. The page that issues keys belongs here.
+            </div>
+
+            <h2 id="add">2. Add the server</h2>
+            <p>The same block works in every JSON-configured client: Claude Code, Cursor, Claude Desktop, Hermes, OpenClaw. <a class="docs-ref" href="mcp-references.html#r-1">R1</a></p>
+            <span class="docs-sub">MCP config · JSON</span>
+            <div class="code"><button class="cpy" onclick="ccCopyEl(this)">Copy</button><pre><code>{
+  <span class="tok-g">"mcpServers"</span>: {
+    <span class="tok-g">"clockchain"</span>: {
+      <span class="tok-g">"type"</span>: "http",
+      <span class="tok-g">"url"</span>: "https://mcp.clockchain.network/mcp",
+      <span class="tok-g">"headers"</span>: { <span class="tok-g">"x-api-key"</span>: "&lt;YOUR_TOKEN&gt;" }
+    }
+  }
+}</code></pre></div>
+            <span class="docs-sub">CLI · where the client can set headers</span>
+            <div class="code"><button class="cpy" onclick="ccCopyEl(this)">Copy</button><pre><code>claude mcp add clockchain --transport http https://mcp.clockchain.network/mcp \
+  --header "x-api-key: &lt;YOUR_TOKEN&gt;"</code></pre></div>
+            <span class="docs-sub">Codex · ~/.codex/config.toml</span>
+            <div class="code"><button class="cpy" onclick="ccCopyEl(this)">Copy</button><pre><code>[mcp_servers.clockchain]
+url = "https://mcp.clockchain.network/mcp"
+http_headers = { "x-api-key" = "&lt;YOUR_TOKEN&gt;" }
+# headless (codex exec) only: nobody is there to approve each call
+default_tools_approval_mode = "approve"</code></pre></div>
+
+            <h2 id="verify">3. Verify</h2>
+            <p>Open a new session and run <span class="mono-inline">/mcp</span>. You should see clockchain with all 50 tools. Then ask: "use clockchain to get the current consensus time." <a class="docs-ref" href="mcp-references.html#r-1">R1</a></p>
+            <p>Local stdio install, ERC-8004 reads and chat-connector setup are in <a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/INSTALL.md">INSTALL.md</a>. <a class="docs-ref" href="mcp-references.html#r-8">R8</a></p>
+
+            <div class="docs-prevnext" id="docs-pn"></div>
+          </article>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="../app.js?v=15"></script>
+</body>
+</html>

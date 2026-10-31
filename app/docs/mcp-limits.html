@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MCP: Limits · Clockchain Docs</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@100;200;300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../app.css?v=17" />
+  <script>(function(){try{if(localStorage.getItem('ccapp-theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
+</head>
+<!-- MCP docs, page 7 of 10: Limits. Content from the MCP technical manual (approved 10-30), section 07. -->
+<body data-nav="mcp" data-docs>
+  <div class="shell">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main">
+      <header class="topbar" id="topbar" data-title="Documentation"></header>
+      <div class="content">
+        <div class="docs-layout">
+
+          <nav class="docs-toc" id="docs-toc" aria-label="Docs"></nav>
+
+          <article class="docs-body">
+            <div class="docs-mnav" id="docs-mnav"></div>
+            <span class="tag">AI Agents · MCP</span>
+            <h1 style="margin-top:12px;">Limits and honest claims.</h1>
+
+            <dl class="docs-spec">
+              <div><dt>Rate</dt><dd>30 tool calls per minute per token. The MCP handshake and tools/list are free. <a class="docs-ref" href="mcp-references.html#r-2">R2</a></dd></div>
+              <div><dt>Triggers</dt><dd>Up to 20 active timers and alarms per caller. A fire is 1 s to 30 days out; intervals are 60 s or more. <a class="docs-ref" href="mcp-references.html#r-2">R2</a></dd></div>
+              <div><dt>Credits</dt><dd>Each anchor spends one testnet log credit: two per stopwatch measurement, one per timer or alarm fire. Reads and verification are free. <a class="docs-ref" href="mcp-references.html#r-2">R2</a></dd></div>
+              <div><dt>Webhooks</dt><dd>Optional webhook_url on timer_set and alarm_set. Standard-Webhooks headers, HMAC-SHA256 signature with a per-caller secret returned once. Destinations are DNS-pinned and allow-listed. <a class="docs-ref" href="mcp-references.html#r-2">R2</a><a class="docs-ref" href="mcp-references.html#r-13">R13</a></dd></div>
+              <div><dt>Blocks</dt><dd>Blocks mint only on writes, so consensus now goes stale on an idle chain. <a class="docs-ref" href="mcp-references.html#r-9">R9</a></dd></div>
+              <div><dt>Network</dt><dd>Anchored on the Clockchain anchoring gateway: testnet, one validator. Hash, block anchor and block time are real and verifiable with no key. Multi-validator attestation starts at mainnet. <a class="docs-ref" href="mcp-references.html#r-1">R1</a><a class="docs-ref" href="mcp-references.html#r-9">R9</a></dd></div>
+              <div><dt>Evidence</dt><dd>Not yet a court-of-law evidentiary claim. <a class="docs-ref" href="mcp-references.html#r-1">R1</a></dd></div>
+              <div><dt>Packages</dt><dd>The @clockchain packages are not on npm yet. Use the hosted endpoint, or clone and build the repo. <a class="docs-ref" href="mcp-references.html#r-7">R7</a></dd></div>
+            </dl>
+
+            <div class="docs-note is-rasesh">
+              <b>Note for Rasesh · N9 <a href="mcp-notes.html#n-9">All notes</a></b>
+              The roadmap file says webhooks stay off until the allow-list ships <a class="docs-ref" href="mcp-references.html#r-9">R9</a>. The clock-tools page says destinations are allow-listed on this deployment <a class="docs-ref" href="mcp-references.html#r-2">R2</a>. Which is current?
+            </div>
+
+            <div class="docs-prevnext" id="docs-pn"></div>
+          </article>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="../app.js?v=15"></script>
+</body>
+</html>

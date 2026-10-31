@@ -3,72 +3,128 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Billing &amp; Tokens · Clockchain App</title>
-  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png" />
+  <title>Billing &amp; Usage · Clockchain App</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@100;200;300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="app.css?v=1" />
+  <link rel="stylesheet" href="app.css?v=14" />
+  <script>(function(){try{if(localStorage.getItem('ccapp-theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
 </head>
 <body data-nav="account">
   <div class="shell">
     <aside class="sidebar" id="sidebar"></aside>
     <div class="main">
-      <header class="topbar" id="topbar" data-title="Billing &amp; Tokens"></header>
+      <header class="topbar" id="topbar" data-title="Billing &amp; Usage"></header>
       <div class="content">
 
         <div class="page-head">
-          <h1>Billing &amp; Tokens</h1>
-          <p>Plan, payment history, and key management for your account.</p>
+          <h1>Billing &amp; Usage</h1>
+          <p>How you pay for each service: method, plan, and history. Rates live on <a href="pricing.html" style="color:var(--accent);">Pricing</a>.</p>
+          <div style="margin-top:12px;"><button class="btn btn-outline btn-sm" onclick="ccMock('Mockup: opens the Stripe customer portal')">Manage Billing</button></div>
         </div>
 
-        <div class="cards c3">
-          <div class="card accent">
-            <div class="card-head"><h3>Current plan</h3></div>
-            <div class="stat-v" style="font-size:22px;">Developer</div>
-            <div class="stat-sub">20,000 API requests / month · 1,000 logs</div>
-            <div style="margin-top:16px;"><button class="btn btn-outline btn-sm" onclick="ccMock('Mockup: plan change simulated')">Change plan</button></div>
-          </div>
-          <div class="card">
-            <div class="card-head"><h3>Usage this cycle</h3></div>
-            <div class="stat-k">API requests</div>
-            <div class="stat-v" style="font-size:22px;">12,408 / 20,000</div>
-            <div class="stat-sub">resets Aug 1, 2026</div>
-          </div>
-          <div class="card">
-            <div class="card-head"><h3>Payment method</h3></div>
-            <div class="stat-v mono" style="font-size:16px;">•••• 6411</div>
-            <div class="stat-sub">Visa · expires 08/28</div>
-            <div style="margin-top:16px;"><button class="btn btn-outline btn-sm" onclick="ccMock()">Update</button></div>
-          </div>
-        </div>
+        <details class="acc acct-anchor" id="logs" open>
+          <summary>Logs<svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <div class="acc-body">
+            <div class="bar"><div class="bar-fill" style="width:54%;"></div></div>
+            <div class="bar-legend"><span>5,363 remaining (54%)</span><span>4,637 consumed (46%)</span></div>
+            <div style="margin:14px 0 18px;"><button class="btn btn-primary btn-sm" onclick="ccBuy('Buy more logs')">Buy More</button></div>
 
-        <div class="section card">
-          <div class="card-head"><h3>API keys</h3><button class="btn btn-primary btn-sm" onclick="ccMock('Mockup: key created')">Create key</button></div>
-          <table class="table">
-            <thead><tr><th>Name</th><th>Key</th><th>Created</th><th>Last used</th><th></th></tr></thead>
-            <tbody>
-              <tr><td>production</td><td class="mono">cc_live_••••••••9f2c</td><td>Feb 26, 2026</td><td>10 min ago</td><td><button class="kv-copy" onclick="ccMock('Mockup: key revoked')">Revoke</button></td></tr>
-              <tr><td>test</td><td class="mono">cc_test_••••••••0b5c</td><td>Jun 12, 2026</td><td>2 h ago</td><td><button class="kv-copy" onclick="ccMock('Mockup: key revoked')">Revoke</button></td></tr>
-            </tbody>
-          </table>
-        </div>
+            <div class="stat-k" style="margin-bottom:8px;">Payment plan for Logs · <a class="lnk" href="pricing.html">See Pricing</a></div>
+            <div class="choice">
+              <label><input type="radio" name="log-plan" checked /> Prepaid blocks of logs <span style="color:var(--fg-3);font-size:12px;">(Autopay: Off — <a class="lnk" href="#" onclick="ccMock('Mockup: autopay settings');return false;">Manage Autopay</a>)</span></label>
+              <label><input type="radio" name="log-plan" /> Subscription <a class="lnk" href="payment-methods.html">Manage Payment Method</a>
+                <span class="sub">You can apply prorated credit for unused prepaid logs to a subscription.</span></label>
+            </div>
+            <button class="btn btn-outline btn-sm" onclick="ccMock('Mockup: plan change simulated')">Change Payment Plan for Logs</button>
+          </div>
+        </details>
 
-        <div class="section card">
-          <div class="card-head"><h3>Billing history</h3></div>
-          <table class="table">
-            <thead><tr><th>Date</th><th>Description</th><th>Amount</th><th>Status</th></tr></thead>
-            <tbody>
-              <tr><td>Jul 1, 2026</td><td>Developer plan · monthly</td><td>$49.00</td><td><span class="status-pill">Paid</span></td></tr>
-              <tr><td>Jun 1, 2026</td><td>Developer plan · monthly</td><td>$49.00</td><td><span class="status-pill">Paid</span></td></tr>
-              <tr><td>May 14, 2026</td><td>Log pack · 500</td><td>$19.00</td><td><span class="status-pill">Paid</span></td></tr>
-            </tbody>
-          </table>
-        </div>
+        <details class="acc acct-anchor" id="time-services" open>
+          <summary>Time API<svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <div class="acc-body">
+            <p style="margin-bottom:4px;">4 days remaining in plan month <span style="color:var(--fg-3);font-size:12px;">(resets Oct 1, 2026 at midnight Clockchain Time)</span></p>
+            <div class="bar"><div class="bar-fill" style="width:60%;"></div></div>
+            <div class="bar-legend"><span>12,032 remaining (60%)</span><span>7,968 consumed (40%)</span></div>
+
+            <div class="stat-k" style="margin:18px 0 8px;">Plan Type for Time API · <a class="lnk" href="pricing.html">See Pricing</a></div>
+            <div class="choice">
+              <label><input type="radio" name="ts-plan" /> Prepaid blocks of Time API calls
+                <span class="lnks"><a class="lnk" href="#" onclick="ccBuy('Buy more Time API calls');return false;">Buy More</a><a class="lnk" href="#" onclick="ccMock('Mockup: autopay settings');return false;">Manage Autopay</a></span></label>
+              <label><input type="radio" name="ts-plan" checked /> Subscription — current plan: Developer <span class="lnks"><a class="lnk" href="#" onclick="ccMock('Mockup: plan picker');return false;">Change Subscription Plan</a><a class="lnk" href="payment-methods.html">Manage Payment Method</a></span>
+                <span class="sub">You can apply prorated credit for unused prepaid calls to a subscription.</span></label>
+            </div>
+            <button class="btn btn-outline btn-sm" onclick="ccMock('Mockup: plan change simulated')">Change Payment Plan for Time API</button>
+          </div>
+        </details>
+
+        <details class="acc acct-anchor" id="smart-contracts" open>
+          <summary>Smart Contract Scheduling<svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <div class="acc-body">
+            <div class="kv">
+              <div class="kv-row"><span class="kv-k">Current Smart Contract Credit Balance</span><span class="kv-v"><span class="mono">$31.23 USD</span><button class="kv-copy" onclick="ccBuy('Buy more Smart Contract credits')">Buy More Credits</button></span></div>
+            </div>
+            <p class="acc-note">Any refunds/adjustments will post to your balance within 24 hours.</p>
+
+            <p style="margin-bottom:12px;">You can schedule automatic Smart Contract credits replenishment when your balance falls below a specified threshold:</p>
+            <div class="stat-k" style="margin-bottom:8px;">Smart Contract Credit Auto-Pay Settings</div>
+            <div class="kv">
+              <div class="kv-row">
+                <span class="kv-k">Autopay status</span>
+                <span class="kv-v"><span id="ap-state">On</span>
+                  <input type="checkbox" class="sw" id="ap-sw" checked
+                    onchange="document.getElementById('ap-state').textContent=this.checked?'On':'Off';ccToast('Mockup: autopay '+(this.checked?'on':'off'))" aria-label="Autopay status" />
+                </span>
+              </div>
+              <div class="kv-row">
+                <span class="kv-k">Threshold to trigger autopay</span>
+                <span class="kv-v"><span class="mono">$5.00 USD</span><button class="kv-copy" onclick="ccMock('Mockup: threshold editor')">Update</button><span style="color:var(--fg-3);font-size:11px;font-style:italic;flex:none;">$5 minimum</span></span>
+              </div>
+              <div class="kv-row">
+                <span class="kv-k">Replenishment Amount</span>
+                <span class="kv-v"><span class="mono">$20.00 USD</span><button class="kv-copy" onclick="ccMock('Mockup: amount editor')">Update</button><span style="color:var(--fg-3);font-size:11px;font-style:italic;flex:none;">$5 minimum</span></span>
+              </div>
+              <div class="kv-row">
+                <span class="kv-k">Autopay Payment Method</span>
+                <span class="kv-v"><span class="mono">credit card ending in -9482</span><a class="kv-copy" href="payment-methods.html" style="text-decoration:none;">Manage</a></span>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="acc" open>
+          <summary>Billing History<svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <div class="acc-body">
+            <div class="filters">
+              <span class="flt-label">Filters</span>
+              <label><input type="checkbox" checked /> Logging</label>
+              <label><input type="checkbox" checked /> Time API</label>
+              <label><input type="checkbox" /> Smart Contracts</label>
+            </div>
+            <div class="filters">
+              <span class="flt-label">Date</span>
+              <label><input type="radio" name="bh-date" checked /> Today</label>
+              <label><input type="radio" name="bh-date" /> Last 7 days</label>
+              <label><input type="radio" name="bh-date" /> Last 30 days</label>
+              <label><input type="radio" name="bh-date" /> Custom</label>
+              <input class="date-in" type="date" value="2026-08-25" aria-label="From" />
+              <input class="date-in" type="date" value="2026-08-25" aria-label="To" />
+            </div>
+            <table class="table" data-sort="0,-1">
+              <thead><tr><th>Date</th><th>Description</th><th>Amount</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td data-v="2026-07-01">Jul 1, 2026</td><td>Developer plan · monthly</td><td data-v="49">$49.00</td><td><span class="status-pill">Paid</span></td></tr>
+                <tr><td data-v="2026-06-01">Jun 1, 2026</td><td>Developer plan · monthly</td><td data-v="49">$49.00</td><td><span class="status-pill">Paid</span></td></tr>
+                <tr><td data-v="2026-05-14">May 14, 2026</td><td>Log pack · 500</td><td data-v="19">$19.00</td><td><span class="status-pill">Paid</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
 
       </div>
     </div>
   </div>
-  <script src="app.js?v=1"></script>
+  <script src="app.js?v=13"></script>
 </body>
 </html>

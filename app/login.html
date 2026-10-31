@@ -4,18 +4,27 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sign in · Clockchain App</title>
-  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@100;200;300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="app.css?v=1" />
+  <link rel="stylesheet" href="app.css?v=14" />
+  <script>(function(){try{if(localStorage.getItem('ccapp-theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
 </head>
 <body>
   <div class="login-page">
     <div class="login-card">
-      <img src="../assets/clockchain-logo-full.png" alt="Clockchain" />
+      <img src="assets/clockchain-logo-full.png" alt="Clockchain" />
       <h1>Clockchain App</h1>
-      <p>One account for logging, smart contract scheduling, and the Timestamp API.</p>
+      <p>One account for logging, smart contract scheduling, and the Time API.</p>
+      <div class="login-wallets">
+        <button class="login-wallet" type="button" onclick="ccWalletSignIn()">
+          <svg viewBox="0 0 32 30" aria-hidden="true"><path fill="#E2761B" d="M30.6 1 17.8 10.5l2.4-5.6z"/><path fill="#E4761B" d="M1.4 1l12.7 9.6-2.3-5.7zM26 22.8l-3.4 5.2 7.3 2 2.1-7.1zM.1 22.9 2.2 30l7.3-2-3.4-5.2z"/><path fill="#E4761B" d="m9.1 13.9-2 3.1 7.2.3-.3-7.8zM22.9 13.9l-5-4.5-.2 7.9 7.2-.3zM9.5 28l4.3-2.1-3.7-2.9zM18.2 25.9l4.3 2.1-.6-5z"/><path fill="#D7C1B3" d="m22.5 28-4.3-2.1.3 2.8v1.2zM9.5 28l4 1.9v-1.2l.3-2.8z"/><path fill="#233447" d="m13.6 21.2-3.6-1 2.5-1.2zM18.4 21.2l1.1-2.2 2.5 1.2z"/><path fill="#CD6116" d="m9.5 28 .6-5.2-4 .1zM21.9 22.8l.6 5.2 3.4-5.1zM24.9 17l-7.2.3.7 3.9 1.1-2.2 2.5 1.2zM10 20.2l2.5-1.2 1.1 2.2.7-3.9-7.2-.3z"/><path fill="#E4751F" d="m7.1 17 3 5.9-.1-2.7zM21.9 20.2l-.1 2.7 3.1-5.9zM14.3 17.3l-.7 3.9.9 4.6.2-6zM17.7 17.3l-.4 2.5.2 6.1.9-4.6z"/><path fill="#F6851B" d="m18.4 21.2-.9 4.6.6.4 3.7-2.9.1-2.7zM10 20.2l.1 2.7 3.7 2.9.6-.4-.8-4.6z"/><path fill="#C0AD9E" d="M18.5 29.9v-1.2l-.3-.3h-4.4l-.3.3v1.2l-4-1.9 1.4 1.1 2.8 2h4.5l2.8-2 1.4-1.1z"/><path fill="#161616" d="m18.2 25.9-.6-.4h-3.2l-.6.4-.3 2.8.3-.3h4.4l.3.3z"/><path fill="#763D16" d="m31.2 11.1 1-5.2L30.6 1 18.2 10.2l4.7 4 6.7 2 1.5-1.8-.6-.5 1-.9-.8-.6 1-.8zM-.2 5.9l1 5.2-.6.5 1 .8-.8.6 1 .9-.6.5 1.5 1.8 6.7-2 4.7-4L1.4 1z"/><path fill="#F6851B" d="m29.6 16.2-6.7-2 2 3.1-3 5.9 4-.1h5.9zM9.1 14.2l-6.7 2-2.3 7h5.9l4-.1-3-5.9zM17.7 17.3l.4-7.1 2-5.3h-8.3l2 5.3.4 7.1.2 2.2v5.9h3.2v-5.9z"/></svg>
+          MetaMask<span class="lw-tag">Installed</span>
+        </button>
+        <button class="login-wallet" type="button" onclick="ccMock('Mockup: WalletConnect, Coinbase Wallet and more')">More Wallet Options</button>
+      </div>
+      <div class="login-or">or continue with Google</div>
       <a class="btn-google" href="dashboard.html">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M23.49 12.27c0-.79-.07-1.54-.19-2.27H12v4.51h6.47a5.57 5.57 0 0 1-2.4 3.58v3h3.86c2.26-2.09 3.56-5.17 3.56-8.82z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.86-3c-1.08.72-2.45 1.16-4.07 1.16-3.13 0-5.78-2.11-6.73-4.96H1.29v3.09A11.99 11.99 0 0 0 12 24z"/><path fill="#FBBC05" d="M5.27 14.29a7.16 7.16 0 0 1 0-4.58V6.62H1.29a12 12 0 0 0 0 10.76l3.98-3.09z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.69 1.29 6.62l3.98 3.09C6.22 6.86 8.87 4.75 12 4.75z"/></svg>
         Sign in with Google
@@ -29,6 +38,14 @@
       </div>
     </div>
   </div>
-  <script src="app.js?v=1"></script>
+  <script src="app.js?v=13"></script>
+  <script>
+  /* wallet sign-in lands on the dashboard with the header wallet already connected */
+  window.ccWalletSignIn = function(){
+    try{ localStorage.setItem('ccapp-wallet', 'on'); }catch(e){}
+    ccToast('Mockup: signed in with MetaMask');
+    setTimeout(function(){ location.href = 'dashboard.html'; }, 600);
+  };
+  </script>
 </body>
 </html>

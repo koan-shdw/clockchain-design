@@ -4,11 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Logging · Clockchain App</title>
-  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@100;200;300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="app.css?v=1" />
+  <link rel="stylesheet" href="app.css?v=14" />
+  <script>(function(){try{if(localStorage.getItem('ccapp-theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
 </head>
 <body data-nav="logging">
   <div class="shell">
@@ -19,49 +20,150 @@
 
         <div class="page-head">
           <h1>Logging</h1>
-          <p>Hash any asset with industry-standard hashing, anchor it on-chain, and authenticate it from any device.</p>
+          <p>Hash any asset with industry-standard hashing, anchor it on-chain, and verify it from any device. You can log manually using the form below, or use our APIs for larger-scale needs.</p>
         </div>
 
         <div class="cards c4">
-          <div class="card"><div class="stat-k">Logs remaining</div><div class="stat-v">1,000</div></div>
-          <div class="card"><div class="stat-k">Consumed · 30d</div><div class="stat-v">214</div></div>
-          <div class="card"><div class="stat-k">Purchased total</div><div class="stat-v">1,500</div></div>
-          <div class="card"><div class="stat-k">Block height</div><div class="stat-v" data-live="height">#—</div></div>
+          <div class="card"><div class="stat-k">Logs remaining</div><div class="stat-v" id="cl-remaining">5,363 / 10,000</div>
+            <button class="btn btn-primary btn-sm stat-act" id="cl-buy" type="button" onclick="ccBuy('Buy more logs')">Buy More</button></div>
+          <div class="card"><div class="stat-k">Consumed · all-time</div><div class="stat-v" id="cl-consumed">4,637</div></div>
+          <div class="card"><div class="stat-k">Purchased · all-time</div><div class="stat-v" id="cl-purchased">10,000</div></div>
+          <div class="card"><div class="stat-k">Plan Type</div><div class="stat-v" id="cl-plan">Prepaid</div>
+            <a class="btn btn-outline btn-sm stat-act" href="account.html#logs">Manage Plan</a></div>
         </div>
 
-        <div class="section cards c2">
-          <div class="card">
-            <div class="card-head"><h3>Create log</h3></div>
-            <div class="field">
-              <label>Payload or asset</label>
-              <textarea rows="3" placeholder="Paste text, or a file hash (SHA-256)"></textarea>
+        <div class="section card">
+          <div class="card-head"><h3 id="cl-title">Create log</h3></div>
+
+          <!-- form state -->
+          <div id="cl-form">
+            <div class="cl-zone hashed">
+              <div class="cl-zone-head">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+                <h4>Hashed</h4>
+                <span class="cl-cap">Only the fingerprint goes on chain. The content itself is never stored.</span>
+              </div>
+
+              <p style="font-size:13px;color:var(--fg-2);margin-top:2px;">What would you like to log?</p>
+              <div class="tabs">
+                <button class="tabbtn active" type="button" onclick="clTab('hash','cl-p-hash',this)">I have a hash</button>
+                <button class="tabbtn" type="button" onclick="clTab('text','cl-p-text',this)">Enter plain text/data</button>
+                <button class="tabbtn" type="button" onclick="clTab('file','cl-p-file',this)">Get file</button>
+              </div>
+
+              <div class="tabpane" id="cl-p-hash">
+                <div class="field" style="margin-bottom:0;">
+                  <input type="text" id="cl-in-hash" class="mono" placeholder="0x…" maxlength="128" autocomplete="off" spellcheck="false" oninput="clFromHash(this)" />
+                  <span class="cl-count" id="cl-c-hash">0/128 characters</span>
+                </div>
+              </div>
+              <div class="tabpane" id="cl-p-text" hidden>
+                <div class="field" style="margin-bottom:0;">
+                  <textarea id="cl-in-text" rows="3" maxlength="128" placeholder="Paste or type the text to hash" oninput="clFromText(this)"></textarea>
+                  <span class="cl-count" id="cl-c-text">0/128 characters</span>
+                </div>
+              </div>
+              <div class="tabpane" id="cl-p-file" hidden>
+                <div class="cl-drop" id="cl-drop" onclick="document.getElementById('cl-in-file').click()">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V4M8 8l4-4 4 4"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+                  <span id="cl-drop-label">Drop a file or click to browse</span>
+                </div>
+                <input type="file" id="cl-in-file" hidden onchange="clFromFile(this.files[0])" />
+                <p class="cl-hashcap">Hashed locally. The file never leaves your machine.</p>
+              </div>
+
+              <div class="cl-hashrow">
+                <span class="cl-hash" id="cl-hash">—</span>
+                <button class="kv-copy" type="button" onclick="clCopyHash()">Copy</button>
+                <select id="cl-type" aria-label="Hash type"><option>SHA-256</option></select>
+              </div>
+              <p class="cl-hashcap">This is the hash that will be stored on the Clockchain.</p>
             </div>
-            <div class="field">
-              <label>Label</label>
-              <input type="text" placeholder="e.g. Q3 board resolution, final" />
+
+            <div class="cl-divider"></div>
+
+            <div class="cl-zone">
+              <div class="cl-zone-head">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.7 3.8 9S14.5 18.4 12 21c-2.5-2.6-3.8-5.7-3.8-9S9.5 5.6 12 3z"/></svg>
+                <h4>Public</h4>
+                <span class="cl-cap">Readable by anyone, forever.</span>
+              </div>
+              <div class="cl-grid">
+                <div class="field">
+                  <label>Asset Name <i style="text-transform:none;letter-spacing:0;">(optional)</i></label>
+                  <input type="text" id="cl-in-name" maxlength="128" placeholder="e.g. Q3 board resolution, final" oninput="clCount(this,'cl-c-name',128)" />
+                  <span class="cl-count" id="cl-c-name">0/128 characters</span>
+                </div>
+                <div class="field">
+                  <label>Asset ID <i style="text-transform:none;letter-spacing:0;">(optional)</i></label>
+                  <input type="text" id="cl-in-id" maxlength="128" oninput="clCount(this,'cl-c-id',128)" />
+                  <span class="cl-count" id="cl-c-id">0/128 characters</span>
+                </div>
+                <div class="field">
+                  <label>Additional Info <i style="text-transform:none;letter-spacing:0;">(optional)</i></label>
+                  <textarea id="cl-in-info" rows="3" maxlength="512" oninput="clCount(this,'cl-c-info',512)"></textarea>
+                  <span class="cl-count" id="cl-c-info">0/512 characters</span>
+                </div>
+                <div class="field">
+                  <label>Version # <i style="text-transform:none;letter-spacing:0;">(optional)</i></label>
+                  <input type="text" id="cl-in-ver" maxlength="10" inputmode="numeric" oninput="this.value=this.value.replace(/\D/g,'');clCount(this,'cl-c-ver',10)" />
+                  <span class="cl-count" id="cl-c-ver">0/10 numerical characters</span>
+                </div>
+              </div>
             </div>
-            <button class="btn btn-primary" onclick="ccMock('Mockup: log anchored to next block')">Log to chain</button>
-            <p style="font-size:12px;color:var(--fg-3);margin-top:12px;">You get back a verifiable, second-anchored timestamp and receipt.</p>
+
+            <div style="margin-top:18px;">
+              <button class="btn btn-primary" id="cl-preview-btn" type="button" disabled onclick="clPreview()">Preview</button>
+            </div>
           </div>
 
-          <div class="card">
-            <div class="card-head"><h3>Search &amp; verify</h3></div>
-            <div class="field">
-              <label>Hash, label, or block</label>
-              <input type="text" placeholder="0x…, label, or #block" />
+          <!-- preview state -->
+          <div id="cl-preview" hidden>
+            <p style="font-size:13px;color:var(--fg-2);margin-bottom:16px;">Your data will show on the Clockchain exactly as shown below.</p>
+
+            <div class="cl-rec-label">Hash</div>
+            <div class="cl-hashrow" style="margin-top:0;">
+              <span class="cl-hash" id="pv-hash">—</span>
+              <span style="flex:none;color:var(--fg-3);font-size:11px;" id="pv-type">SHA-256</span>
             </div>
-            <button class="btn btn-outline" onclick="ccMock('Mockup: search simulated')">Search history</button>
-            <div class="docs-note" style="margin-top:18px;">Every receipt is self-verifying: recompute the hash, compare to the on-chain block. <b>Proof, not a screenshot.</b></div>
+
+            <div class="kv" id="pv-public" style="margin-top:18px;"></div>
+
+            <div class="cl-rec-label">Anchor</div>
+            <table class="table">
+              <tbody>
+                <tr><td>Block</td><td class="mono" data-live="height">#—</td><td style="color:var(--fg-3);">estimated at submission</td></tr>
+                <tr><td>Consensus time</td><td class="mono"><span data-live="time">—</span> Clockchain Time</td><td style="color:var(--fg-3);">estimated at submission</td></tr>
+                <tr><td>Reference key</td><td class="mono">CC-XXXX-XXXX</td><td style="color:var(--fg-3);">issued at submission</td></tr>
+              </tbody>
+            </table>
+
+            <div class="docs-note" id="pv-cost">This uses 1 log.</div>
+
+            <div style="display:flex;gap:10px;margin-top:18px;">
+              <button class="btn btn-outline" type="button" onclick="clBack()">Back</button>
+              <button class="btn btn-primary" type="button" onclick="clSubmit()">Submit</button>
+            </div>
           </div>
+        </div>
+
+        <div class="section card">
+          <div class="card-head"><h3>Search &amp; verify</h3><a class="more" href="search.html">Open →</a></div>
+          <div class="field">
+            <label>Hash, quicklink, or block</label>
+            <input type="text" id="cl-search" placeholder="0x…, CC-XXXX-XXXX, or #block" onkeydown="if(event.key==='Enter')clSearch()" />
+          </div>
+          <button class="btn btn-outline" onclick="clSearch()">Search Clockchain</button>
+          <div class="docs-note" style="margin-top:18px;">Every receipt is self-verifying: recompute the hash, compare to the on-chain block. <b>Proof, not a screenshot.</b></div>
         </div>
 
         <div class="section card">
           <div class="card-head"><h3>Recent logging activity</h3></div>
           <table class="table">
             <thead><tr><th>Hash</th><th>Label</th><th>Block</th><th>Anchored</th><th>Status</th></tr></thead>
-            <tbody>
+            <tbody id="cl-activity">
               <tr><td class="mono">0x9f3c…a71e</td><td>Q3 board resolution, final</td><td class="mono">#36,041,882</td><td>2026-07-03 02:12 UTC</td><td><span class="status-pill">Verified</span></td></tr>
-              <tr><td class="mono">0x4b21…09dd</td><td>supplier-manifest.pdf</td><td class="mono">#36,038,554</td><td>2026-07-03 01:03 UTC</td><td><span class="status-pill">Verified</span></td></tr>
+              <tr><td class="mono">0x4b21…09dd</td><td>supplier-manifest.pdf</td><td class="mono">#36,037,794</td><td>2026-07-03 01:03 UTC</td><td><span class="status-pill">Verified</span></td></tr>
               <tr><td class="mono">0xe7a0…3c48</td><td>deploy-artifact 4.2.1</td><td class="mono">#35,991,207</td><td>2026-07-02 12:14 UTC</td><td><span class="status-pill">Verified</span></td></tr>
             </tbody>
           </table>
@@ -70,6 +172,185 @@
       </div>
     </div>
   </div>
-  <script src="app.js?v=1"></script>
+  <script src="app.js?v=13"></script>
+  <script>
+  /* Create log: three input modes feed one hash row. Hashing is real (WebCrypto). */
+  (function(){
+    var st = { mode:'hash', hash:'', file:null, fileHash:'', remaining:5363, consumed:4637, purchased:10000, job:0 };
+
+    /* Plan Type (Jeff 10-08): Prepaid by default; ?plan=subscription or ?plan=none shows the
+       other two for demos. Buy More is for Prepaid and No Plan only. */
+    var plan = { subscription: 'Subscription', none: 'No Plan' }[new URLSearchParams(location.search).get('plan')] || 'Prepaid';
+    if(plan === 'No Plan'){ st.remaining = 0; st.consumed = 0; st.purchased = 0; }
+    function paintLogs(){
+      document.getElementById('cl-remaining').textContent = st.purchased
+        ? st.remaining.toLocaleString() + ' / ' + st.purchased.toLocaleString() : String(st.remaining);
+      document.getElementById('cl-consumed').textContent = st.consumed.toLocaleString();
+      document.getElementById('cl-purchased').textContent = st.purchased.toLocaleString();
+    }
+    document.getElementById('cl-plan').textContent = plan;
+    document.getElementById('cl-buy').hidden = plan === 'Subscription';
+    paintLogs();
+
+    function sha256Hex(buf){
+      return crypto.subtle.digest('SHA-256', buf).then(function(d){
+        var b = new Uint8Array(d), s = '0x';
+        for(var i = 0; i < b.length; i++) s += b[i].toString(16).padStart(2, '0');
+        return s;
+      });
+    }
+    function setHash(h){
+      st.hash = h || '';
+      document.getElementById('cl-hash').textContent = st.hash || '—';
+      document.getElementById('cl-preview-btn').disabled = !st.hash;
+    }
+
+    window.clTab = function(mode, pane, btn){
+      ccTab(pane, btn);
+      st.mode = mode;
+      if(mode === 'hash') clFromHash(document.getElementById('cl-in-hash'));
+      else if(mode === 'text') clFromText(document.getElementById('cl-in-text'));
+      else setHash(st.fileHash);
+    };
+    window.clFromHash = function(el){
+      clCount(el, 'cl-c-hash', 128);
+      setHash(el.value.trim());
+    };
+    window.clFromText = function(el){
+      clCount(el, 'cl-c-text', 128);
+      var v = el.value, job = ++st.job;
+      if(!v){ setHash(''); return; }
+      clearTimeout(st.t);
+      st.t = setTimeout(function(){
+        sha256Hex(new TextEncoder().encode(v)).then(function(h){
+          if(job === st.job && st.mode === 'text') setHash(h);
+        });
+      }, 250);
+    };
+    window.clFromFile = function(f){
+      if(!f) return;
+      st.file = f;
+      var kb = f.size < 1048576 ? (f.size/1024).toFixed(1) + ' KB' : (f.size/1048576).toFixed(1) + ' MB';
+      document.getElementById('cl-drop-label').innerHTML = '<span class="cl-file">' + f.name.replace(/[<>&]/g,'') + ' · ' + kb + '</span>';
+      var job = ++st.job;
+      f.arrayBuffer().then(sha256Hex).then(function(h){
+        if(job !== st.job) return;
+        st.fileHash = h;
+        if(st.mode === 'file') setHash(h);
+      });
+    };
+    var drop = document.getElementById('cl-drop');
+    ['dragover','dragenter'].forEach(function(e){ drop.addEventListener(e, function(ev){ ev.preventDefault(); drop.classList.add('drag'); }); });
+    ['dragleave','drop'].forEach(function(e){ drop.addEventListener(e, function(ev){ ev.preventDefault(); drop.classList.remove('drag'); }); });
+    drop.addEventListener('drop', function(ev){ if(ev.dataTransfer.files[0]) clFromFile(ev.dataTransfer.files[0]); });
+
+    window.clCount = function(el, id, max){
+      document.getElementById(id).textContent = el.value.length + '/' + max +
+        (id === 'cl-c-ver' ? ' numerical characters' : ' characters');
+    };
+    window.clCopyHash = function(){
+      if(st.hash) ccCopy(st.hash); else ccToast('Nothing to copy yet');
+    };
+
+    function pubFields(){
+      return [
+        ['Asset Name', document.getElementById('cl-in-name').value.trim()],
+        ['Asset ID', document.getElementById('cl-in-id').value.trim()],
+        ['Additional Info', document.getElementById('cl-in-info').value.trim()],
+        ['Version #', document.getElementById('cl-in-ver').value.trim()]
+      ].filter(function(p){ return p[1]; });
+    }
+
+    window.clPreview = function(){
+      if(!st.hash) return;
+      document.getElementById('pv-hash').textContent = st.hash;
+      document.getElementById('pv-type').textContent = document.getElementById('cl-type').value;
+      var box = document.getElementById('pv-public'); box.innerHTML = '';
+      var fields = pubFields();
+      if(!fields.length){
+        box.innerHTML = '<p style="font-size:13px;color:var(--fg-3);">No public text will be stored.</p>';
+      } else {
+        fields.forEach(function(p){
+          var r = document.createElement('div'); r.className = 'kv-row';
+          r.innerHTML = '<span class="kv-k"></span><span class="kv-v"><span></span></span>';
+          r.querySelector('.kv-k').textContent = p[0];
+          r.querySelector('.kv-v span').textContent = p[1];
+          box.appendChild(r);
+        });
+      }
+      document.getElementById('pv-cost').textContent = st.remaining > 0
+        ? 'This uses 1 log. ' + (st.remaining - 1).toLocaleString() + ' remain after.'
+        : 'No logs left. Buy More to anchor this one.';
+      document.getElementById('cl-title').textContent = 'Preview';
+      document.getElementById('cl-form').hidden = true;
+      document.getElementById('cl-preview').hidden = false;
+    };
+    window.clBack = function(){
+      document.getElementById('cl-title').textContent = 'Create log';
+      document.getElementById('cl-preview').hidden = true;
+      document.getElementById('cl-form').hidden = false;
+    };
+    window.clSearch = function(){
+      var q = document.getElementById('cl-search').value.trim();
+      location.href = 'search.html' + (q ? '?q=' + encodeURIComponent(q) : '');
+    };
+    function mintKey(){
+      var c = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789', s = 'CC-';
+      for(var i = 0; i < 8; i++){ if(i === 4) s += '-'; s += c[Math.floor(Math.random() * c.length)]; }
+      return s;
+    }
+    window.clSubmit = function(){
+      var block = (document.getElementById('tb-height') || {}).textContent || '#—';
+      var name = document.getElementById('cl-in-name').value.trim() || '—';
+      var shortHash = st.hash.length > 14 ? st.hash.slice(0, 6) + '…' + st.hash.slice(-4) : st.hash;
+      var key = mintKey();
+      var now = new Date();
+      function p(n){ return String(n).padStart(2, '0'); }
+      var when = now.getUTCFullYear() + '-' + p(now.getUTCMonth()+1) + '-' + p(now.getUTCDate())
+        + ' ' + p(now.getUTCHours()) + ':' + p(now.getUTCMinutes()) + ' UTC';
+      try{
+        var fresh = JSON.parse(sessionStorage.getItem('cc-fresh-logs') || '[]');
+        fresh.unshift({
+          hash: st.hash, short: shortHash, name: name,
+          assetId: document.getElementById('cl-in-id').value.trim(),
+          ver: document.getElementById('cl-in-ver').value.trim(), text: '',
+          userId: 'usr_9d4f', block: parseInt(block.replace(/[#,]/g, ''), 10) || 0,
+          status: 'Verified', when: 'just now',
+          anchored: when.replace(' UTC', ' Clockchain Time'), key: key
+        });
+        sessionStorage.setItem('cc-fresh-logs', JSON.stringify(fresh));
+      }catch(e){}
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td class="mono"></td><td></td><td class="mono"></td><td></td><td><span class="status-pill">Verified</span></td>';
+      tr.children[0].textContent = shortHash;
+      tr.children[1].textContent = name;
+      tr.children[2].textContent = block;
+      tr.children[3].textContent = when;
+      var tb = document.getElementById('cl-activity');
+      tb.insertBefore(tr, tb.firstChild);
+
+      if(st.remaining > 0){ st.remaining--; st.consumed++; }
+      paintLogs();
+      ccToast('Log anchored to block ' + block + ' · quicklink ' + key);
+
+      /* reset to the empty hashed-zone state */
+      ['cl-in-hash','cl-in-text','cl-in-name','cl-in-id','cl-in-info','cl-in-ver'].forEach(function(id){
+        document.getElementById(id).value = '';
+      });
+      clCount(document.getElementById('cl-in-hash'), 'cl-c-hash', 128);
+      clCount(document.getElementById('cl-in-text'), 'cl-c-text', 128);
+      clCount(document.getElementById('cl-in-name'), 'cl-c-name', 128);
+      clCount(document.getElementById('cl-in-id'), 'cl-c-id', 128);
+      clCount(document.getElementById('cl-in-info'), 'cl-c-info', 512);
+      clCount(document.getElementById('cl-in-ver'), 'cl-c-ver', 10);
+      st.file = null; st.fileHash = ''; st.job++;
+      document.getElementById('cl-in-file').value = '';
+      document.getElementById('cl-drop-label').textContent = 'Drop a file or click to browse';
+      clTab('hash', 'cl-p-hash', document.querySelector('.tabs .tabbtn'));
+      setHash('');
+      clBack();
+    };
+  })();
+  </script>
 </body>
 </html>

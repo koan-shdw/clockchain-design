@@ -4,11 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Smart Contracts · Clockchain App</title>
-  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@100;200;300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="app.css?v=1" />
+  <link rel="stylesheet" href="app.css?v=14" />
+  <script>(function(){try{if(localStorage.getItem('ccapp-theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
 </head>
 <body data-nav="contracts">
   <div class="shell">
@@ -22,32 +23,19 @@
           <p>Time triggers with cryptographic proof of execution, on Ethereum and Polygon. Non-custodial: your wallet signs, the server holds no key.</p>
         </div>
 
-        <div class="card accent wallet-bar" id="wallet-bar" style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
-          <div style="display:flex;align-items:center;gap:12px;">
-            <svg viewBox="0 0 24 24" style="width:22px;height:22px;fill:none;stroke:var(--accent);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none;"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M16 12h3M3 10h18"/></svg>
+        <div class="card accent sc-top top-module">
+          <div class="sc-top-l">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="7" width="16" height="11" rx="2"/><path d="M4 11h16M8 15h3"/></svg>
             <div>
-              <div class="stat-k">Wallet</div>
-              <div id="wallet-status" style="font-size:14px;color:var(--fg);font-family:var(--f-mono);">Not connected</div>
+              <div class="stat-k">Smart Contract Credit Balance</div>
+              <div class="sc-top-v">$31.23 USD</div>
             </div>
           </div>
-          <button class="btn btn-primary" id="wallet-btn" onclick="ccConnectWallet()">Connect Wallet</button>
+          <div class="sc-top-r">
+            <a class="btn btn-outline btn-sm" href="account.html#smart-contracts" style="text-decoration:none;">Manage autopay</a>
+            <button class="btn btn-primary btn-sm" onclick="ccBuy('Buy Smart Contract credits')">Buy More</button>
+          </div>
         </div>
-        <script>
-          window.ccConnectWallet = function(){
-            var s = document.getElementById('wallet-status');
-            var b = document.getElementById('wallet-btn');
-            if(b.getAttribute('data-connected')){
-              s.textContent = 'Not connected';
-              b.textContent = 'Connect Wallet';
-              b.removeAttribute('data-connected');
-              return;
-            }
-            s.textContent = '0x8d4f…22b1 · Ethereum';
-            b.textContent = 'Disconnect';
-            b.setAttribute('data-connected', '1');
-            if(window.ccToast) ccToast('Mockup: wallet connected');
-          };
-        </script>
 
         <div class="cards c4">
           <div class="card"><div class="stat-k">Total contracts</div><div class="stat-v">7</div></div>
@@ -57,21 +45,60 @@
         </div>
 
         <div class="section cards c2">
-          <div class="card">
-            <div class="card-head"><h3>Schedule contract</h3></div>
-            <div class="field">
-              <label>Contract address</label>
-              <input type="text" placeholder="0x…" class="mono" />
+          <div class="card" id="sc-card">
+            <div class="card-head"><h3 id="sc-title">Schedule contract</h3></div>
+
+            <div id="sc-form">
+              <div class="field">
+                <label>Contract name <i style="text-transform:none;letter-spacing:0;">(optional)</i></label>
+                <input type="text" id="sc-name" maxlength="64" placeholder="e.g. escrow release" />
+              </div>
+              <div class="field">
+                <label>Contract address</label>
+                <input type="text" id="sc-addr" placeholder="0x…" class="mono" oninput="scCheck()" />
+              </div>
+              <div class="field">
+                <label>Chain</label>
+                <select id="sc-chain"><option>Ethereum</option><option>Polygon</option></select>
+              </div>
+              <div class="field" style="margin-bottom:0;">
+                <label>Trigger time (UVT)</label>
+                <div class="sc-time" oninput="scCheck()">
+                  <label>Year<input id="sc-y" inputmode="numeric" maxlength="4" placeholder="YYYY" /></label>
+                  <label>Month<input id="sc-mo" inputmode="numeric" maxlength="2" placeholder="MM" /></label>
+                  <label>Day<input id="sc-d" inputmode="numeric" maxlength="2" placeholder="DD" /></label>
+                  <label>Hour<input id="sc-h" inputmode="numeric" maxlength="2" placeholder="hh" /></label>
+                  <label>Min<input id="sc-mi" inputmode="numeric" maxlength="2" placeholder="mm" /></label>
+                  <label>Sec<input id="sc-s" inputmode="numeric" maxlength="2" placeholder="ss" /></label>
+                </div>
+                <div class="sc-human is-empty" id="sc-human">Enter the trigger time above.</div>
+                <div class="sc-note">UVT = UTC +/- &lt;1 second</div>
+              </div>
+              <div class="sc-actions">
+                <button class="btn btn-primary" id="sc-preview-btn" type="button" disabled onclick="scPreview()">Preview</button>
+              </div>
             </div>
-            <div class="field">
-              <label>Chain</label>
-              <select><option>Ethereum</option><option>Polygon</option></select>
+
+            <div id="sc-preview" hidden>
+              <div class="kv">
+                <div class="kv-row"><span class="kv-k">Contract Name</span><span class="kv-v"><span id="pv-name">—</span></span></div>
+                <div class="kv-row"><span class="kv-k">Contract Address</span><span class="kv-v"><span id="pv-addr">—</span></span></div>
+                <div class="kv-row"><span class="kv-k">Trigger time</span><span class="kv-v"><span id="pv-time">—</span></span></div>
+                <div class="kv-row"><span class="kv-k">Cost</span><span class="kv-v"><span id="pv-cost">$0.38 USD</span></span></div>
+              </div>
+              <div class="sc-actions">
+                <button class="btn btn-primary" type="button" onclick="scAccept()">Accept &amp; Schedule</button>
+                <button class="btn btn-outline" type="button" onclick="scModify()">Modify</button>
+                <button class="btn btn-outline" type="button" onclick="scCancel()">Cancel</button>
+              </div>
             </div>
-            <div class="field">
-              <label>Trigger · Clockchain time (UTC)</label>
-              <input type="text" placeholder="2026-07-04T00:00:00Z" class="mono" />
+
+            <div id="sc-done" hidden>
+              <div class="docs-note sc-done" id="sc-done-msg"></div>
+              <div class="sc-actions">
+                <button class="btn btn-outline" type="button" onclick="scCancel()">Schedule another</button>
+              </div>
             </div>
-            <button class="btn btn-primary" onclick="ccMock('Mockup: contract scheduled')">Schedule</button>
           </div>
 
           <div class="card">
@@ -83,13 +110,13 @@
         </div>
 
         <div class="section card">
-          <div class="card-head"><h3>Recent contract activity</h3></div>
+          <div class="card-head"><h3>Recent contract activity</h3><a class="more" href="search.html?cat=contract" target="_blank" rel="noopener">See more…</a></div>
           <table class="table">
             <thead><tr><th>Contract</th><th>Chain</th><th>Trigger</th><th>Status</th></tr></thead>
-            <tbody>
-              <tr><td class="mono">escrow-release · 0x8d4f…22b1</td><td>Ethereum</td><td class="mono">2026-07-04T00:00:00Z</td><td><span class="status-pill">Scheduled</span></td></tr>
-              <tr><td class="mono">payroll-jul · 0x1a9c…77e4</td><td>Polygon</td><td class="mono">2026-07-25T09:00:00Z</td><td><span class="status-pill">Scheduled</span></td></tr>
-              <tr><td class="mono">option-expiry · 0x3fb8…c052</td><td>Ethereum</td><td class="mono">2026-06-30T16:00:00Z</td><td><span class="status-pill">Executed</span></td></tr>
+            <tbody id="sc-activity">
+              <tr><td class="mono">escrow-release · 0x8d4f…22b1</td><td>Ethereum</td><td class="mono">2026-07-04 00:00:00 UVT</td><td><div class="st-stack"><span class="status-pill">Scheduled</span><span class="row-acts"><button class="kv-copy" type="button" onclick="scModifyRow()">Modify</button><button class="kv-copy" type="button" onclick="scCancelRow(this,'escrow-release')">Cancel</button></span></div></td></tr>
+              <tr><td class="mono">payroll-jul · 0x1a9c…77e4</td><td>Polygon</td><td class="mono">2026-07-25 09:00:00 UVT</td><td><div class="st-stack"><span class="status-pill">Scheduled</span><span class="row-acts"><button class="kv-copy" type="button" onclick="scModifyRow()">Modify</button><button class="kv-copy" type="button" onclick="scCancelRow(this,'payroll-jul')">Cancel</button></span></div></td></tr>
+              <tr><td class="mono">option-expiry · 0x3fb8…c052</td><td>Ethereum</td><td class="mono">2026-06-30 16:00:00 UVT</td><td><div class="st-stack"><span class="status-pill">Executed</span><span class="row-acts"><button class="kv-copy" type="button" onclick="scAgain('option-expiry')">Schedule Again</button></span></div></td></tr>
             </tbody>
           </table>
         </div>
@@ -97,6 +124,96 @@
       </div>
     </div>
   </div>
-  <script src="app.js?v=1"></script>
+  <script src="app.js?v=13"></script>
+  <script>
+  (function(){
+    var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    var KNOWN = {
+      'escrow-release': { addr:'0x8d4ff352122b1', chain:'Ethereum' },
+      'payroll-jul':    { addr:'0x1a9c3e5077e4', chain:'Polygon' },
+      'option-expiry':  { addr:'0x3fb8a1d2c052', chain:'Ethereum' }
+    };
+    var IDS = ['sc-y','sc-mo','sc-d','sc-h','sc-mi','sc-s'];
+    function $(id){ return document.getElementById(id); }
+    function two(n){ return String(n).padStart(2, '0'); }
+    function short(a){ return a.length > 12 ? a.slice(0, 6) + '…' + a.slice(-4) : a; }
+
+    /* the six boxes -> {y,mo,d,h,mi,s} or null (incomplete) or false (invalid) */
+    function readTime(){
+      var v = IDS.map(function(id){ var el = $(id); el.value = el.value.replace(/\D/g, ''); return el.value; });
+      if(v.some(function(x){ return x === ''; }) || v[0].length < 4) return null;
+      var t = { y:+v[0], mo:+v[1], d:+v[2], h:+v[3], mi:+v[4], s:+v[5] };
+      var dim = new Date(Date.UTC(t.y, t.mo, 0)).getUTCDate();
+      if(t.mo < 1 || t.mo > 12 || t.d < 1 || t.d > dim || t.h > 23 || t.mi > 59 || t.s > 59) return false;
+      return t;
+    }
+    function human(t){
+      return t.d + ' ' + MONTHS[t.mo - 1] + ' ' + t.y + ' at ' + two(t.h) + ':' + two(t.mi) + ':' + two(t.s) + ' UVT';
+    }
+    window.scCheck = function(){
+      var t = readTime(), el = $('sc-human');
+      el.className = 'sc-human' + (t === null ? ' is-empty' : t === false ? ' is-bad' : '');
+      el.textContent = t === null ? 'Enter the trigger time above.'
+        : t === false ? "That date or time isn't valid."
+        : 'Contract to be scheduled for ' + human(t);
+      $('sc-preview-btn').disabled = !(t && $('sc-addr').value.trim());
+    };
+    function show(which){
+      $('sc-form').hidden = which !== 'form';
+      $('sc-preview').hidden = which !== 'preview';
+      $('sc-done').hidden = which !== 'done';
+      $('sc-title').textContent = which === 'preview' ? 'Preview' : which === 'done' ? 'Scheduled' : 'Schedule contract';
+    }
+    window.scPreview = function(){
+      var t = readTime(); if(!t) return;
+      $('pv-name').textContent = $('sc-name').value.trim() || '—';
+      $('pv-addr').textContent = $('sc-addr').value.trim();
+      $('pv-time').textContent = t.d + ' ' + MONTHS[t.mo - 1] + ' ' + t.y + ' ' + two(t.h) + ':' + two(t.mi) + ':' + two(t.s) + ' UVT';
+      show('preview');
+    };
+    window.scModify = function(){ show('form'); };
+    window.scCancel = function(){
+      ['sc-name','sc-addr'].concat(IDS).forEach(function(id){ $(id).value = ''; });
+      scCheck(); show('form');
+    };
+    window.scAccept = function(){
+      var t = readTime(); if(!t) return;
+      var name = $('sc-name').value.trim() || 'unnamed', addr = $('sc-addr').value.trim();
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td class="mono"></td><td></td><td class="mono"></td><td><div class="st-stack"><span class="status-pill">Scheduled</span>'
+        + '<span class="row-acts"><button class="kv-copy" type="button" onclick="scModifyRow()">Modify</button>'
+        + '<button class="kv-copy" type="button">Cancel</button></span></div></td>';
+      tr.querySelector('.row-acts button + button').onclick = function(){ scCancelRow(this, name); };
+      tr.children[0].textContent = name + ' · ' + short(addr);
+      tr.children[1].textContent = $('sc-chain').value;
+      tr.children[2].textContent = t.y + '-' + two(t.mo) + '-' + two(t.d) + ' ' + two(t.h) + ':' + two(t.mi) + ':' + two(t.s) + ' UVT';
+      $('sc-activity').prepend(tr);
+      $('sc-done-msg').textContent = 'Your contract has been scheduled for ' + human(t) + '. It is listed in Recent contract activity below.';
+      show('done');
+      ccToast('Contract scheduled');
+    };
+    window.scModifyRow = function(){ ccMock('Mockup: modify this scheduled contract. Flow to come.'); };
+    /* Cancel under the status (Jeff 10-08): confirm, then the row reads Canceled */
+    window.scCancelRow = function(btn, name){
+      ccConfirm('Cancel ' + name + '?', 'Cancel Contract', function(){
+        var stack = btn.closest('.st-stack');
+        stack.querySelector('.status-pill').textContent = 'Canceled';
+        stack.querySelector('.row-acts').remove();
+        ccToast('Mockup: ' + name + ' canceled');
+      });
+    };
+    /* Schedule again: copy everything from a past contract except the trigger time */
+    window.scAgain = function(name){
+      var k = KNOWN[name]; if(!k) return;
+      scCancel();
+      $('sc-name').value = name; $('sc-addr').value = k.addr; $('sc-chain').value = k.chain;
+      scCheck();
+      $('sc-card').scrollIntoView({ behavior:'smooth', block:'start' });
+      $('sc-y').focus({ preventScroll:true });
+    };
+    var again = new URLSearchParams(location.search).get('again');
+    if(again) scAgain(again);
+  })();
+  </script>
 </body>
 </html>

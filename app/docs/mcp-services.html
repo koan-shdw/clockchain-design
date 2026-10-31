@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MCP: Services · Clockchain Docs</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@100;200;300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../app.css?v=17" />
+  <script>(function(){try{if(localStorage.getItem('ccapp-theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
+</head>
+<!-- MCP docs, page 2 of 10: Services. Content from the MCP technical manual (approved 10-30), section 02. -->
+<body data-nav="mcp" data-docs>
+  <div class="shell">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main">
+      <header class="topbar" id="topbar" data-title="Documentation"></header>
+      <div class="content">
+        <div class="docs-layout">
+
+          <nav class="docs-toc" id="docs-toc" aria-label="Docs"></nav>
+
+          <article class="docs-body">
+            <div class="docs-mnav" id="docs-mnav"></div>
+            <span class="tag">AI Agents · MCP</span>
+            <h1 style="margin-top:12px;">Five services, one endpoint.</h1>
+            <p class="lead">What an agent needs to prove when, what and who, and to trust the agent on the other side. Each service lists its tools, the repo files behind it and notes for agents. <a class="docs-ref" href="mcp-references.html#r-1">R1</a></p>
+
+            <div class="docs-note is-rasesh">
+              <b>Note for Rasesh · N3 <a href="mcp-notes.html#n-3">All notes</a></b>
+              The live page names five services but not which tools sit under each. The README groups the same tools into seven modules and leaves out the 11 handshake tools <a class="docs-ref" href="mcp-references.html#r-7">R7</a>. The tool lists below are our grouping of the 50 registered tools <a class="docs-ref" href="mcp-references.html#r-10">R10</a>. Please confirm, in particular where verify_receipt and verify_cross_party belong.
+            </div>
+
+            <!-- Trusted time -->
+            <h2 id="svc-time">Trusted time</h2>
+            <div class="docs-meta"><span class="status-pill"><span class="live-dot"></span>Live on testnet</span><a class="docs-ref" href="mcp-references.html#r-1">R1</a><a class="docs-ref" href="mcp-references.html#r-2">R2</a></div>
+            <p class="docs-hl">One clock every agent agrees on.</p>
+            <p>The network's consensus block time, provable after the fact. A hosted stopwatch, timer and alarm fire on verified time, never early. <a class="docs-ref" href="mcp-references.html#r-1">R1</a> Detail on the <a href="mcp-clock-tools.html">Clock tools</a> page.</p>
+            <span class="docs-sub">Tools · 12</span>
+            <div class="docs-tools"><code>get_time</code><code>get_timestamp</code><code>get_block</code><code>get_validation</code><code>stopwatch_start</code><code>stopwatch_stop</code><code>stopwatch_verify</code><code>timer_set</code><code>alarm_set</code><code>timer_status</code><code>timer_cancel</code><code>timer_list</code></div>
+            <span class="docs-sub">Repo files</span>
+            <ul class="docs-files">
+              <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/packages/mcp-server/src/tools.ts">packages/mcp-server/src/tools.ts</a><span>The tool registry: all 50 tools</span></li>
+              <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/packages/keeper/README.md">packages/keeper/README.md</a><span>The hosted keeper: how a fire is delivered, anchored and re-armed</span></li>
+              <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/packages/mcp-server/src/keeper-runtime.ts">packages/mcp-server/src/keeper-runtime.ts</a><span>The keeper loop, run inside the MCP process</span></li>
+              <li><a href="https://github.com/thetangstr/clockchain-developer-tools/tree/main/packages/clock-sdk">packages/clock-sdk/</a><span>Client-side clock, scheduler and stopwatch</span></li>
+              <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/packages/clock-sdk/GATES.md">packages/clock-sdk/GATES.md</a><span>Live gates G0 to G4 and their pass criteria</span></li>
+              <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/skills/clockchain-verified-alarm/SKILL.md">skills/clockchain-verified-alarm/SKILL.md</a><span>The agent playbook for verified time</span></li>
+              <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/clock-tools-production-plan.md">clock-tools-production-plan.md</a><span>Production plan, including the idle-chain fix</span></li>
+            </ul>
+            <div class="docs-note is-agent"><b>Notes for agents</b><ul>
+              <li>Consensus now is the last block's time. On an idle chain it goes stale; 86 s was observed. <a class="docs-ref" href="mcp-references.html#r-9">R9</a></li>
+              <li>A null blockHeight is a failed anchor, never pending. Do not report success until anchored. <a class="docs-ref" href="mcp-references.html#r-11">R11</a></li>
+              <li>Poll the timer id you were given. Never arm a second timer for the same job. <a class="docs-ref" href="mcp-references.html#r-2">R2</a></li>
+            </ul></div>
+            <div class="docs-note is-rasesh">
+              <b>Note for Rasesh · N1 <a href="mcp-notes.html#n-1">All notes</a></b>
+              The README says alarms and timers need the client-side SDK, and its roadmap table lists the hosted keeper as Phase 2, next <a class="docs-ref" href="mcp-references.html#r-7">R7</a>. The roadmap file, the clock-tools page and the keeper package say timer_set and alarm_set already fire on the hosted keeper <a class="docs-ref" href="mcp-references.html#r-9">R9</a><a class="docs-ref" href="mcp-references.html#r-2">R2</a><a class="docs-ref" href="mcp-references.html#r-13">R13</a>. These docs follow the hosted keeper. The README callout needs updating if that is current.
+            </div>
+
+            <!-- Proof -->
+            <h2 id="svc-proof">Proof</h2>
+            <div class="docs-meta"><span class="status-pill"><span class="live-dot"></span>Live on testnet</span><a class="docs-ref" href="mcp-references.html#r-1">R1</a><a class="docs-ref" href="mcp-references.html#r-7">R7</a></div>
+            <p class="docs-hl">Anchor anything. Verify it forever.</p>
+            <p>Anchor any hash to an append-only ledger and get a receipt anyone can re-check against the on-chain block, with no key. <a class="docs-ref" href="mcp-references.html#r-1">R1</a> Content is SHA-256 hashed and never stored. <a class="docs-ref" href="mcp-references.html#r-7">R7</a></p>
+            <span class="docs-sub">Tools · 4</span>
+            <div class="docs-tools"><code>log_action</code><code>search_actions</code><code>get_log_entry</code><code>verify_asset</code></div>
+            <span class="docs-sub">Repo files</span>
+            <ul class="docs-files">
+              <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/packages/core/src/receipt.ts">packages/core/src/receipt.ts</a><span>Receipt shape and self-verification</span></li>
+              <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/packages/core/src/hash.ts">packages/core/src/hash.ts</a><span>Hashing of anchored content</span></li>
+              <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/packages/mcp-server/src/idempotency.ts">packages/mcp-server/src/idempotency.ts</a><span>Idempotency keys on write tools</span></li>
+              <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/infra/anchoring-gateway/README.md">infra/anchoring-gateway/README.md</a><span>The anchoring gateway the testnet runs on</span></li>
+            </ul>
+            <div class="docs-note is-agent"><b>Notes for agents</b><ul>
+              <li>Verify against the immutable block: <span class="mono-inline">GET /searchAssetFromChain?blockHeight={h}</span>, no key. The /ledger/{id} cache is mutable and is not the record. <a class="docs-ref" href="mcp-references.html#r-7">R7</a></li>
+              <li>Lookup by search is scoped to your client id. You cannot find a record you were never handed. <a class="docs-ref" href="mcp-references.html#r-9">R9</a></li>
+            </ul></div>
+
+            <!-- Agent identity -->
+            <h2 id="svc-identity">Agent identity</h2>
+            <div class="docs-meta"><span class="status-pill"><span class="live-dot"></span>Live on testnet</span><a class="docs-ref" href="mcp-references.html#r-1">R1</a><a class="docs-ref" href="mcp-references.html#r-7">R7</a></div>
+            <p class="docs-hl">Know who acted, and whether they could.</p>
+            <p>Register agent identities, delegate and revoke authority, and check that an agent was authorized at the exact moment it acted. <a class="docs-ref" href="mcp-references.html#r-1">R1</a> This is verification at a point in time, not authentication. Identities resolve on the ERC-8004 registry on Ethereum Sepolia. <a class="docs-ref" href="mcp-references.html#r-7">R7</a><a class="docs-ref" href="mcp-references.html#r-9">R9</a></p>
+            <span class="docs-sub">Tools · 10</span>
+            <div class="docs-tools"><code>resolve_agent</code><code>attest_action</code><code>complete_attestation</code><code>verify_receipt</code><code>mint_identity</code><code>revoke_identity</code><code>delegate_authority</code><code>get_identity_history</code><code>verify_identity_at</code><code>verify_cross_party</code></div>
+            <span class="docs-sub">Repo files</span>
+            <ul class="docs-files">
+              <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/packages/core/src/erc8004.ts">packages/core/src/erc8004.ts</a><span>ERC-8004 registry reads</span></li>
+              <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/packages/core/src/receipt.ts">packages/core/src/receipt.ts</a><span>Agent Attested Receipts</span></li>
+              <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/product-a-identity-decision.md">product-a-identity-decision.md</a><span>Decision memo: ERC-8004 plus SIWA over a proprietary DID</span></li>
+            </ul>
+            <div class="docs-note is-agent"><b>Notes for agents</b><ul>
+              <li><span class="mono-inline">attest_action</span> with wait=false returns at once; <span class="mono-inline">complete_attestation</span> polls for the confirmed receipt. <a class="docs-ref" href="mcp-references.html#r-7">R7</a></li>
+              <li>Mint, revoke and delegate resolve against a directory that is still a preview. <a class="docs-ref" href="mcp-references.html#r-7">R7</a></li>
+              <li><span class="mono-inline">resolve_agent</span> returns status "unknown" when the registry RPC fails. <a class="docs-ref" href="mcp-references.html#r-9">R9</a></li>
+            </ul></div>
+
+            <!-- Handshake -->
+            <h2 id="svc-handshake">Handshake</h2>
+            <div class="docs-meta"><span class="status-pill"><span class="live-dot"></span>Live on testnet</span><a class="docs-ref" href="mcp-references.html#r-1">R1</a><a class="docs-ref" href="mcp-references.html#r-5">R5</a></div>
+            <p class="docs-hl">Two agents, verified before they talk.</p>
+            <p>Previously unconnected agents establish who is present, sign consent to a stated scope on their own machines, and open a witnessed, bounded channel. The server never sees a private key. <a class="docs-ref" href="mcp-references.html#r-1">R1</a> The two handshakes and their endpoints are on the <a href="mcp-agents.html">Agents</a> page.</p>
+            <span class="docs-sub">Tools on /mcp · 11</span>
+            <div class="docs-tools"><code>handshake_status</code><code>handshake_join</code><code>handshake_next</code><code>handshake_submit</code><code>handshake_get_certificate</code><code>agent_handshake_invite</code><code>agent_handshake_status</code><code>agent_handshake_join</code><code>agent_handshake_next</code><code>agent_handshake_submit</code><code>agent_handshake_get_certificate</code></div>
+            <span class="docs-sub">Repo files</span>
+            <ul class="docs-files">
+              <li><a href="https://github.com/thetangstr/clockchain-developer-tools/tree/main/packages/mcp-server/src/standalone-handshake">packages/mcp-server/src/standalone-handshake/</a><span>Standalone Handshake: checklist, turns, mailbox</span></li>
+              <li><a href="https://github.com/thetangstr/clockchain-developer-tools/tree/main/packages/mcp-server/src/agent-handshake/v2">packages/mcp-server/src/agent-handshake/v2/</a><span>Agent Handshake v2: protocol, receipts, public tools</span></li>
+              <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/docs/superpowers/specs/2026-09-14-standalone-handshake-design.md">docs/superpowers/specs/2026-09-14-standalone-handshake-design.md</a><span>Standalone Handshake design</span></li>
+              <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/docs/superpowers/specs/2026-09-28-server-driven-handshakes-shared-design.md">docs/superpowers/specs/2026-09-28-server-driven-handshakes-shared-design.md</a><span>Shared design for both handshakes</span></li>
+              <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/packages/mcp-server/src/handshake-sop-page.ts">packages/mcp-server/src/handshake-sop-page.ts</a><span>Source of the Handshake SOP page</span></li>
+            </ul>
+            <div class="docs-note is-rasesh">
+              <b>Note for Rasesh · N4 <a href="mcp-notes.html#n-4">All notes</a></b>
+              The live page says the Agent Handshake endpoint has exactly eight tools <a class="docs-ref" href="mcp-references.html#r-1">R1</a>. The main /mcp endpoint registers six agent_handshake tools <a class="docs-ref" href="mcp-references.html#r-10">R10</a>, and the SOP prompt calls agent_handshake_accept_invitation, which is not on /mcp <a class="docs-ref" href="mcp-references.html#r-5">R5</a>. The eight tool names for /next/handshake/mcp belong here.
+            </div>
+            <div class="docs-note is-rasesh">
+              <b>Note for Rasesh · N8 <a href="mcp-notes.html#n-8">All notes</a></b>
+              "How the handshake works" on the live page links back to its own section <a class="docs-ref" href="mcp-references.html#r-1">R1</a>. A how-it-works doc, or the SOP, belongs there.
+            </div>
+
+            <!-- Commitments & audit -->
+            <h2 id="svc-commit">Commitments &amp; audit</h2>
+            <div class="docs-meta"><span class="status-pill"><span class="live-dot"></span>Live on testnet</span><a class="docs-ref" href="mcp-references.html#r-1">R1</a><a class="docs-ref" href="mcp-references.html#r-7">R7</a></div>
+            <p class="docs-hl">Promises with a timestamp, and the trail to prove them.</p>
+            <p>Issue, checkpoint and settle commitments with every outcome, kept or broken, on the record. Then export audit trails, compliance reports and portable evidence packages. <a class="docs-ref" href="mcp-references.html#r-1">R1</a></p>
+            <dl class="docs-spec">
+              <div><dt>Verdict</dt><dd><span class="mono-inline">tsa_attest</span> compares the anchor time with the deadline: kept, broken-late or broken. The consequence is recorded, not enforced. <a class="docs-ref" href="mcp-references.html#r-7">R7</a></dd></div>
+              <div><dt>Compliance</dt><dd>Report presets for EU AI Act Art. 12, SEC 17a-4 and ISO 27001. <a class="docs-ref" href="mcp-references.html#r-7">R7</a></dd></div>
+              <div><dt>Scheduling</dt><dd>Contract types, estimates and lists are live. <span class="mono-inline">create_schedule</span> is a preview, blocked on the signing-message spec. The caller's own EVM wallet signs; the server never makes a signature. <a class="docs-ref" href="mcp-references.html#r-7">R7</a><a class="docs-ref" href="mcp-references.html#r-9">R9</a></dd></div>
+            </dl>
+            <span class="docs-sub">Tools · 13</span>
+            <div class="docs-tools"><code>tsa_issue</code><code>tsa_checkpoint</code><code>tsa_attest</code><code>tsa_settle</code><code>tsa_status</code><code>get_contract_types</code><code>estimate_schedule</code><code class="is-pv" title="Preview">create_schedule · preview</code><code>list_schedules</code><code>generate_audit_trail</code><code>generate_compliance_report</code><code>build_evidence_package</code><code>verify_package</code></div>
+            <span class="docs-sub">Repo files</span>
+            <ul class="docs-files">
+              <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/packages/core/src/tsa.ts">packages/core/src/tsa.ts</a><span>Commitment lifecycle</span></li>
+              <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/implementation-plan.md">implementation-plan.md</a><span>Full technical spec; marked the source of truth</span></li>
+              <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/mcp-readiness.md">mcp-readiness.md</a><span>Per-tool readiness, from live tests</span></li>
+            </ul>
+
+            <div class="docs-prevnext" id="docs-pn"></div>
+          </article>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="../app.js?v=15"></script>
+</body>
+</html>

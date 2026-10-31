@@ -3,14 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Clockchain MCP · Clockchain Docs</title>
-  <link rel="icon" type="image/png" sizes="32x32" href="../../assets/favicon-32.png" />
+  <title>MCP · Clockchain Docs</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@100;200;300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../app.css?v=1" />
+  <link rel="stylesheet" href="../app.css?v=17" />
+  <link rel="stylesheet" href="../agents/section.css?v=1" />
+  <link rel="stylesheet" href="../agents/r2.css?v=1" />
+  <script>(function(){try{if(localStorage.getItem('ccapp-theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
+  <script type="importmap">{ "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  } }</script>
 </head>
-<body data-nav="docs" data-docs>
+<!-- MCP docs, page 1 of 10: Overview. Content from the MCP technical manual (approved 10-30), set in the docs design.
+     Every claim carries a source chip (R#) to MCP: References; orange notes for Rasesh are listed in MCP: Notes for Rasesh. -->
+<body data-nav="mcp" data-docs>
   <div class="shell">
     <aside class="sidebar" id="sidebar"></aside>
     <div class="main">
@@ -18,93 +27,73 @@
       <div class="content">
         <div class="docs-layout">
 
-          <nav class="docs-toc">
-            <div class="docs-toc-label">Start here</div>
-            <a href="index.html">Getting started</a>
-            <a href="index.html#auth">Authentication</a>
-            <a href="index.html#concepts">Core concepts</a>
-            <div class="docs-toc-label">API reference</div>
-            <a href="timestamp-api.html">Timestamp API</a>
-            <a href="timestamp-api.html#logging">Logging API</a>
-            <a href="timestamp-api.html#contracts">Scheduling API</a>
-            <div class="docs-toc-label">Agents</div>
-            <a href="mcp.html" class="active">Clockchain MCP</a>
-            <a href="#modules">Modules</a>
-            <a href="#install">Install</a>
-          </nav>
+          <nav class="docs-toc" id="docs-toc" aria-label="Docs"></nav>
 
           <article class="docs-body">
+            <div class="docs-mnav" id="docs-mnav"></div>
             <span class="tag">Model Context Protocol · Testnet</span>
             <h1 style="margin-top:12px;">Time your agents can prove.</h1>
-            <p class="lead">Clockchain MCP gives any AI agent consensus-anchored time, tamper-evident receipts, and on-chain verification. 31 tools across six modules, one endpoint.</p>
+            <p class="lead">Trusted time, proof, identity, handshakes and commitments for any AI agent. Five services behind one MCP endpoint. <a class="docs-ref" href="mcp-references.html#r-1">R1</a></p>
+
+            <div class="docs-cta">
+              <a class="btn btn-primary" href="mcp-install.html">Add to your agent</a>
+              <a class="btn btn-outline" href="https://mcp.clockchain.network/status">View live status</a>
+            </div>
 
             <div class="try-key">
-              <span>Endpoint:</span><span>mcp.clockchain.network/mcp</span>
+              <span>Endpoint:</span><span>https://mcp.clockchain.network/mcp</span>
               <button class="kv-copy" onclick="ccCopy('https://mcp.clockchain.network/mcp','Endpoint copied')">Copy</button>
-              <span style="margin-left:auto;">StreamableHTTP</span>
             </div>
 
-            <h2 id="modules">Six modules</h2>
-            <p>Every tool is typed, idempotent where it writes, and degrades with grace.</p>
-            <div class="module-grid">
-              <div class="module-card"><div class="i">01</div><h3>Time</h3><p>Consensus block time and height. The network's consented clock, not a single server's. Provable after the fact.</p></div>
-              <div class="module-card"><div class="i">02</div><h3>Notarization</h3><p>Anchor any hash to an append-only ledger, then verify it against the immutable on-chain block.</p></div>
-              <div class="module-card"><div class="i">03</div><h3>Scheduler</h3><p>Time-triggered smart contracts. Non-custodial: the caller's wallet signs, the server holds no key.</p></div>
-              <div class="module-card"><div class="i">04</div><h3>Audit</h3><p>Audit trails, compliance reports (EU AI Act Art. 12, SEC 17a-4, ISO 27001), and portable evidence packages.</p></div>
-              <div class="module-card"><div class="i">05</div><h3>Agent identity</h3><p>Attest agent actions into self-verifying receipts; resolve and verify identity valid at a point in time.</p></div>
-              <div class="module-card"><div class="i">06</div><h3>Commitments</h3><p>Issue, checkpoint, attest, settle. Every commitment's outcome, kept or broken, on the record.</p></div>
+            <div class="docs-stats">
+              <div><span class="stat-k">Services</span><b>5</b></div>
+              <div><span class="stat-k">Tools</span><b>50 <a class="docs-ref" href="mcp-references.html#r-10">R10</a></b></div>
+              <div><span class="stat-k">Transport</span><b>Streamable HTTP</b></div>
+              <div><span class="stat-k">Network</span><b>Testnet</b></div>
+              <div><span class="stat-k">Auth</span><b>x-api-key</b></div>
             </div>
 
-            <h2>Why it holds up</h2>
-            <ul>
-              <li><b>Consensus time.</b> Every timestamp is the network's consented block time. Anyone can re-check it, no single clock to trust.</li>
-              <li><b>Self-verifying receipts.</b> A receipt carries its own payload and anchor. Recompute the hash, compare to the on-chain block. Proof, not a screenshot.</li>
-              <li><b>Tamper-evident.</b> Change one byte and verification fails. The ledger is append-only, the immutable block is authoritative.</li>
-            </ul>
-
-            <h2 id="install">Install</h2>
-            <p>Hosted endpoint. Connect any MCP client in under a minute.</p>
-
-            <h3>1 · Get a testnet token</h3>
-            <p>Mint an instant testnet token (delegated, writes spend testnet credits), or bring your own Clockchain API key.</p>
-            <div class="try-key">
-              <button class="btn btn-primary btn-sm" onclick="ccMock('Mockup: token minted')">Get a testnet token</button>
-              <span style="color:var(--fg-3);">instant · expires in 30 days</span>
+            <div class="docs-note is-rasesh">
+              <b>Note for Rasesh · N2 <a href="mcp-notes.html#n-2">All notes</a></b>
+              The Network Overview film <a class="docs-ref" href="mcp-references.html#r-26">R26</a> says 12 tools. The live page, the README and the server source say 50 <a class="docs-ref" href="mcp-references.html#r-1">R1</a><a class="docs-ref" href="mcp-references.html#r-7">R7</a><a class="docs-ref" href="mcp-references.html#r-10">R10</a>. One of the two needs to change.
             </div>
 
-            <h3>2 · Add the server, any MCP client</h3>
-            <p>The config block is identical everywhere: Claude Code, Cursor, Claude Desktop, Codex.</p>
-            <div class="code"><button class="cpy" onclick="ccCopyEl(this)">Copy</button><pre><code>{
-  "mcpServers": {
-    "clockchain": {
-      "type": "http",
-      "url": "https://mcp.clockchain.network/mcp",
-      "headers": { "x-api-key": "&lt;YOUR_TOKEN&gt;" }
-    }
-  }
-}</code></pre></div>
-            <p>CLI shortcut where one works (Claude Code):</p>
-            <div class="code"><button class="cpy" onclick="ccCopyEl(this)">Copy</button><pre><code>claude mcp add clockchain --transport http https://mcp.clockchain.network/mcp \
-  --header "x-api-key: &lt;YOUR_TOKEN&gt;"</code></pre></div>
-            <div class="docs-note"><b>Already have a Clockchain API key?</b> Use the <span class="mono-inline">x-clockchain-*</span> headers instead of <span class="mono-inline">x-api-key</span>: same endpoint, your credits.</div>
+            <h2 id="what">What the server is</h2>
+            <p>An MCP server that adds Clockchain consensus time, notarization, contract scheduling, audit trails and agent identity verification to any MCP client. It wraps the live node gateway at node.clockchain.network and does not change the blockchain protocol. <a class="docs-ref" href="mcp-references.html#r-7">R7</a></p>
 
-            <h3>3 · Verify</h3>
-            <p>Open a new session, run <span class="mono-inline">/mcp</span> (you should see <span class="mono-inline">clockchain</span> with all 31 tools), then ask: <i>"use clockchain to get the current consensus time."</i></p>
+            <figure class="docs-fig">
+              <div class="docs-anim"><div data-ag-player></div></div>
+              <figcaption><b>Fig 1.1</b>The demo film, drawn as cards. An agent acts, the action is anchored on a testnet block, the receipt verifies, and a one byte change is rejected. <a class="docs-ref" href="mcp-references.html#r-31">R31</a></figcaption>
+            </figure>
 
-            <h2>Health &amp; status</h2>
-            <p>Liveness: <span class="mono-inline">GET mcp.clockchain.network/health</span>, no auth. Live status and the capability catalog sit in the app's <a href="../benchmarking.html" style="color:var(--accent);">Live Benchmarking</a> view.</p>
-            <p style="font-size:12.5px;color:var(--fg-3);">Presently recorded on a single-validator testnet: the event hash, on-chain anchor, and consensus timestamp are real and independently verifiable. Multi-validator supermajority attestation activates at mainnet.</p>
+            <h2 id="films">Films for this section</h2>
+            <p>Three films cover the MCP services and the two agent flows. <a class="docs-ref" href="mcp-references.html#r-26">R26</a><a class="docs-ref" href="mcp-references.html#r-27">R27</a><a class="docs-ref" href="mcp-references.html#r-28">R28</a></p>
+            <table class="table">
+              <thead><tr><th>Film</th><th>Length</th><th>Shows</th><th>Source</th></tr></thead>
+              <tbody>
+                <tr><td>Network overview</td><td>34.6 s</td><td>The five services and the endpoint</td><td><a class="docs-ref" href="mcp-references.html#r-26">R26</a></td></tr>
+                <tr><td>Agent Handshake demo</td><td>36.5 s</td><td>Two agents verify each other and get one certificate</td><td><a class="docs-ref" href="mcp-references.html#r-27">R27</a></td></tr>
+                <tr><td>Agent Contract</td><td>30 s</td><td>A family agent and a travel agency; all six milestones anchored</td><td><a class="docs-ref" href="mcp-references.html#r-28">R28</a></td></tr>
+              </tbody>
+            </table>
 
-            <div class="docs-prevnext">
-              <a href="timestamp-api.html"><span class="dir">Previous</span>← Timestamp API</a>
-              <span></span>
+            <div class="docs-foot">
+              <p>Presently anchored on the Clockchain anchoring gateway (testnet, one validator): the event hash, block anchor and block time are real and verifiable with no key against the sealed block, but not yet attested by an independent validator set. Multi-validator supermajority attestation starts at mainnet. Not yet a court-of-law evidentiary claim. <a class="docs-ref" href="mcp-references.html#r-1">R1</a></p>
+              <p>MCP-TM-01 · Draft r2 · 2026-10-30 · <a href="mcp-references.html">34 references</a> · <a href="mcp-notes.html">9 notes for Rasesh</a></p>
             </div>
+
+            <div class="docs-prevnext" id="docs-pn"></div>
           </article>
 
         </div>
       </div>
     </div>
   </div>
-  <script src="../app.js?v=1"></script>
+  <script src="../agents/story-server.js?v=1"></script>
+  <script src="../app.js?v=15"></script>
+  <script type="module">
+    import { mount } from '../agents/player.js?v=2';
+    mount(document.querySelector('[data-ag-player]'), { scene: './scene-server.js?v=1', ui: 'tabs', story: window.CC_STORY_SERVER });
+  </script>
 </body>
 </html>

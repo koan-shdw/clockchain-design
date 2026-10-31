@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MCP: References · Clockchain Docs</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@100;200;300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../app.css?v=17" />
+  <script>(function(){try{if(localStorage.getItem('ccapp-theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
+</head>
+<!-- MCP docs, page 9 of 10: References. The manual's Appendix A (34 sources). Every R# chip in the MCP docs links to #r-N here. -->
+<body data-nav="mcp" data-docs>
+  <div class="shell">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main">
+      <header class="topbar" id="topbar" data-title="Documentation"></header>
+      <div class="content">
+        <div class="docs-layout">
+
+          <nav class="docs-toc" id="docs-toc" aria-label="Docs"></nav>
+
+          <article class="docs-body">
+            <div class="docs-mnav" id="docs-mnav"></div>
+            <span class="tag">AI Agents · MCP · Appendix</span>
+            <h1 style="margin-top:12px;">References.</h1>
+            <p class="lead">Every source chip in the MCP docs points here. Pages read 2026-10-30; repo files at main.</p>
+
+            <ol class="docs-refl" id="refs"></ol>
+            <script>
+            (function () {
+              var GH = 'https://github.com/thetangstr/clockchain-developer-tools/';
+              function B(p) { return GH + 'blob/main/' + p; }
+              function T(p) { return GH + 'tree/main/' + p; }
+              function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+              var REFS = [
+                [1, 'https://mcp.clockchain.network/', 'The live MCP page: services, handshake, install, footer disclaimer'],
+                [2, 'https://mcp.clockchain.network/clock-tools', 'Clock tools, module 07: tools, arguments, limits, evidence'],
+                [3, 'https://mcp.clockchain.network/clock-tools.txt', 'Clock tools as plain text, for agents'],
+                [4, 'https://mcp.clockchain.network/llms.txt', 'Connect guide for agents'],
+                [5, 'https://mcp.clockchain.network/handshake/sop', 'Handshake SOP: protocol v2, helper 2.1.8, pass criteria, limits'],
+                [6, 'https://mcp.clockchain.network/status', 'Live status'],
+                [7, B('README.md'), 'Repo README: tools by module, status, roadmap table'],
+                [8, B('INSTALL.md'), 'Install: hosted, self-host, bring your own key, chat connectors'],
+                [9, B('roadmap.md'), 'Roadmap and known limits, last updated 2026-09-10'],
+                [10, B('packages/mcp-server/src/tools.ts'), 'The tool registry: 50 registerTool calls'],
+                [11, B('packages/clock-sdk/GATES.md'), 'Clock gates G0 to G4 and pass criteria'],
+                [12, T('eval/reports'), 'Eval reports, 2026-09-11 runs'],
+                [13, B('packages/keeper/README.md'), 'Hosted keeper: delivery, anchoring, re-arm'],
+                [14, B('packages/mcp-server/src/keeper-runtime.ts'), 'Keeper loop inside the MCP process'],
+                [15, B('skills/clockchain-verified-alarm/SKILL.md'), 'Agent playbook for verified time'],
+                [16, B('packages/core/src/receipt.ts'), 'Receipts'],
+                [17, B('infra/anchoring-gateway/README.md'), 'Anchoring gateway'],
+                [18, B('packages/core/src/erc8004.ts'), 'ERC-8004 registry reads'],
+                [19, B('product-a-identity-decision.md'), 'Identity decision memo'],
+                [20, T('packages/mcp-server/src/standalone-handshake'), 'Standalone Handshake source'],
+                [21, T('packages/mcp-server/src/agent-handshake/v2'), 'Agent Handshake v2 source'],
+                [22, B('docs/superpowers/specs/2026-09-14-standalone-handshake-design.md'), 'Standalone Handshake design'],
+                [23, T('docs/agent-contract'), 'Agent Contract build briefs and logs'],
+                [24, T('packages/mcp-server/src/agent-contract'), 'Agent Contract source'],
+                [25, B('packages/core/src/tsa.ts'), 'Commitment lifecycle'],
+                [26, 'https://docsend.com/view/gphvbt5saqjtvmxg', 'Film: Clockchain Network Overview, 34.6 s (Tetsuji)'],
+                [27, 'https://docsend.com/view/y5rzpup27q6yknyj', 'Film: Clockchain Agent Handshake Demo, 36.5 s (Tetsuji)'],
+                [28, 'https://docsend.com/view/9ruzxgzhdbvssisi', 'Film: Clockchain Agent Contract, 30 s (Tetsuji)'],
+                [29, 'https://github.com/thetangstr/clockchain-handshake', 'Repo: Agent Trust Handshake product and demo'],
+                [30, 'https://github.com/thetangstr/clockchain-handshake-v2', 'Repo: bilateral payment-authorization handshake demo'],
+                [31, 'https://mcp.clockchain.network/assets/mcp-demo.mp4', 'Demo film, 27 s'],
+                [32, B('packages/mcp-server/src/landing.ts'), 'Source of the live MCP page'],
+                [33, 'https://github.com/thetangstr/clockchain-developer-tools', 'Repo root'],
+                [34, B('clock-tools-production-plan.md'), 'Clock tools production plan']
+              ];
+              /* repo files show as repo/path; folders end in a slash */
+              function show(u) {
+                if (u.indexOf(GH) === 0 && u.length > GH.length) {
+                  return 'clockchain-developer-tools/' + u.slice(GH.length).replace(/^blob\/main\//, '').replace(/^tree\/main\/(.*)$/, '$1/');
+                }
+                return u.replace(/^https:\/\//, '');
+              }
+              document.getElementById('refs').innerHTML = REFS.map(function (r) {
+                return '<li id="r-' + r[0] + '"><b>R' + r[0] + '</b><a href="' + r[1] + '">' + esc(show(r[1])) + '</a><span>' + esc(r[2]) + '</span></li>';
+              }).join('');
+            })();
+            </script>
+
+            <div class="docs-prevnext" id="docs-pn"></div>
+          </article>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="../app.js?v=15"></script>
+</body>
+</html>

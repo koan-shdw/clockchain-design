@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MCP: Notes for Rasesh · Clockchain Docs</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@100;200;300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../app.css?v=17" />
+  <script>(function(){try{if(localStorage.getItem('ccapp-theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
+</head>
+<!-- MCP docs, page 10 of 10: Notes for Rasesh. The manual's Appendix B (9 notes). Each links to the docs page where the note sits. -->
+<body data-nav="mcp" data-docs>
+  <div class="shell">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main">
+      <header class="topbar" id="topbar" data-title="Documentation"></header>
+      <div class="content">
+        <div class="docs-layout">
+
+          <nav class="docs-toc" id="docs-toc" aria-label="Docs"></nav>
+
+          <article class="docs-body">
+            <div class="docs-mnav" id="docs-mnav"></div>
+            <span class="tag">AI Agents · MCP · Appendix</span>
+            <h1 style="margin-top:12px;">Notes for Rasesh.</h1>
+            <p class="lead">Where a source is missing or two sources disagree. Each note says what belongs where.</p>
+
+            <ol class="docs-refl is-notes" id="notes"></ol>
+            <script>
+            (function () {
+              function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+              var NOTES = [
+                [1, 'mcp-services.html#svc-time', 'Services: Trusted time', 'Hosted keeper or client SDK: the README says timers and alarms need the client-side SDK and lists the hosted keeper as next; the roadmap, the clock-tools page and the keeper package say they fire on the hosted keeper. Update the README callout if the keeper is current.'],
+                [2, 'mcp.html', 'Overview', 'Tool count: the Network Overview film says 12 tools; the live page, README and server source say 50.'],
+                [3, 'mcp-services.html', 'Services', 'Service grouping: the tool lists under each service are our grouping of the 50 tools. Confirm, in particular verify_receipt and verify_cross_party.'],
+                [4, 'mcp-services.html#svc-handshake', 'Services: Handshake', 'The eight tool names on /next/handshake/mcp. The main endpoint has six agent_handshake tools; the SOP calls agent_handshake_accept_invitation.'],
+                [5, 'mcp-agents.html#contract', 'Agents: Agent Contract', 'Agent Contract: which doc can be public, and its endpoint and status line.'],
+                [6, 'mcp-repositories.html', 'Repositories', 'Which handshake repo is canonical, and whether to link it.'],
+                [7, 'mcp-install.html#token', 'Install: Get a testnet token', 'The page that issues Clockchain API keys. "How to get one" goes to the home page.'],
+                [8, 'mcp-services.html#svc-handshake', 'Services: Handshake', '"How the handshake works" on the live page links back to its own section. A how-it-works doc, or the SOP, belongs there.'],
+                [9, 'mcp-limits.html', 'Limits', 'Webhooks: off until the allow-list ships (roadmap) or allow-listed now (clock-tools page).']
+              ];
+              document.getElementById('notes').innerHTML = NOTES.map(function (n) {
+                return '<li id="n-' + n[0] + '"><b>N' + n[0] + '</b><a href="' + n[1] + '">' + esc(n[2]) + '</a><span>' + esc(n[3]) + '</span></li>';
+              }).join('');
+            })();
+            </script>
+
+            <div class="docs-prevnext" id="docs-pn"></div>
+          </article>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="../app.js?v=15"></script>
+</body>
+</html>

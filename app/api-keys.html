@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Keys · Clockchain App</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@100;200;300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="app.css?v=14" />
+  <script>(function(){try{if(localStorage.getItem('ccapp-theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
+</head>
+<body data-nav="apikeys">
+  <div class="shell">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main">
+      <header class="topbar" id="topbar" data-title="API Keys"></header>
+      <div class="content">
+
+        <div class="page-head">
+          <h1>API Keys</h1>
+          <p>Generate, manage, and revoke keys for the Clockchain API. Keys are shown in full once, at generation.</p>
+        </div>
+
+        <div class="section card">
+          <div class="card-head"><h3>Your keys</h3><a class="more" href="docs/timestamp-api.html">API reference →</a></div>
+          <table class="table">
+            <thead><tr><th>Name</th><th>Key</th><th>Created</th><th>Last used</th><th>Status</th><th></th></tr></thead>
+            <tbody id="keys-body">
+              <tr>
+                <td>production-default</td>
+                <td class="mono"><span class="key-val" data-key="cc_live_9d2e7c41b8f05a63d1ac">cc_live_…••••••••…d1ac</span> <button class="kv-copy" onclick="ccReveal(this)">Reveal</button><button class="kv-copy" onclick="ccCopy(this.parentElement.querySelector('.key-val').getAttribute('data-key'))">Copy</button></td>
+                <td>Mar 12, 2026</td>
+                <td>2 min ago</td>
+                <td><span class="status-pill">Active</span></td>
+                <td><button class="btn btn-outline btn-sm" onclick="ccRevoke(this)">Revoke</button></td>
+              </tr>
+              <tr>
+                <td>local-testing</td>
+                <td class="mono"><span class="key-val" data-key="cc_test_4f8a2b9c1d7e3f6a0b5c">cc_test_…••••••••…0b5c</span> <button class="kv-copy" onclick="ccReveal(this)">Reveal</button><button class="kv-copy" onclick="ccCopy(this.parentElement.querySelector('.key-val').getAttribute('data-key'))">Copy</button></td>
+                <td>May 30, 2026</td>
+                <td>1 h ago</td>
+                <td><span class="status-pill">Active</span></td>
+                <td><button class="btn btn-outline btn-sm" onclick="ccRevoke(this)">Revoke</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="section cards c2">
+          <div class="card">
+            <div class="card-head"><h3>Generate a new key</h3></div>
+            <div class="field">
+              <label>Key name</label>
+              <input type="text" id="nk-name" placeholder="e.g. staging-backend" />
+            </div>
+            <div class="field">
+              <label>Environment</label>
+              <select id="nk-env">
+                <option value="production">Production</option>
+                <option value="test">Test</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" onclick="ccGenKey()">Generate key</button>
+            <div class="docs-note" id="nk-note" style="margin-top:14px;" hidden>New keys appear in full <b>once</b>, at the top of the table. Copy and store it now; after revoke or reload only the masked form remains.</div>
+          </div>
+
+          <div class="card">
+            <div class="card-head"><h3>Using your key</h3></div>
+            <p style="font-size:13px;color:var(--fg-2);margin-bottom:12px;">Send the key with every request in the <span class="mono">X-API-Key</span> header. Full request and response shapes live in the API reference.</p>
+            <div class="code"><button class="cpy" onclick="ccCopyEl(this)">Copy</button><pre><code>curl https://node.clockchain.network/api/time/time \
+  -H "X-API-Key: cc_live_…"</code></pre></div>
+            <div class="docs-note">Mockup note: keys on this page are simulated. Production wires this view to the key service behind the Dev Portal.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <script src="app.js?v=13"></script>
+  <script>
+    function ccHex(n){var c='0123456789abcdef',s='';for(var i=0;i<n;i++)s+=c[Math.floor(Math.random()*16)];return s;}
+    function ccMask(k){return k.slice(0,8)+'…••••••••…'+k.slice(-4);}
+    window.ccReveal=function(btn){
+      var kv=btn.parentElement.querySelector('.key-val'),k=kv.getAttribute('data-key');
+      var revealed=kv.textContent===k;
+      kv.textContent=revealed?ccMask(k):k;
+      btn.textContent=revealed?'Reveal':'Hide';
+    };
+    window.ccGenKey=function(){
+      var name=document.getElementById('nk-name').value.trim()||'untitled-key';
+      var env=document.getElementById('nk-env').value;
+      var key=(env==='production'?'cc_live_':'cc_test_')+ccHex(20);
+      var tr=document.createElement('tr');
+      tr.innerHTML='<td>'+name.replace(/[<>&]/g,'')+'</td>'
+        +'<td class="mono"><span class="key-val" data-key="'+key+'">'+key+'</span> <button class="kv-copy" onclick="ccReveal(this)">Hide</button><button class="kv-copy" onclick="ccCopy(this.parentElement.querySelector(\'.key-val\').getAttribute(\'data-key\'))">Copy</button></td>'
+        +'<td>just now</td><td>—</td>'
+        +'<td><span class="status-pill">Active</span></td>'
+        +'<td><button class="btn btn-outline btn-sm" onclick="ccRevoke(this)">Revoke</button></td>';
+      var tb=document.getElementById('keys-body');
+      tb.insertBefore(tr,tb.firstChild);
+      document.getElementById('nk-note').hidden=false;
+      document.getElementById('nk-name').value='';
+      ccToast('Key generated. Copy it now.');
+    };
+    window.ccRevoke=function(btn){
+      var tr=btn.closest('tr'),pill=tr.querySelector('.status-pill'),kv=tr.querySelector('.key-val');
+      pill.textContent='Revoked';pill.classList.add('is-revoked');
+      if(kv)kv.textContent=ccMask(kv.getAttribute('data-key'));
+      tr.style.opacity=.45;btn.disabled=true;btn.textContent='Revoked';
+      ccToast('Mockup: key revoked');
+    };
+  </script>
+</body>
+</html>

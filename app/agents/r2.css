@@ -1,0 +1,134 @@
+/* ============ AI & AGENTS round 2 (10-30) ============
+   The two animations as two clear buttons (three styles to compare), and the three clock tool cards.
+   Site tokens only. Loaded after section.css. */
+.agents{--tl-ink:color-mix(in oklab, var(--accent) 68%, black);}
+:root[data-variant="eclipse"] .agents{--tl-ink:var(--accent);}
+
+/* the round 1 chips leave the stage when a round 2 button style is on */
+.ag-player:not([data-ui="chips"]) .ag-chips{display:none;}
+.ag-player.is-still .ag-nav{display:none;}
+
+/* ---------- shared button ---------- */
+.ag-nav{display:grid;gap:12px;}
+.ag-nb{
+  appearance:none;font:inherit;text-align:left;cursor:pointer;color:var(--fg);
+  position:relative;display:flex;flex-direction:column;gap:8px;min-width:0;
+  background:var(--surface);border:1px solid var(--line-2);border-radius:14px;padding:15px 18px 0;overflow:hidden;
+  transition:border-color .2s, box-shadow .2s, background .2s;
+}
+.ag-nb:hover{border-color:var(--accent-line);}
+.ag-nb:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.ag-nb[aria-current]{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft);}
+.ag-nb-top{display:flex;align-items:center;gap:10px;min-width:0;}
+.ag-nb-n{
+  flex:none;display:grid;place-items:center;width:28px;height:28px;border-radius:50%;
+  border:2px solid var(--line-2);font:500 11px/1 var(--f-mono);color:var(--fg-3);background:var(--surface);
+  transition:border-color .2s, color .2s, box-shadow .2s;
+}
+.ag-nb[aria-current] .ag-nb-n{border-color:var(--accent);color:var(--tl-ink);box-shadow:0 0 0 4px var(--accent-soft);}
+.ag-nb-l{font:400 clamp(17px,1.55vw,20px)/1.2 var(--f-display);letter-spacing:-0.01em;white-space:nowrap;}
+.ag-nb-s{
+  display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
+  font:400 12px/1 var(--f-body);color:var(--fg-2);
+}
+.ag-nb-s::before{content:"";width:7px;height:7px;border-radius:50%;flex:none;}
+.ag-nb-s.is-live::before{background:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
+.ag-nb-s.is-dev::before{border:1.5px solid var(--fg-3);box-sizing:border-box;}
+.ag-nb-d{margin-left:auto;font:400 11px/1 var(--f-mono);color:var(--fg-3);font-variant-numeric:tabular-nums;}
+.ag-nb-b{font-size:14.5px;line-height:1.5;color:var(--fg-2);text-wrap:pretty;}
+.ag-nb-go{display:none;}
+.ag-nb-bar{display:block;height:3px;margin:6px -18px 0;background:var(--line);}
+.ag-nb-bar i{display:block;height:100%;width:0;background:var(--accent);}
+
+/* ---------- B1 tabs: above the stage ---------- */
+.ag-nav-tabs{grid-template-columns:repeat(2,minmax(0,1fr));margin-bottom:14px;}
+.ag-nav-tabs .ag-nb-top{flex-wrap:wrap;row-gap:6px;}
+
+/* ---------- B2 timeline: under the ruler, each button the width of its part ---------- */
+.ag-nav-timeline{gap:0;margin-top:8px;}
+.ag-nav-timeline .ag-nb{margin-right:10px;border-radius:0 0 14px 14px;border-top-width:3px;padding-top:13px;}
+.ag-nav-timeline .ag-nb[aria-current]{border-top-color:var(--accent);}
+.ag-nav-timeline .ag-nb-bar{position:absolute;top:-3px;left:0;right:0;margin:0;height:3px;background:none;}
+.ag-nav-timeline .ag-nb-top{flex-wrap:wrap;row-gap:6px;}
+.ag-nav-timeline .ag-nb-b{padding-bottom:14px;}
+
+/* ---------- B3 cards: the two films as cards under the caption ---------- */
+.ag-nav-cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin-top:26px;}
+.ag-nav-cards .ag-nb{border-radius:18px;padding:22px 24px 0;gap:12px;border-color:var(--line);}
+.ag-nav-cards .ag-nb[aria-current]{border-color:var(--accent);}
+.ag-nav-cards .ag-nb-top{flex-wrap:wrap;row-gap:8px;}
+.ag-nav-cards .ag-nb-l{font-size:clamp(19px,1.9vw,22px);}
+.ag-nav-cards .ag-nb-b{font-size:15px;line-height:1.6;}
+.ag-nav-cards .ag-nb-go{
+  display:inline-flex;align-self:flex-start;align-items:center;gap:8px;min-height:44px;padding:0 18px 0 14px;margin-top:4px;
+  border-radius:999px;border:1px solid var(--line-2);font:500 14px/1 var(--f-body);color:var(--fg);transition:background .2s,color .2s,border-color .2s;
+}
+.ag-nav-cards .ag-nb-go svg{width:14px;height:14px;fill:currentColor;}
+.ag-nav-cards .ag-nb-go em{font-style:normal;}
+.ag-nav-cards .ag-nb:hover .ag-nb-go{border-color:var(--accent);color:var(--tl-ink);}
+.ag-nav-cards .ag-nb[aria-current] .ag-nb-go{background:var(--accent);border-color:var(--accent);color:#fff;}
+.ag-nav-cards .ag-nb[aria-current] .ag-nb-go em::after{content:"ing";}
+.ag-nav-cards .ag-nb-bar{margin:12px -24px 0;}
+
+/* ---------- the three clock tools ---------- */
+.ag-tools{margin-top:clamp(44px,5vw,64px);}
+.tl-head{display:flex;align-items:center;gap:16px;margin-bottom:20px;}
+.tl-k{font:500 11px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--tl-ink);white-space:nowrap;}
+.tl-rule{flex:1;height:1px;background:var(--line-2);}
+.tl-sub{font-size:14px;color:var(--fg-2);white-space:nowrap;}
+.tl-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;}
+.tl-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px 16px 22px;display:flex;flex-direction:column;}
+.tl-fig{background:color-mix(in oklab, var(--surface-2) 96%, var(--accent));border:1px solid var(--line);border-radius:12px;padding:8px 6px 4px;margin-bottom:18px;}
+.tl-top{display:flex;align-items:center;gap:10px;padding:0 8px;}
+.tl-n{font:500 11px/1 var(--f-mono);letter-spacing:.12em;color:var(--tl-ink);}
+.tl-name{font:400 clamp(19px,1.9vw,22px)/1.2 var(--f-display);letter-spacing:-0.01em;color:var(--fg);margin:0;}
+.tl-s{margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--fg-2);white-space:nowrap;}
+.tl-s::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
+.tl-p{color:var(--fg-2);font-size:15px;line-height:1.6;margin:12px 8px 0;text-wrap:pretty;}
+
+/* the infographics (also used by the MCP manual) */
+svg.tf{display:block;width:100%;height:auto;overflow:visible;}
+.tf line{stroke-linecap:round;}
+.tf-rule{stroke:var(--line-2);stroke-width:1;}
+.tf-tick{stroke:var(--line-2);stroke-width:1;}
+.tf-tk{stroke:color-mix(in oklab, var(--line-2), var(--fg-3) 45%);stroke-width:1;}
+.tf-run{stroke:var(--accent);stroke-width:2;}
+.tf-after{stroke:var(--accent);stroke-width:1.25;stroke-dasharray:2 3;}
+.tf-target{stroke:var(--fg-3);stroke-width:1;stroke-dasharray:2 3;}
+.tf-off{stroke:var(--fg-3);stroke-width:1.25;stroke-dasharray:1 4;}
+.tf-stem{stroke:var(--line-2);stroke-width:1;}
+.tf-br{stroke:color-mix(in oklab, var(--accent) 60%, var(--line-2));stroke-width:1.25;}
+.tf-x{stroke:var(--fg-2);stroke-width:1.6;}
+.tf-halo{fill:var(--accent-soft);}
+.tf-node{fill:var(--surface);stroke:var(--accent);stroke-width:2.5;}
+.tf-sq{fill:var(--fg);}
+.tf-check{fill:none;stroke:var(--tl-ink, var(--accent));stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.tf-k{font:500 8.5px var(--f-mono);letter-spacing:.13em;text-transform:uppercase;fill:var(--fg-3);}
+.tf-k.g{fill:var(--tl-ink, var(--accent));}
+.tf-t{font:400 10.5px var(--f-mono);fill:var(--fg);font-variant-numeric:tabular-nums;}
+.tf-ms{fill:var(--tl-ink, var(--accent));}
+.tf-pill{fill:var(--surface);stroke:color-mix(in oklab, var(--accent) 45%, var(--line-2));stroke-width:1;}
+.tf-pt{font:500 9px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;fill:var(--tl-ink, var(--accent));}
+
+@media(max-width:760px){
+  .ag-nav-tabs{gap:8px;margin-bottom:10px;}
+  .ag-nav-tabs .ag-nb,.ag-nav-timeline .ag-nb{padding:12px 12px 0;gap:6px;border-radius:12px;}
+  .ag-nav-timeline .ag-nb{border-radius:0 0 12px 12px;margin-right:6px;padding-top:10px;}
+  .ag-nb-top{gap:7px;}
+  .ag-nb-n{width:24px;height:24px;font-size:10px;}
+  .ag-nb-l{font-size:15px;white-space:normal;}
+  .ag-nb-s{font-size:11px;}
+  .ag-nb-d{display:none;}
+  .ag-nb-b{font-size:12.5px;line-height:1.45;}
+  .ag-nb-bar{margin:4px -12px 0;}
+  .ag-nav-timeline .ag-nb-b{padding-bottom:10px;}
+  .ag-nav-cards{grid-template-columns:minmax(0,1fr);gap:12px;margin-top:20px;}
+  .ag-nav-cards .ag-nb{padding:18px 18px 0;}
+  .ag-nav-cards .ag-nb-l{font-size:19px;white-space:nowrap;}
+  .ag-nav-cards .ag-nb-b{font-size:14px;}
+  .ag-nav-cards .ag-nb-bar{margin:10px -18px 0;}
+  .tl-head{flex-wrap:wrap;gap:8px 12px;}
+  .tl-rule{display:none;}
+  .tl-sub{white-space:normal;flex-basis:100%;}
+  .tl-grid{grid-template-columns:minmax(0,1fr);gap:14px;}
+}

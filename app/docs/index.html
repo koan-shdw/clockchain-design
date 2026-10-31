@@ -4,11 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Documentation · Clockchain</title>
-  <link rel="icon" type="image/png" sizes="32x32" href="../../assets/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@100;200;300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../app.css?v=1" />
+  <link rel="stylesheet" href="../app.css?v=17" />
+  <script>(function(){try{if(localStorage.getItem('ccapp-theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
 </head>
 <body data-nav="docs" data-docs>
   <div class="shell">
@@ -18,22 +19,10 @@
       <div class="content">
         <div class="docs-layout">
 
-          <nav class="docs-toc">
-            <div class="docs-toc-label">Start here</div>
-            <a href="index.html" class="active">Getting started</a>
-            <a href="index.html#auth">Authentication</a>
-            <a href="index.html#concepts">Core concepts</a>
-            <div class="docs-toc-label">API reference</div>
-            <a href="timestamp-api.html">Timestamp API</a>
-            <a href="timestamp-api.html#logging">Logging API</a>
-            <a href="timestamp-api.html#contracts">Scheduling API</a>
-            <div class="docs-toc-label">Agents</div>
-            <a href="mcp.html">Clockchain MCP</a>
-            <a href="mcp.html#modules">Modules</a>
-            <a href="mcp.html#install">Install</a>
-          </nav>
+          <nav class="docs-toc" id="docs-toc" aria-label="Docs"></nav>
 
           <article class="docs-body">
+            <div class="docs-mnav" id="docs-mnav"></div>
             <span class="tag">Public docs · no account required</span>
             <h1 style="margin-top:12px;">Getting started</h1>
             <p class="lead">Clockchain is a verifiable global time standard, anchored on-chain every second. These docs cover the three service APIs and the MCP surface for agents.</p>
@@ -98,16 +87,13 @@ print(res.json()["data"])</code></pre></div>
             <h3>Receipts</h3>
             <p>Writes return a self-verifying receipt: it carries its own payload hash and anchor. Recompute the hash, compare to the on-chain block. Change one byte and verification fails.</p>
 
-            <div class="docs-prevnext">
-              <span></span>
-              <a href="timestamp-api.html"><span class="dir">Next</span>Timestamp API →</a>
-            </div>
+            <div class="docs-prevnext" id="docs-pn"></div>
           </article>
 
         </div>
       </div>
     </div>
   </div>
-  <script src="../app.js?v=1"></script>
+  <script src="../app.js?v=15"></script>
 </body>
 </html>
