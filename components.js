@@ -5,6 +5,8 @@
   var SVG_TELEGRAM = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9.04 15.4 8.9 19.2c.4 0 .57-.17.77-.37l1.86-1.78 3.86 2.83c.71.39 1.21.18 1.4-.65l2.53-11.85c.23-1.04-.38-1.45-1.06-1.2L3.5 10.18c-1 .39-.99.94-.18 1.19l3.66 1.14 8.5-5.36c.4-.25.77-.11.47.14"/></svg>';
   var SVG_EMAIL = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2zm2 .5v.4l8 5.6 8-5.6V5.5L12 11Z"/></svg>';
   var SVG_ARROW_UP = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
+  // API/MCP opens the MCP docs in the dashboard (moved there 10-31; the review copy until staging has it)
+  var MCP_DOCS = 'https://clockchain-dashboard.pages.dev/docs/mcp';
 
   var path = location.pathname.replace(/\/$/, '') || '/index.html';
   var pageName = path.substring(path.lastIndexOf('/') + 1) || 'index.html';
@@ -24,7 +26,7 @@
           '<li><a href="' + agentsHref + '">AI &amp; Agents</a></li>' +
           '<li><a href="newsroom.html"' + (pageName === 'newsroom.html' ? ' aria-current="page"' : '') + '>News</a></li>' +
           '<li><a href="docs.html"' + (pageName === 'docs.html' ? ' aria-current="page"' : '') + '>Docs</a></li>' +
-          '<li><a href="mcp.html">API/MCP</a></li>' +
+          '<li><a href="' + MCP_DOCS + '">API/MCP</a></li>' +
         '</ul>' +
         '<div class="nav-right">' +
           '<nav class="nav-socials" aria-label="Clockchain on social media">' +
@@ -42,7 +44,7 @@
           '<a href="' + agentsHref + '">AI &amp; Agents</a>' +
           '<a href="newsroom.html"' + (pageName === 'newsroom.html' ? ' aria-current="page"' : '') + '>News</a>' +
           '<a href="docs.html"' + (pageName === 'docs.html' ? ' aria-current="page"' : '') + '>Docs</a>' +
-          '<a href="mcp.html">API/MCP</a>' +
+          '<a href="' + MCP_DOCS + '">API/MCP</a>' +
           '<a href="https://discord.com/invite/daHCN5qMtN" target="_blank" rel="noopener">Community</a>' +
         '</nav>' +
         '<nav class="mm-socials" aria-label="Clockchain on social media">' +
