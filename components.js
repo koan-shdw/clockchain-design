@@ -14,15 +14,17 @@
   var navContainer = document.getElementById('site-nav');
   if (navContainer) {
     var logoHref = isHome ? '#main-content' : 'index.html';
+    var agentsHref = isHome ? '#agents' : 'index.html#agents';
     navContainer.outerHTML = 
       '<nav class="nav">' +
         '<a class="nav-logo" href="' + logoHref + '" aria-label="Clockchain"><img src="assets/clockchain-logo-full.png" alt="Clockchain" /></a>' +
         '<ul class="nav-links">' +
           '<li><a href="about.html"' + (pageName === 'about.html' ? ' aria-current="page"' : '') + '>About</a></li>' +
           '<li><a href="services.html"' + (pageName === 'services.html' ? ' aria-current="page"' : '') + '>Services</a></li>' +
+          '<li><a href="' + agentsHref + '">AI &amp; Agents</a></li>' +
           '<li><a href="newsroom.html"' + (pageName === 'newsroom.html' ? ' aria-current="page"' : '') + '>News</a></li>' +
           '<li><a href="docs.html"' + (pageName === 'docs.html' ? ' aria-current="page"' : '') + '>Docs</a></li>' +
-          '<li><a href="https://staging.clockchain.network/service/" target="_blank">API/MCP</a></li>' +
+          '<li><a href="mcp.html">API/MCP</a></li>' +
         '</ul>' +
         '<div class="nav-right">' +
           '<nav class="nav-socials" aria-label="Clockchain on social media">' +
@@ -37,9 +39,10 @@
         '<nav class="mm-links" aria-label="Primary (mobile)">' +
           '<a href="about.html"' + (pageName === 'about.html' ? ' aria-current="page"' : '') + '>About</a>' +
           '<a href="services.html"' + (pageName === 'services.html' ? ' aria-current="page"' : '') + '>Services</a>' +
+          '<a href="' + agentsHref + '">AI &amp; Agents</a>' +
           '<a href="newsroom.html"' + (pageName === 'newsroom.html' ? ' aria-current="page"' : '') + '>News</a>' +
           '<a href="docs.html"' + (pageName === 'docs.html' ? ' aria-current="page"' : '') + '>Docs</a>' +
-          '<a href="https://staging.clockchain.network/service/">API/MCP</a>' +
+          '<a href="mcp.html">API/MCP</a>' +
           '<a href="https://discord.com/invite/daHCN5qMtN" target="_blank" rel="noopener">Community</a>' +
         '</nav>' +
         '<nav class="mm-socials" aria-label="Clockchain on social media">' +

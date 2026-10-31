@@ -31,6 +31,12 @@
     rel="stylesheet" />
   <link rel="stylesheet" href="styles.css?v=5" />
   <link rel="stylesheet" href="site.css?v=20" />
+  <link rel="stylesheet" href="agents/section.css?v=1" />
+  <link rel="stylesheet" href="agents/r2.css?v=1" />
+  <script type="importmap">{ "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  } }</script>
   <script>window.CC_GA_ID = 'G-56GW11EBX3';</script>
   <script>(function () { try { var t = localStorage.getItem('cc-theme'); if (t === 'eclipse' || t === 'daylight') { document.documentElement.setAttribute('data-variant', t); } } catch (e) { } })();</script>
 </head>
@@ -422,6 +428,19 @@
       </div>
     </section>
 
+    <!-- ===== AI & AGENTS: Agent Handshake + Agent Contract animation (agents/), then the three clock tools ===== -->
+    <section class="agents reveal" id="agents" data-screen-label="04b AI & Agents">
+      <div class="container">
+        <div class="ag-head">
+          <span class="tag">AI &amp; Agents</span>
+          <h2 class="h2">Trust the agent <em>on the other side.</em></h2>
+          <p class="body-lg">Before agents talk business, they prove who is present and what each side agreed to.</p>
+        </div>
+        <div data-ag-player></div>
+        <div class="ag-tools" data-ag-tools></div>
+      </div>
+    </section>
+
     <!-- ===== NEWSROOM TEASER ===== -->
     <section class="newsroom-teaser reveal" id="news" data-screen-label="05 Newsroom">
       <div class="container">
@@ -498,12 +517,19 @@
 
   <div id="site-footer"></div>
 
-  <script src="components.js?v=3"></script>
+  <script src="components.js?v=4"></script>
   <script src="app.js?v=3"></script>
   <script src="contact.js?v=1"></script>
   <script src="widget.js?v=5"></script>
   <script src="hero-earth.js?v=8"></script>
   <script src="consent.js?v=1"></script>
+  <script src="agents/story.js?v=1"></script>
+  <script src="agents/tools.js?v=1"></script>
+  <script>CC_renderTools(document.querySelector('[data-ag-tools]'));</script>
+  <script type="module">
+    import { mount } from './agents/player.js?v=1';
+    mount(document.querySelector('[data-ag-player]'), { scene: './scene-a.js', ui: 'tabs' });
+  </script>
 </body>
 
 </html>

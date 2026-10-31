@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en" data-variant="daylight" data-accent="bright" data-font="inter" data-bodyfont="inter"
+  data-headweight="light" data-bodyweight="light" data-density="comfortable">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clockchain MCP · Technical manual</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=5" />
+  <link rel="stylesheet" href="agents/section.css?v=1" />
+  <link rel="stylesheet" href="agents/r2.css?v=1" />
+  <link rel="stylesheet" href="mcp.css?v=1" />
+  <script>(function () { try { var t = localStorage.getItem('cc-theme'); if (t === 'eclipse' || t === 'daylight') { document.documentElement.setAttribute('data-variant', t); } } catch (e) { } })();</script>
+  <script type="importmap">{ "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  } }</script>
+</head>
+<!--
+  The MCP page (mcp.clockchain.network) as a technical manual of the main page. Approved 2026-10-30.
+  Every claim carries a reference chip (R#) to the page, doc or repo file it comes from (Appendix A).
+  Orange "Note for Rasesh" blocks mark a missing or conflicting source (Appendix B).
+  Style rules: mcp-style-guide.html. Styles: mcp.css on top of the site tokens (styles.css).
+  The animation (Fig 3.1) is agents/scene-c.js, run by agents/player.js.
+-->
+<body class="m">
+
+<header class="m-top">
+  <a class="m-logo" href="index.html" aria-label="Clockchain home"><img src="assets/clockchain-logo-full.png" alt="Clockchain" /></a>
+  <div class="m-doc"><b>MCP</b><span class="m-dl">· Technical manual</span><span class="m-net">Testnet</span></div>
+  <nav class="m-top-r" aria-label="Site">
+    <a class="m-tl" href="https://mcp.clockchain.network/status">Status</a>
+    <a class="m-tl" href="https://github.com/thetangstr/clockchain-developer-tools">Docs</a>
+    <button class="m-theme" type="button" aria-label="Switch light and dark" data-theme-toggle>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg>
+    </button>
+    <a class="m-btn" href="#install">Add to your agent</a>
+  </nav>
+</header>
+
+<div class="m-wrap">
+
+  <aside class="m-side" aria-label="Contents">
+    <div class="m-toc-k">Contents</div>
+    <ol class="m-toc">
+      <li><a href="#cover"><span>00</span>Cover</a></li>
+      <li><a href="#overview"><span>01</span>Overview</a></li>
+      <li><a href="#services"><span>02</span>Services</a></li>
+      <li><a href="#agents"><span>03</span>Agents</a></li>
+      <li><a href="#clock-tools"><span>04</span>Clock tools</a></li>
+      <li><a href="#proof"><span>05</span>Proof</a></li>
+      <li><a href="#install"><span>06</span>Install</a></li>
+      <li><a href="#limits"><span>07</span>Limits</a></li>
+      <li><a href="#repos"><span>08</span>Repositories</a></li>
+      <li><a href="#refs"><span>A</span>References</a></li>
+      <li><a href="#notes"><span>B</span>Notes for Rasesh</a></li>
+    </ol>
+    <dl class="m-docbox">
+      <div><dt>Document</dt><dd>MCP-TM-01</dd></div>
+      <div><dt>Revision</dt><dd>Draft r2 · 2026-10-30</dd></div>
+      <div><dt>Endpoint</dt><dd>mcp.clockchain.network<wbr>/mcp</dd></div>
+      <div><dt>Network</dt><dd>Testnet</dd></div>
+      <div><dt>Sources</dt><dd>34 references</dd></div>
+      <div><dt>Open</dt><dd>9 notes for Rasesh</dd></div>
+    </dl>
+  </aside>
+
+  <main class="m-main" id="main">
+
+    <!-- ===== 00 COVER ===== -->
+    <section class="m-cover" id="cover" data-sec>
+      <div class="m-cover-k"><span class="m-k">Model Context Protocol · Testnet · Technical manual</span><i></i><span class="m-k">MCP-TM-01</span></div>
+      <h1 class="m-h1">Time your agents <em>can prove.</em></h1>
+      <p class="m-lead">Trusted time, proof, identity, handshakes and commitments for any AI agent. Five services behind one MCP endpoint. <a class="m-ref" href="#r-1">R1</a></p>
+      <div class="m-cta">
+        <a class="m-btn" href="#install">Add to your agent</a>
+        <a class="m-btn o" href="https://mcp.clockchain.network/status">View live status</a>
+      </div>
+      <div class="m-end">
+        <span class="m-k">Endpoint</span>
+        <code data-copy-src>https://mcp.clockchain.network/mcp</code>
+        <button class="m-copy" type="button" data-copy>Copy</button>
+      </div>
+      <div class="m-stats">
+        <div><span class="m-k">Services</span><b>5</b></div>
+        <div><span class="m-k">Tools</span><b>50 <a class="m-ref" href="#r-10">R10</a></b></div>
+        <div><span class="m-k">Transport</span><b>Streamable HTTP</b></div>
+        <div><span class="m-k">Network</span><b>Testnet</b></div>
+        <div><span class="m-k">Auth</span><b>x-api-key</b></div>
+      </div>
+      <div class="m-note" id="n-2-at">
+        <b>Note for Rasesh · N2 <a href="#n-2">Appendix B</a></b>
+        <p>The Network Overview film <a class="m-ref" href="#r-26">R26</a> says 12 tools. The live page, the README and the server source say 50 <a class="m-ref" href="#r-1">R1</a><a class="m-ref" href="#r-7">R7</a><a class="m-ref" href="#r-10">R10</a>. One of the two needs to change.</p>
+      </div>
+    </section>
+
+    <!-- ===== 01 OVERVIEW ===== -->
+    <section class="m-sec" id="overview" data-sec>
+      <header class="m-sh">
+        <div class="m-sn">01<small>Overview</small></div>
+        <div>
+          <h2 class="m-st">What the server <em>is.</em></h2>
+        </div>
+        <p class="m-lead">An MCP server that adds Clockchain consensus time, notarization, contract scheduling, audit trails and agent identity verification to any MCP client. It wraps the live node gateway at node.clockchain.network and does not change the blockchain protocol. <a class="m-ref" href="#r-7">R7</a></p>
+      </header>
+
+      <figure class="m-fig">
+        <a class="m-vid" href="https://mcp.clockchain.network/assets/mcp-demo.mp4" aria-label="Play the demo film on mcp.clockchain.network">
+          <img src="assets/mcp-demo-poster.jpg" alt="Demo film poster: an agent anchors an action, the receipt verifies, and a one byte change is rejected" />
+          <span class="m-play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>Play · 0:27</span>
+        </a>
+        <figcaption><b>Fig 1.1</b><span>Demo film, 27 s. An agent acts, the action is anchored on a testnet block, the receipt verifies, and a one byte change is rejected. <a class="m-ref" href="#r-31">R31</a></span></figcaption>
+      </figure>
+
+      <div class="m-blk">
+        <div class="m-bh"><span class="m-id">1.2</span><h3>Films for this page</h3><span class="m-refs"><a class="m-ref" href="#r-26">R26</a><a class="m-ref" href="#r-27">R27</a><a class="m-ref" href="#r-28">R28</a></span></div>
+        <div class="m-bb m-scroll">
+          <table class="m-tab">
+            <thead><tr><th>Film</th><th>Length</th><th>Shows</th><th>Source</th></tr></thead>
+            <tbody>
+              <tr><td>Network overview</td><td>34.6 s</td><td>The five services and the endpoint</td><td><a class="m-ref" href="#r-26">R26</a></td></tr>
+              <tr><td>Agent Handshake demo</td><td>36.5 s</td><td>Two agents verify each other and get one certificate</td><td><a class="m-ref" href="#r-27">R27</a></td></tr>
+              <tr><td>Agent Contract</td><td>30 s</td><td>A family agent and a travel agency; all six milestones anchored</td><td><a class="m-ref" href="#r-28">R28</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 02 SERVICES ===== -->
+    <section class="m-sec" id="services" data-sec>
+      <header class="m-sh">
+        <div class="m-sn">02<small>Services</small></div>
+        <div><h2 class="m-st">Five services, <em>one endpoint.</em></h2></div>
+        <p class="m-lead">What an agent needs to prove when, what and who, and to trust the agent on the other side. Each service lists its tools, the repo files behind it and notes for agents. <a class="m-ref" href="#r-1">R1</a></p>
+      </header>
+
+      <div class="m-note">
+        <b>Note for Rasesh · N3 <a href="#n-3">Appendix B</a></b>
+        <p>The live page names five services but not which tools sit under each. The README groups the same tools into seven modules and leaves out the 11 handshake tools <a class="m-ref" href="#r-7">R7</a>. The tool lists below are our grouping of the 50 registered tools <a class="m-ref" href="#r-10">R10</a>. Please confirm, in particular where verify_receipt and verify_cross_party belong.</p>
+      </div>
+
+      <!-- 2.1 -->
+      <article class="m-blk" id="svc-time">
+        <div class="m-bh"><span class="m-id">2.1</span><h3>Trusted time</h3><span class="m-status">Live on testnet</span><span class="m-refs"><a class="m-ref" href="#r-1">R1</a><a class="m-ref" href="#r-2">R2</a></span></div>
+        <div class="m-bb">
+          <p class="m-hl">One clock every agent agrees on.</p>
+          <p class="m-p">The network's consensus block time, provable after the fact. A hosted stopwatch, timer and alarm fire on verified time, never early. <a class="m-ref" href="#r-1">R1</a> Detail in section 04.</p>
+          <div class="m-sub">Tools · 12</div>
+          <div class="m-tools"><code>get_time</code><code>get_timestamp</code><code>get_block</code><code>get_validation</code><code>stopwatch_start</code><code>stopwatch_stop</code><code>stopwatch_verify</code><code>timer_set</code><code>alarm_set</code><code>timer_status</code><code>timer_cancel</code><code>timer_list</code></div>
+          <div class="m-sub">Repo files</div>
+          <ul class="m-files">
+            <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/packages/mcp-server/src/tools.ts">packages/mcp-server/src/tools.ts</a><span>The tool registry: all 50 tools</span></li>
+            <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/packages/keeper/README.md">packages/keeper/README.md</a><span>The hosted keeper: how a fire is delivered, anchored and re-armed</span></li>
+            <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/packages/mcp-server/src/keeper-runtime.ts">packages/mcp-server/src/keeper-runtime.ts</a><span>The keeper loop, run inside the MCP process</span></li>
+            <li><a class="dir" href="https://github.com/thetangstr/clockchain-developer-tools/tree/main/packages/clock-sdk">packages/clock-sdk/</a><span>Client-side clock, scheduler and stopwatch</span></li>
+            <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/packages/clock-sdk/GATES.md">packages/clock-sdk/GATES.md</a><span>Live gates G0 to G4 and their pass criteria</span></li>
+            <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/skills/clockchain-verified-alarm/SKILL.md">skills/clockchain-verified-alarm/SKILL.md</a><span>The agent playbook for verified time</span></li>
+            <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/clock-tools-production-plan.md">clock-tools-production-plan.md</a><span>Production plan, including the idle-chain fix</span></li>
+          </ul>
+          <div class="m-agent"><b>Notes for agents</b><ul>
+            <li>Consensus now is the last block's time. On an idle chain it goes stale; 86 s was observed. <a class="m-ref" href="#r-9">R9</a></li>
+            <li>A null blockHeight is a failed anchor, never pending. Do not report success until anchored. <a class="m-ref" href="#r-11">R11</a></li>
+            <li>Poll the timer id you were given. Never arm a second timer for the same job. <a class="m-ref" href="#r-2">R2</a></li>
+          </ul></div>
+          <div class="m-note">
+            <b>Note for Rasesh · N1 <a href="#n-1">Appendix B</a></b>
+            <p>The README says alarms and timers need the client-side SDK, and its roadmap table lists the hosted keeper as Phase 2, next <a class="m-ref" href="#r-7">R7</a>. The roadmap file, the clock-tools page and the keeper package say timer_set and alarm_set already fire on the hosted keeper <a class="m-ref" href="#r-9">R9</a><a class="m-ref" href="#r-2">R2</a><a class="m-ref" href="#r-13">R13</a>. This manual follows the hosted keeper. The README callout needs updating if that is current.</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- 2.2 -->
+      <article class="m-blk" id="svc-proof">
+        <div class="m-bh"><span class="m-id">2.2</span><h3>Proof</h3><span class="m-status">Live on testnet</span><span class="m-refs"><a class="m-ref" href="#r-1">R1</a><a class="m-ref" href="#r-7">R7</a></span></div>
+        <div class="m-bb">
+          <p class="m-hl">Anchor anything. Verify it forever.</p>
+          <p class="m-p">Anchor any hash to an append-only ledger and get a receipt anyone can re-check against the on-chain block, with no key. <a class="m-ref" href="#r-1">R1</a> Content is SHA-256 hashed and never stored. <a class="m-ref" href="#r-7">R7</a></p>
+          <div class="m-sub">Tools · 4</div>
+          <div class="m-tools"><code>log_action</code><code>search_actions</code><code>get_log_entry</code><code>verify_asset</code></div>
+          <div class="m-sub">Repo files</div>
+          <ul class="m-files">
+            <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/packages/core/src/receipt.ts">packages/core/src/receipt.ts</a><span>Receipt shape and self-verification</span></li>
+            <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/packages/core/src/hash.ts">packages/core/src/hash.ts</a><span>Hashing of anchored content</span></li>
+            <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/packages/mcp-server/src/idempotency.ts">packages/mcp-server/src/idempotency.ts</a><span>Idempotency keys on write tools</span></li>
+            <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/infra/anchoring-gateway/README.md">infra/anchoring-gateway/README.md</a><span>The anchoring gateway the testnet runs on</span></li>
+          </ul>
+          <div class="m-agent"><b>Notes for agents</b><ul>
+            <li>Verify against the immutable block: <code>GET /searchAssetFromChain?blockHeight={h}</code>, no key. The /ledger/{id} cache is mutable and is not the record. <a class="m-ref" href="#r-7">R7</a></li>
+            <li>Lookup by search is scoped to your client id. You cannot find a record you were never handed. <a class="m-ref" href="#r-9">R9</a></li>
+          </ul></div>
+        </div>
+      </article>
+
+      <!-- 2.3 -->
+      <article class="m-blk" id="svc-identity">
+        <div class="m-bh"><span class="m-id">2.3</span><h3>Agent identity</h3><span class="m-status">Live on testnet</span><span class="m-refs"><a class="m-ref" href="#r-1">R1</a><a class="m-ref" href="#r-7">R7</a></span></div>
+        <div class="m-bb">
+          <p class="m-hl">Know who acted, and whether they could.</p>
+          <p class="m-p">Register agent identities, delegate and revoke authority, and check that an agent was authorized at the exact moment it acted. <a class="m-ref" href="#r-1">R1</a> This is verification at a point in time, not authentication. Identities resolve on the ERC-8004 registry on Ethereum Sepolia. <a class="m-ref" href="#r-7">R7</a><a class="m-ref" href="#r-9">R9</a></p>
+          <div class="m-sub">Tools · 10</div>
+          <div class="m-tools"><code>resolve_agent</code><code>attest_action</code><code>complete_attestation</code><code>verify_receipt</code><code>mint_identity</code><code>revoke_identity</code><code>delegate_authority</code><code>get_identity_history</code><code>verify_identity_at</code><code>verify_cross_party</code></div>
+          <div class="m-sub">Repo files</div>
+          <ul class="m-files">
+            <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/packages/core/src/erc8004.ts">packages/core/src/erc8004.ts</a><span>ERC-8004 registry reads</span></li>
+            <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/packages/core/src/receipt.ts">packages/core/src/receipt.ts</a><span>Agent Attested Receipts</span></li>
+            <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/product-a-identity-decision.md">product-a-identity-decision.md</a><span>Decision memo: ERC-8004 plus SIWA over a proprietary DID</span></li>
+          </ul>
+          <div class="m-agent"><b>Notes for agents</b><ul>
+            <li><code>attest_action</code> with wait=false returns at once; <code>complete_attestation</code> polls for the confirmed receipt. <a class="m-ref" href="#r-7">R7</a></li>
+            <li>Mint, revoke and delegate resolve against a directory that is still a preview. <a class="m-ref" href="#r-7">R7</a></li>
+            <li><code>resolve_agent</code> returns status "unknown" when the registry RPC fails. <a class="m-ref" href="#r-9">R9</a></li>
+          </ul></div>
+        </div>
+      </article>
+
+      <!-- 2.4 -->
+      <article class="m-blk" id="svc-handshake">
+        <div class="m-bh"><span class="m-id">2.4</span><h3>Handshake</h3><span class="m-status">Live on testnet</span><span class="m-refs"><a class="m-ref" href="#r-1">R1</a><a class="m-ref" href="#r-5">R5</a></span></div>
+        <div class="m-bb">
+          <p class="m-hl">Two agents, verified before they talk.</p>
+          <p class="m-p">Previously unconnected agents establish who is present, sign consent to a stated scope on their own machines, and open a witnessed, bounded channel. The server never sees a private key. <a class="m-ref" href="#r-1">R1</a> The two handshakes and their endpoints are in section 03.</p>
+          <div class="m-sub">Tools on /mcp · 11</div>
+          <div class="m-tools"><code>handshake_status</code><code>handshake_join</code><code>handshake_next</code><code>handshake_submit</code><code>handshake_get_certificate</code><code>agent_handshake_invite</code><code>agent_handshake_status</code><code>agent_handshake_join</code><code>agent_handshake_next</code><code>agent_handshake_submit</code><code>agent_handshake_get_certificate</code></div>
+          <div class="m-sub">Repo files</div>
+          <ul class="m-files">
+            <li><a class="dir" href="https://github.com/thetangstr/clockchain-developer-tools/tree/main/packages/mcp-server/src/standalone-handshake">packages/mcp-server/src/standalone-handshake/</a><span>Standalone Handshake: checklist, turns, mailbox</span></li>
+            <li><a class="dir" href="https://github.com/thetangstr/clockchain-developer-tools/tree/main/packages/mcp-server/src/agent-handshake/v2">packages/mcp-server/src/agent-handshake/v2/</a><span>Agent Handshake v2: protocol, receipts, public tools</span></li>
+            <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/docs/superpowers/specs/2026-09-14-standalone-handshake-design.md">docs/superpowers/specs/2026-09-14-standalone-handshake-design.md</a><span>Standalone Handshake design</span></li>
+            <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/docs/superpowers/specs/2026-09-28-server-driven-handshakes-shared-design.md">docs/superpowers/specs/2026-09-28-server-driven-handshakes-shared-design.md</a><span>Shared design for both handshakes</span></li>
+            <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/packages/mcp-server/src/handshake-sop-page.ts">packages/mcp-server/src/handshake-sop-page.ts</a><span>Source of the Handshake SOP page</span></li>
+          </ul>
+          <div class="m-note">
+            <b>Note for Rasesh · N4 <a href="#n-4">Appendix B</a></b>
+            <p>The live page says the Agent Handshake endpoint has exactly eight tools <a class="m-ref" href="#r-1">R1</a>. The main /mcp endpoint registers six agent_handshake tools <a class="m-ref" href="#r-10">R10</a>, and the SOP prompt calls agent_handshake_accept_invitation, which is not on /mcp <a class="m-ref" href="#r-5">R5</a>. The eight tool names for /next/handshake/mcp belong here.</p>
+          </div>
+          <div class="m-note">
+            <b>Note for Rasesh · N8 <a href="#n-8">Appendix B</a></b>
+            <p>"How the handshake works" on the live page links back to its own section <a class="m-ref" href="#r-1">R1</a>. A how-it-works doc, or the SOP, belongs there.</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- 2.5 -->
+      <article class="m-blk" id="svc-commit">
+        <div class="m-bh"><span class="m-id">2.5</span><h3>Commitments &amp; audit</h3><span class="m-status">Live on testnet</span><span class="m-refs"><a class="m-ref" href="#r-1">R1</a><a class="m-ref" href="#r-7">R7</a></span></div>
+        <div class="m-bb">
+          <p class="m-hl">Promises with a timestamp, and the trail to prove them.</p>
+          <p class="m-p">Issue, checkpoint and settle commitments with every outcome, kept or broken, on the record. Then export audit trails, compliance reports and portable evidence packages. <a class="m-ref" href="#r-1">R1</a></p>
+          <table class="m-spec">
+            <tr><th>Verdict</th><td><code>tsa_attest</code> compares the anchor time with the deadline: kept, broken-late or broken. The consequence is recorded, not enforced. <a class="m-ref" href="#r-7">R7</a></td></tr>
+            <tr><th>Compliance</th><td>Report presets for EU AI Act Art. 12, SEC 17a-4 and ISO 27001. <a class="m-ref" href="#r-7">R7</a></td></tr>
+            <tr><th>Scheduling</th><td>Contract types, estimates and lists are live. <code>create_schedule</code> is a preview, blocked on the signing-message spec. The caller's own EVM wallet signs; the server never makes a signature. <a class="m-ref" href="#r-7">R7</a><a class="m-ref" href="#r-9">R9</a></td></tr>
+          </table>
+          <div class="m-sub">Tools · 13</div>
+          <div class="m-tools"><code>tsa_issue</code><code>tsa_checkpoint</code><code>tsa_attest</code><code>tsa_settle</code><code>tsa_status</code><code>get_contract_types</code><code>estimate_schedule</code><code class="pv" title="Preview">create_schedule · preview</code><code>list_schedules</code><code>generate_audit_trail</code><code>generate_compliance_report</code><code>build_evidence_package</code><code>verify_package</code></div>
+          <div class="m-sub">Repo files</div>
+          <ul class="m-files">
+            <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/packages/core/src/tsa.ts">packages/core/src/tsa.ts</a><span>Commitment lifecycle</span></li>
+            <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/implementation-plan.md">implementation-plan.md</a><span>Full technical spec; marked the source of truth</span></li>
+            <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/mcp-readiness.md">mcp-readiness.md</a><span>Per-tool readiness, from live tests</span></li>
+          </ul>
+        </div>
+      </article>
+    </section>
+
+    <!-- ===== 03 AGENTS ===== -->
+    <section class="m-sec" id="agents" data-sec>
+      <header class="m-sh">
+        <div class="m-sn">03<small>Agents</small></div>
+        <div><h2 class="m-st">Trust the agent <em>on the other side.</em></h2></div>
+        <p class="m-lead">Before agents talk business, they prove who is present and what each side agreed to. Signing happens on each agent's own machine, and the outcome is anchored where anyone can re-verify it. <a class="m-ref" href="#r-1">R1</a></p>
+      </header>
+
+      <figure class="m-fig">
+        <div class="m-anim"><div data-ag-player></div></div>
+        <figcaption><b>Fig 3.1</b><span>The two animations: Agent Handshake, live on testnet, and Agent Contract, in development. The same story as the main page, drawn as cards.</span></figcaption>
+      </figure>
+
+      <div class="m-cols">
+        <article class="m-blk">
+          <div class="m-bh"><span class="m-id">3.1</span><h3>Standalone Handshake</h3><span class="m-status">Live on testnet</span></div>
+          <div class="m-bb">
+            <p class="m-p">Two strangers run identity, authority and capability checks, sign consent to a stated purpose and scope, then talk in a witnessed channel whose opening and closing are anchored. <a class="m-ref" href="#r-1">R1</a></p>
+            <table class="m-spec">
+              <tr><th>Endpoint</th><td><code>/connect/mcp</code></td></tr>
+              <tr><th>Key</th><td>None</td></tr>
+              <tr><th>Scope</th><td>Consent covers communication only. It is not an agreement and never authorizes a transaction. <a class="m-ref" href="#r-1">R1</a></td></tr>
+            </table>
+            <div class="m-code"><button class="m-copy" type="button" data-copy>Copy</button><pre>claude mcp add clockchain-handshake --transport http \
+  https://mcp.clockchain.network/connect/mcp</pre></div>
+          </div>
+        </article>
+        <article class="m-blk">
+          <div class="m-bh"><span class="m-id">3.2</span><h3>Agent Handshake</h3><span class="m-status">Live on testnet</span></div>
+          <div class="m-bb">
+            <p class="m-p">Two independently controlled agents prove live signing-key control in a bounded session and sign the same ordered exchange. The output is a VERIFIED certificate binding both identities, the session, message digests, ordering and freshness. <a class="m-ref" href="#r-5">R5</a></p>
+            <table class="m-spec">
+              <tr><th>Endpoint</th><td><code>/next/handshake/mcp</code>, no auth, capability per call</td></tr>
+              <tr><th>Protocol</th><td><code>clockchain.agent-handshake/v2</code> · helper 2.1.8</td></tr>
+              <tr><th>Local adapter</th><td><code>npx -y @d4d.group/local-adapter</code> · Node.js 24 · keys never leave the machine</td></tr>
+              <tr><th>Pass</th><td>Three ordered anchors: proposal, acceptance, acknowledgment</td></tr>
+              <tr><th>Scope</th><td>Authorizes nothing downstream. externalBusinessActionPerformed is always false.</td></tr>
+              <tr><th>Limits</th><td>Invites are single-use, short-lived and capped at 5 per hour</td></tr>
+            </table>
+            <p class="m-p" style="margin-top:12px">Full steps: <a href="https://mcp.clockchain.network/handshake/sop">Handshake SOP</a> <a class="m-ref" href="#r-5">R5</a></p>
+          </div>
+        </article>
+      </div>
+
+      <article class="m-blk">
+        <div class="m-bh"><span class="m-id">3.3</span><h3>Agent Contract</h3><span class="m-status dev">In development</span><span class="m-refs"><a class="m-ref" href="#r-28">R28</a><a class="m-ref" href="#r-23">R23</a></span></div>
+        <div class="m-bb">
+          <p class="m-p">Two agents agree terms, an outside settlement provider holds the funds, and payment follows verified work. The film shows a family agent and a travel agency, with all six milestones anchored on Clockchain. <a class="m-ref" href="#r-28">R28</a></p>
+          <div class="m-sub">Repo files</div>
+          <ul class="m-files">
+            <li><a class="dir" href="https://github.com/thetangstr/clockchain-developer-tools/tree/main/docs/agent-contract">docs/agent-contract/</a><span>Build briefs N4A to N7C, the milestone log, runbooks</span></li>
+            <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/docs/agent-contract/MILESTONE-LOG.md">docs/agent-contract/MILESTONE-LOG.md</a><span>Milestone log</span></li>
+            <li><a class="dir" href="https://github.com/thetangstr/clockchain-developer-tools/tree/main/packages/mcp-server/src/agent-contract">packages/mcp-server/src/agent-contract/</a><span>Approval, settlement rail, milestone log, certificate</span></li>
+          </ul>
+          <div class="m-note">
+            <b>Note for Rasesh · N5 <a href="#n-5">Appendix B</a></b>
+            <p>Agent Contract has no public page, endpoint or tool list yet. The repo holds build briefs and source only <a class="m-ref" href="#r-23">R23</a><a class="m-ref" href="#r-24">R24</a>. Which doc can be public, and what endpoint and status line belong here?</p>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- ===== 04 CLOCK TOOLS ===== -->
+    <section class="m-sec" id="clock-tools" data-sec>
+      <header class="m-sh">
+        <div class="m-sn">04<small>Module 07</small></div>
+        <div><h2 class="m-st">Stopwatch, timer, alarm, <em>on time you can prove.</em></h2></div>
+        <p class="m-lead">Measure and schedule on Clockchain consensus time instead of a machine clock. Timers and alarms fire while your agent is offline, never early. Every result is anchored and anyone can re-verify it with no key. <a class="m-ref" href="#r-2">R2</a></p>
+      </header>
+
+      <div class="m-stats" style="margin:0 0 20px">
+        <div><span class="m-k">Tools</span><b>8</b></div>
+        <div><span class="m-k">Fires offline</span><b>Yes</b></div>
+        <div><span class="m-k">Early fires</span><b>Never</b></div>
+        <div><span class="m-k">Horizon</span><b>1 s to 30 d</b></div>
+        <div><span class="m-k">Verification</span><b>Keyless</b></div>
+      </div>
+
+      <div data-tool-sections></div>
+
+      <article class="m-blk">
+        <div class="m-bh"><span class="m-id">4.4</span><h3>Evidence</h3><span class="m-refs"><a class="m-ref" href="#r-11">R11</a><a class="m-ref" href="#r-12">R12</a></span></div>
+        <div class="m-bb">
+          <p class="m-p">Real runs against the hosted endpoint on 2026-09-11. Every check is an on-chain re-read. <a class="m-ref" href="#r-2">R2</a></p>
+          <div class="m-scroll"><table class="m-tab">
+            <thead><tr><th>Run</th><th>Result</th><th>Record</th></tr></thead>
+            <tbody>
+              <tr><td>Live gates G0 to G4</td><td>12 / 12: stopwatch, timer, alarm (soft, confirmed, hosted), freshness</td><td><a class="m-ref" href="#r-11">R11</a></td></tr>
+              <tr><td>Production agent, all 50 tools</td><td>24 / 24 tasks</td><td><a class="m-ref" href="#r-12">R12</a></td></tr>
+              <tr><td>Five fresh agents on a demo token</td><td>4 / 4 clock tasks each</td><td><a class="m-ref" href="#r-12">R12</a></td></tr>
+            </tbody>
+          </table></div>
+        </div>
+      </article>
+    </section>
+
+    <!-- ===== 05 PROOF ===== -->
+    <section class="m-sec" id="proof" data-sec>
+      <header class="m-sh">
+        <div class="m-sn">05<small>Why it holds</small></div>
+        <div><h2 class="m-st">Proof, <em>not assurance.</em></h2></div>
+      </header>
+      <div class="m-claims">
+        <div><h4><span>5.1</span>Consensus time</h4><p>Every timestamp is the network's agreed block time, and anyone can re-check it. There is no single clock to trust. <a class="m-ref" href="#r-1">R1</a></p></div>
+        <div><h4><span>5.2</span>Self-verifying receipts</h4><p>A receipt carries its own payload and anchor. Recompute the hash and compare it with the on-chain block. <a class="m-ref" href="#r-1">R1</a><a class="m-ref" href="#r-16">R16</a></p></div>
+        <div><h4><span>5.3</span>Tamper-evident</h4><p>Change one byte and verification fails. The ledger is append-only; the immutable block is the record. <a class="m-ref" href="#r-1">R1</a></p></div>
+      </div>
+    </section>
+
+    <!-- ===== 06 INSTALL ===== -->
+    <section class="m-sec" id="install" data-sec>
+      <header class="m-sh">
+        <div class="m-sn">06<small>Install</small></div>
+        <div><h2 class="m-st">Add Clockchain <em>to your agent.</em></h2></div>
+        <p class="m-lead">Hosted endpoint. Any MCP client connects in under a minute. <a class="m-ref" href="#r-1">R1</a><a class="m-ref" href="#r-8">R8</a></p>
+      </header>
+      <div class="m-blk"><div class="m-bb">
+        <ol class="m-steps">
+          <li><div>
+            <h4>Get a testnet token</h4>
+            <p class="m-p">A delegated testnet token: writes spend Clockchain's testnet credits. No signup. <a class="m-ref" href="#r-7">R7</a></p>
+            <div class="m-code"><button class="m-copy" type="button" data-copy>Copy</button><pre>curl -X POST https://mcp.clockchain.network/token</pre></div>
+            <p class="m-p">Or bring your own Clockchain API key; writes then spend your credits. Send it in the x-clockchain-* headers, not in x-api-key, which is for MCP tokens only. <a class="m-ref" href="#r-1">R1</a></p>
+            <div class="m-note">
+              <b>Note for Rasesh · N7 <a href="#n-7">Appendix B</a></b>
+              <p>"How to get one" for an API key links to the clockchain.network home page <a class="m-ref" href="#r-1">R1</a>. The page that issues keys belongs here.</p>
+            </div>
+          </div></li>
+          <li><div>
+            <h4>Add the server</h4>
+            <p class="m-p">The same block works in every JSON-configured client: Claude Code, Cursor, Claude Desktop, Hermes, OpenClaw. <a class="m-ref" href="#r-1">R1</a></p>
+            <div class="m-code-k">MCP config · JSON</div>
+            <div class="m-code"><button class="m-copy" type="button" data-copy>Copy</button><pre>{
+  <span class="k">"mcpServers"</span>: {
+    <span class="k">"clockchain"</span>: {
+      <span class="k">"type"</span>: "http",
+      <span class="k">"url"</span>: "https://mcp.clockchain.network/mcp",
+      <span class="k">"headers"</span>: { <span class="k">"x-api-key"</span>: "&lt;YOUR_TOKEN&gt;" }
+    }
+  }
+}</pre></div>
+            <div class="m-code-k">CLI · where the client can set headers</div>
+            <div class="m-code"><button class="m-copy" type="button" data-copy>Copy</button><pre>claude mcp add clockchain --transport http https://mcp.clockchain.network/mcp \
+  --header "x-api-key: &lt;YOUR_TOKEN&gt;"</pre></div>
+            <div class="m-code-k">Codex · ~/.codex/config.toml</div>
+            <div class="m-code"><button class="m-copy" type="button" data-copy>Copy</button><pre>[mcp_servers.clockchain]
+url = "https://mcp.clockchain.network/mcp"
+http_headers = { "x-api-key" = "&lt;YOUR_TOKEN&gt;" }
+<span class="c"># headless (codex exec) only: nobody is there to approve each call</span>
+default_tools_approval_mode = "approve"</pre></div>
+          </div></li>
+          <li><div>
+            <h4>Verify</h4>
+            <p class="m-p">Open a new session and run <code>/mcp</code>. You should see clockchain with all 50 tools. Then ask: "use clockchain to get the current consensus time." <a class="m-ref" href="#r-1">R1</a></p>
+            <p class="m-p">Local stdio install, ERC-8004 reads and chat-connector setup are in <a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/INSTALL.md">INSTALL.md</a>. <a class="m-ref" href="#r-8">R8</a></p>
+          </div></li>
+        </ol>
+      </div></div>
+    </section>
+
+    <!-- ===== 07 LIMITS ===== -->
+    <section class="m-sec" id="limits" data-sec>
+      <header class="m-sh">
+        <div class="m-sn">07<small>Limits</small></div>
+        <div><h2 class="m-st">Limits and <em>honest claims.</em></h2></div>
+      </header>
+      <div class="m-blk"><div class="m-bb">
+        <table class="m-spec">
+          <tr><th>Rate</th><td>30 tool calls per minute per token. The MCP handshake and tools/list are free. <a class="m-ref" href="#r-2">R2</a></td></tr>
+          <tr><th>Triggers</th><td>Up to 20 active timers and alarms per caller. A fire is 1 s to 30 days out; intervals are 60 s or more. <a class="m-ref" href="#r-2">R2</a></td></tr>
+          <tr><th>Credits</th><td>Each anchor spends one testnet log credit: two per stopwatch measurement, one per timer or alarm fire. Reads and verification are free. <a class="m-ref" href="#r-2">R2</a></td></tr>
+          <tr><th>Webhooks</th><td>Optional webhook_url on timer_set and alarm_set. Standard-Webhooks headers, HMAC-SHA256 signature with a per-caller secret returned once. Destinations are DNS-pinned and allow-listed. <a class="m-ref" href="#r-2">R2</a><a class="m-ref" href="#r-13">R13</a></td></tr>
+          <tr><th>Blocks</th><td>Blocks mint only on writes, so consensus now goes stale on an idle chain. <a class="m-ref" href="#r-9">R9</a></td></tr>
+          <tr><th>Network</th><td>Anchored on the Clockchain anchoring gateway: testnet, one validator. Hash, block anchor and block time are real and verifiable with no key. Multi-validator attestation starts at mainnet. <a class="m-ref" href="#r-1">R1</a><a class="m-ref" href="#r-9">R9</a></td></tr>
+          <tr><th>Evidence</th><td>Not yet a court-of-law evidentiary claim. <a class="m-ref" href="#r-1">R1</a></td></tr>
+          <tr><th>Packages</th><td>The @clockchain packages are not on npm yet. Use the hosted endpoint, or clone and build the repo. <a class="m-ref" href="#r-7">R7</a></td></tr>
+        </table>
+        <div class="m-note">
+          <b>Note for Rasesh · N9 <a href="#n-9">Appendix B</a></b>
+          <p>The roadmap file says webhooks stay off until the allow-list ships <a class="m-ref" href="#r-9">R9</a>. The clock-tools page says destinations are allow-listed on this deployment <a class="m-ref" href="#r-2">R2</a>. Which is current?</p>
+        </div>
+      </div></div>
+    </section>
+
+    <!-- ===== 08 REPOSITORIES ===== -->
+    <section class="m-sec" id="repos" data-sec>
+      <header class="m-sh">
+        <div class="m-sn">08<small>Source</small></div>
+        <div><h2 class="m-st">Repositories.</h2></div>
+      </header>
+      <article class="m-blk m-repo">
+        <div class="m-bh"><span class="m-id">8.1</span><h3><a href="https://github.com/thetangstr/clockchain-developer-tools">thetangstr/clockchain-developer-tools</a></h3><span class="m-status">Public</span><span class="m-refs"><a class="m-ref" href="#r-33">R33</a></span></div>
+        <div class="m-bb">
+          <div class="m-meta"><span>Linked from the live page as Docs</span><span>Last push 2026-10-26</span><span>509 files</span></div>
+          <p class="m-p">The MCP server, the shared core, the client-side clock SDK, the hosted keeper, the telemetry sink, the web demo, the ChatGPT app, docs and the eval harness.</p>
+          <ul class="m-files">
+            <li class="rp">Start here</li>
+            <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/README.md">README.md</a><span>What it is, tools by module, status</span></li>
+            <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/INSTALL.md">INSTALL.md</a><span>Hosted, self-host, bring your own key, chat connectors</span></li>
+            <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/QUICKSTART.md">QUICKSTART.md</a><span>For engineers</span></li>
+            <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/TRY-IT.md">TRY-IT.md</a><span>For non-engineers, about 10 minutes</span></li>
+            <li><a href="https://github.com/thetangstr/clockchain-developer-tools/blob/main/roadmap.md">roadmap.md</a><span>What works, known limits, what is next</span></li>
+            <li class="rp">Packages</li>
+            <li><a class="dir" href="https://github.com/thetangstr/clockchain-developer-tools/tree/main/packages/mcp-server">packages/mcp-server/</a><span>The MCP server, stdio and HTTP</span></li>
+            <li><a class="dir" href="https://github.com/thetangstr/clockchain-developer-tools/tree/main/packages/core">packages/core/</a><span>Client, types, hashing, receipts, ERC-8004</span></li>
+            <li><a class="dir" href="https://github.com/thetangstr/clockchain-developer-tools/tree/main/packages/clock-sdk">packages/clock-sdk/</a><span>Client-side clock, scheduler, stopwatch</span></li>
+            <li><a class="dir" href="https://github.com/thetangstr/clockchain-developer-tools/tree/main/packages/keeper">packages/keeper/</a><span>Hosted keeper: fires while offline</span></li>
+            <li><a class="dir" href="https://github.com/thetangstr/clockchain-developer-tools/tree/main/eval">eval/</a><span>Eval harness and reports, on-chain checks</span></li>
+          </ul>
+        </div>
+      </article>
+      <div class="m-cols">
+        <article class="m-blk m-repo">
+          <div class="m-bh"><span class="m-id">8.2</span><h3><a href="https://github.com/thetangstr/clockchain-handshake">thetangstr/clockchain-handshake</a></h3><span class="m-refs"><a class="m-ref" href="#r-29">R29</a></span></div>
+          <div class="m-bb">
+            <div class="m-meta"><span>Last push 2026-08-03</span></div>
+            <p class="m-p">The Agent Trust Handshake product and demo.</p>
+          </div>
+        </article>
+        <article class="m-blk m-repo">
+          <div class="m-bh"><span class="m-id">8.3</span><h3><a href="https://github.com/thetangstr/clockchain-handshake-v2">thetangstr/clockchain-handshake-v2</a></h3><span class="m-refs"><a class="m-ref" href="#r-30">R30</a></span></div>
+          <div class="m-bb">
+            <div class="m-meta"><span>Last push 2026-10-08</span></div>
+            <p class="m-p">The bilateral payment-authorization handshake demo.</p>
+          </div>
+        </article>
+      </div>
+      <div class="m-note">
+        <b>Note for Rasesh · N6 <a href="#n-6">Appendix B</a></b>
+        <p>The live page links neither handshake repo. Which one is canonical, and should the manual link it from section 03?</p>
+      </div>
+    </section>
+
+    <!-- ===== A REFERENCES ===== -->
+    <section class="m-sec" id="refs" data-sec>
+      <header class="m-sh">
+        <div class="m-sn">A<small>Appendix</small></div>
+        <div><h2 class="m-st">References.</h2></div>
+        <p class="m-lead">Every chip on this page points here. Pages read 2026-10-30; repo files at main.</p>
+      </header>
+      <ol class="m-refl" data-refs></ol>
+    </section>
+
+    <!-- ===== B NOTES ===== -->
+    <section class="m-sec" id="notes" data-sec>
+      <header class="m-sh">
+        <div class="m-sn">B<small>Appendix</small></div>
+        <div><h2 class="m-st">Notes <em>for Rasesh.</em></h2></div>
+        <p class="m-lead">Where a source is missing or two sources disagree. Each note says what belongs where.</p>
+      </header>
+      <ol class="m-refl" data-notes></ol>
+    </section>
+
+    <footer class="m-foot">
+      <p>Presently anchored on the Clockchain anchoring gateway (testnet, one validator): the event hash, block anchor and block time are real and verifiable with no key against the sealed block, but not yet attested by an independent validator set. Multi-validator supermajority attestation starts at mainnet. Not yet a court-of-law evidentiary claim. <a class="m-ref" href="#r-1">R1</a></p>
+      <p>MCP-TM-01 · Draft r2 · 2026-10-30 · <a href="mcp-style-guide.html">Style guide</a></p>
+    </footer>
+  </main>
+</div>
+
+<script src="agents/story.js?v=1"></script>
+<script src="agents/tools.js?v=1"></script>
+<script>
+(function () {
+  const GH = 'https://github.com/thetangstr/clockchain-developer-tools/';
+  const B = (p) => GH + 'blob/main/' + p, T = (p) => GH + 'tree/main/' + p;
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  /* ---------- Appendix A: references ---------- */
+  const REFS = [
+    [1, 'https://mcp.clockchain.network/', 'The live MCP page: services, handshake, install, footer disclaimer'],
+    [2, 'https://mcp.clockchain.network/clock-tools', 'Clock tools, module 07: tools, arguments, limits, evidence'],
+    [3, 'https://mcp.clockchain.network/clock-tools.txt', 'Clock tools as plain text, for agents'],
+    [4, 'https://mcp.clockchain.network/llms.txt', 'Connect guide for agents'],
+    [5, 'https://mcp.clockchain.network/handshake/sop', 'Handshake SOP: protocol v2, helper 2.1.8, pass criteria, limits'],
+    [6, 'https://mcp.clockchain.network/status', 'Live status'],
+    [7, B('README.md'), 'Repo README: tools by module, status, roadmap table'],
+    [8, B('INSTALL.md'), 'Install: hosted, self-host, bring your own key, chat connectors'],
+    [9, B('roadmap.md'), 'Roadmap and known limits, last updated 2026-09-10'],
+    [10, B('packages/mcp-server/src/tools.ts'), 'The tool registry: 50 registerTool calls'],
+    [11, B('packages/clock-sdk/GATES.md'), 'Clock gates G0 to G4 and pass criteria'],
+    [12, T('eval/reports'), 'Eval reports, 2026-09-11 runs'],
+    [13, B('packages/keeper/README.md'), 'Hosted keeper: delivery, anchoring, re-arm'],
+    [14, B('packages/mcp-server/src/keeper-runtime.ts'), 'Keeper loop inside the MCP process'],
+    [15, B('skills/clockchain-verified-alarm/SKILL.md'), 'Agent playbook for verified time'],
+    [16, B('packages/core/src/receipt.ts'), 'Receipts'],
+    [17, B('infra/anchoring-gateway/README.md'), 'Anchoring gateway'],
+    [18, B('packages/core/src/erc8004.ts'), 'ERC-8004 registry reads'],
+    [19, B('product-a-identity-decision.md'), 'Identity decision memo'],
+    [20, T('packages/mcp-server/src/standalone-handshake'), 'Standalone Handshake source'],
+    [21, T('packages/mcp-server/src/agent-handshake/v2'), 'Agent Handshake v2 source'],
+    [22, B('docs/superpowers/specs/2026-09-14-standalone-handshake-design.md'), 'Standalone Handshake design'],
+    [23, T('docs/agent-contract'), 'Agent Contract build briefs and logs'],
+    [24, T('packages/mcp-server/src/agent-contract'), 'Agent Contract source'],
+    [25, B('packages/core/src/tsa.ts'), 'Commitment lifecycle'],
+    [26, 'https://docsend.com/view/gphvbt5saqjtvmxg', 'Film: Clockchain Network Overview, 34.6 s (Tetsuji)'],
+    [27, 'https://docsend.com/view/y5rzpup27q6yknyj', 'Film: Clockchain Agent Handshake Demo, 36.5 s (Tetsuji)'],
+    [28, 'https://docsend.com/view/9ruzxgzhdbvssisi', 'Film: Clockchain Agent Contract, 30 s (Tetsuji)'],
+    [29, 'https://github.com/thetangstr/clockchain-handshake', 'Repo: Agent Trust Handshake product and demo'],
+    [30, 'https://github.com/thetangstr/clockchain-handshake-v2', 'Repo: bilateral payment-authorization handshake demo'],
+    [31, 'https://mcp.clockchain.network/assets/mcp-demo.mp4', 'Demo film, 27 s'],
+    [32, B('packages/mcp-server/src/landing.ts'), 'Source of the live MCP page'],
+    [33, 'https://github.com/thetangstr/clockchain-developer-tools', 'Repo root'],
+    [34, B('clock-tools-production-plan.md'), 'Clock tools production plan']
+  ];
+  /* repo files show as repo/path; folders end in a slash */
+  const show = (u) => u.indexOf(GH) === 0 && u.length > GH.length
+    ? 'clockchain-developer-tools/' + u.slice(GH.length).replace(/^blob\/main\//, '').replace(/^tree\/main\/(.*)$/, '$1/')
+    : u.replace(/^https:\/\//, '');
+  document.querySelector('[data-refs]').innerHTML = REFS.map(([n, u, t]) =>
+    '<li id="r-' + n + '"><b>R' + n + '</b><div><a href="' + u + '">' + esc(show(u)) + '</a><span>' + esc(t) + '</span></div></li>').join('');
+
+  /* ---------- Appendix B: notes for Rasesh ---------- */
+  const NOTES = [
+    [1, '#svc-time', '2.1 Trusted time', 'Hosted keeper or client SDK: the README says timers and alarms need the client-side SDK and lists the hosted keeper as next; the roadmap, the clock-tools page and the keeper package say they fire on the hosted keeper. Update the README callout if the keeper is current.'],
+    [2, '#cover', '00 Cover', 'Tool count: the Network Overview film says 12 tools; the live page, README and server source say 50.'],
+    [3, '#services', '02 Services', 'Service grouping: the tool lists under each service are our grouping of the 50 tools. Confirm, in particular verify_receipt and verify_cross_party.'],
+    [4, '#svc-handshake', '2.4 Handshake', 'The eight tool names on /next/handshake/mcp. The main endpoint has six agent_handshake tools; the SOP calls agent_handshake_accept_invitation.'],
+    [5, '#agents', '3.3 Agent Contract', 'Agent Contract: which doc can be public, and its endpoint and status line.'],
+    [6, '#repos', '08 Repositories', 'Which handshake repo is canonical, and whether to link it.'],
+    [7, '#install', '06 Install', 'The page that issues Clockchain API keys. "How to get one" goes to the home page.'],
+    [8, '#svc-handshake', '2.4 Handshake', '"How the handshake works" on the live page links back to its own section. A how-it-works doc, or the SOP, belongs there.'],
+    [9, '#limits', '07 Limits', 'Webhooks: off until the allow-list ships (roadmap) or allow-listed now (clock-tools page).']
+  ];
+  document.querySelector('[data-notes]').innerHTML = NOTES.map(([n, at, where, t]) =>
+    '<li id="n-' + n + '"><b>N' + n + '</b><div><a href="' + at + '">' + esc(where) + '</a><span>' + esc(t) + '</span></div></li>').join('');
+
+  /* ---------- 04: one block per clock tool, with its figure and tool table ---------- */
+  const TT = {
+    stopwatch: { sec: '4.1', lead: 'Elapsed time between two anchored markers, measured on consensus time.',
+      how: 'stopwatch_start anchors a start marker and waits for its block. stopwatch_stop anchors a stop marker and returns elapsedMs from the two ledger timestamps, never your clock. stopwatch_verify recomputes the elapsed time from the two block times, with no key.',
+      rows: [['stopwatch_start', '{ label, wait_ms?, idempotency_key?, allow_degraded? }', 'start.ledgerId, start.blockHeight, start.createdTimestamp', '1 credit'],
+             ['stopwatch_stop', '{ label, start_ledger_id, wait_ms?, idempotency_key?, allow_degraded? }', 'elapsedMs, start, stop, status', '1 credit'],
+             ['stopwatch_verify', '{ start_ledger_id, stop_ledger_id, start_block_height?, stop_block_height? }', 'verified, elapsedOnChainMs, elapsedRecordedMs', 'free, keyless']],
+      agent: ['Two credits per measurement, one per marker. A wrong start_ledger_id is refused.', 'Resolution is the block time: a block seals within about 1 s of the write.'] },
+    timer: { sec: '4.2', lead: 'A countdown that fires on verified time while your agent is offline, never early, and anchors the fire.',
+      how: 'timer_set arms a one-shot trigger delay_ms from now on the hosted keeper, on consensus time. You can disconnect. The keeper fires it, anchors the fire as an Agent Attested Receipt and holds the result. Poll timer_status until the status is done.',
+      rows: [['timer_set', '{ delay_ms (1000 to 2592000000), label?, payload?, webhook_url? }', 'id, fireAtIso, status "scheduled", delivery', '1 credit per fire'],
+             ['timer_status', '{ id }', 'status, fires[] with anchor.ledgerId, anchor.blockHeight, receipt', 'free'],
+             ['timer_cancel', '{ id }', 'status "cancelled"', 'free'],
+             ['timer_list', '{ }', 'count, triggers[], yours only', 'free']],
+      agent: ['The fire waits for consensus time to pass the target, then lands on the next keeper tick (1 s). Observed lateness: +87 ms to +922 ms.', 'Verify the fire with verify_cross_party or verify_receipt. Both are keyless.'] },
+    alarm: { sec: '4.3', lead: 'Fires at an absolute time, once or on an interval, with the same anchored receipt as the timer.',
+      how: 'alarm_set takes fire_at, in ISO-8601 UTC or epoch milliseconds, up to 30 days out. Add every_ms of 60000 or more to repeat: it re-arms after each anchored fire until you cancel it. timer_status, timer_cancel and timer_list work on alarms too.',
+      rows: [['alarm_set', '{ fire_at (ISO-8601 or epoch ms), every_ms? (60000 or more), label?, payload?, webhook_url? }', 'id, fireAtIso, mode once or interval, delivery', '1 credit per fire'],
+             ['timer_status · timer_cancel · timer_list', 'as for timers', 'the same trigger view', 'free']],
+      agent: ['Interval alarms spend a credit on every fire. Cancel to stop.', 'Triggers are scoped to the caller. Another token cannot see, poll or cancel yours.'] }
+  };
+  const fig = { stopwatch: '4.1', timer: '4.2', alarm: '4.3' };
+  const host = document.querySelector('[data-tool-sections]');
+  const order = ['stopwatch', 'timer', 'alarm'];
+  host.innerHTML = order.map((id) => {
+    const t = window.CC_TOOLS.find((x) => x.id === id), d = TT[id];
+    return '<article class="m-blk" id="tool-' + id + '">' +
+      '<div class="m-bh"><span class="m-id">' + d.sec + '</span><h3>' + esc(t.name) + '</h3><span class="m-status">' + esc(t.status) + '</span>' +
+      '<span class="m-refs"><a class="m-ref" href="#r-2">R2</a><a class="m-ref" href="#r-3">R3</a></span></div>' +
+      '<div class="m-bb"><div class="m-cols">' +
+        '<figure class="m-fig tight" style="margin:0"><div class="m-fig-b">' + t.svg + '</div><figcaption><b>Fig ' + fig[id] + '</b><span>' + esc(t.name) + ', as on the main page card.</span></figcaption></figure>' +
+        '<div><p class="m-hl">' + esc(d.lead) + '</p><p class="m-p">' + esc(d.how) + ' <a class="m-ref" href="#r-2">R2</a></p></div>' +
+      '</div>' +
+      '<div class="m-sub">Tools</div><div class="m-scroll"><table class="m-tab stack"><thead><tr><th>Tool</th><th>Arguments</th><th>Returns</th><th>Cost</th></tr></thead><tbody>' +
+        d.rows.map((r) => '<tr><td>' + esc(r[0]) + '</td><td data-l="Arguments"><code>' + esc(r[1]) + '</code></td><td data-l="Returns">' + esc(r[2]) + '</td><td data-l="Cost">' + esc(r[3]) + '</td></tr>').join('') +
+      '</tbody></table></div>' +
+      '<div class="m-agent"><b>Notes for agents</b><ul>' + d.agent.map((a) => '<li>' + esc(a) + ' <a class="m-ref" href="#r-2">R2</a></li>').join('') + '</ul></div>' +
+      '</div></article>';
+  }).join('');
+
+  /* ---------- copy buttons ---------- */
+  document.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-copy]'); if (!b) return;
+    const src = b.parentElement.querySelector('pre, [data-copy-src]');
+    const txt = src ? src.textContent : '';
+    const done = () => { const o = b.textContent; b.textContent = 'Copied'; setTimeout(() => { b.textContent = o; }, 1400); };
+    try { navigator.clipboard.writeText(txt).then(done, done); } catch (err) { done(); }
+  });
+
+  /* ---------- theme ---------- */
+  document.querySelector('[data-theme-toggle]').addEventListener('click', () => {
+    const r = document.documentElement, t = r.getAttribute('data-variant') === 'eclipse' ? 'daylight' : 'eclipse';
+    r.setAttribute('data-variant', t);
+    try { localStorage.setItem('cc-theme', t); } catch (err) {}
+  });
+
+  /* ---------- contents: mark the section in view ---------- */
+  const links = [...document.querySelectorAll('.m-toc a')];
+  const io = new IntersectionObserver((es) => {
+    es.forEach((en) => {
+      if (!en.isIntersecting) return;
+      links.forEach((a) => a.toggleAttribute('aria-current', a.getAttribute('href') === '#' + en.target.id));
+      /* phone: the contents are one scrolling row; keep the current chip in view without moving the page */
+      const cur = links.find((a) => a.hasAttribute('aria-current')), ol = cur && cur.closest('ol');
+      if (ol && ol.scrollWidth > ol.clientWidth) {
+        const d = cur.getBoundingClientRect().left - ol.getBoundingClientRect().left;
+        ol.scrollTo({ left: ol.scrollLeft + d - (ol.clientWidth - cur.offsetWidth) / 2, behavior: 'smooth' });
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  document.querySelectorAll('[data-sec]').forEach((s) => io.observe(s));
+})();
+</script>
+<script type="module">
+  import { mount } from './agents/player.js?v=1';
+  mount(document.querySelector('[data-ag-player]'), { scene: './scene-c.js', ui: 'tabs' });
+</script>
+</body>
+</html>
