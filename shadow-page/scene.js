@@ -561,7 +561,7 @@ function buildCamera() {
   K('record', 1, { x: 0, y: 0.6, z: -0.4, dist: 9.6, el: 34, az: -8 });
   K('record', 2, { x: 0, y: 0.6, z: 0, dist: 9.6, el: 42, az: 22 });
   K('anchor', 0, { x: -0.3, y: 1.2, z: 0, dist: 11.2, el: 28, az: 38 });
-  K('anchor', 1, { x: 0.2, y: 0, z: 0.35, dist: 15.5, el: 86, az: 0 }, 2.2);   /* straight down: the record and its shadow ring */
+  K('anchor', 1, { x: 0.2, y: 0, z: 0.35, dist: 13.2, el: 46, az: 26 }, 2.2);   /* angled wide view: the record and its shadow on the ledger */
   K('share', 0, { x: 0, y: 0.4, z: 0.4, dist: 11.4, el: 44, az: 20 });
   K('share', 1, { x: 0, y: 0.5, z: 1.6, dist: 11.8, el: 30, az: 8 });
   K('check', 0, { x: 0, y: 0.6, z: 3.0, dist: 8.6, el: 24, az: 160 });
@@ -570,7 +570,7 @@ function buildCamera() {
   K('recheck', 0, { x: 0.1, y: 0.2, z: 0.2, dist: 10.4, el: 54, az: -30 });
   K('recheck', 1, { x: s7.x + DX * H0, y: 0.1, z: s7.z + DZ * H0, dist: 5.2, el: 48, az: -52 });
   K('means', 0, { x: 0.1, y: 0.2, z: 0.2, dist: 11.6, el: 46, az: -80 });
-  K('end', 0, { x: 0.2, y: 0, z: 0.3, dist: 15.5, el: 84, az: 0 }, 2.2);
+  K('end', 0, { x: 0.2, y: 0, z: 0.3, dist: 13.2, el: 44, az: -24 }, 2.2);
 }
 const camP = { x: 0, y: 0, z: 0, dist: 10, el: 30, az: 0 };
 function camAt() {

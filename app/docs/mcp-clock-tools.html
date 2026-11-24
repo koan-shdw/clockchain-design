@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="../agents/r2.css?v=1" />
   <script>(function(){try{if(localStorage.getItem('ccapp-theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
 </head>
-<!-- MCP docs, page 4 of 10: Clock tools. Content from the MCP technical manual (approved 10-30), section 04.
+<!-- MCP docs, page 4 of 8: Clock tools. Content from the MCP technical manual (approved 10-30), section 04.
      The three figures are the main page's tool drawings (agents/tools.js, styles in agents/r2.css). -->
 <body data-nav="mcp" data-docs>
   <div class="shell">
@@ -28,7 +28,7 @@
             <div class="docs-mnav" id="docs-mnav"></div>
             <span class="tag">AI Agents · MCP · Module 07</span>
             <h1 style="margin-top:12px;">Stopwatch, timer, alarm, on time you can prove.</h1>
-            <p class="lead">Measure and schedule on Clockchain consensus time instead of a machine clock. Timers and alarms fire while your agent is offline, never early. Every result is anchored and anyone can re-verify it with no key. <a class="docs-ref" href="mcp-references.html#r-2">R2</a></p>
+            <p class="lead">Measure and schedule on Clockchain consensus time instead of a machine clock. Timers and alarms fire while your agent is offline, never early. Every result is anchored and anyone can re-verify it with no key.</p>
 
             <div class="docs-stats">
               <div><span class="stat-k">Tools</span><b>8</b></div>
@@ -40,13 +40,13 @@
 
             <!-- Stopwatch -->
             <h2 id="tool-stopwatch">Stopwatch</h2>
-            <div class="docs-meta"><span class="status-pill"><span class="live-dot"></span>Live on testnet</span><a class="docs-ref" href="mcp-references.html#r-2">R2</a><a class="docs-ref" href="mcp-references.html#r-3">R3</a></div>
+            <div class="docs-meta"><span class="status-pill"><span class="live-dot"></span>Live on testnet</span></div>
             <figure class="docs-fig is-tool">
               <div class="docs-fig-b" data-tool-fig="stopwatch"></div>
               <figcaption><b>Fig 4.1</b>Stopwatch, as on the main page card.</figcaption>
             </figure>
             <p class="docs-hl">Elapsed time between two anchored markers, measured on consensus time.</p>
-            <p>stopwatch_start anchors a start marker and waits for its block. stopwatch_stop anchors a stop marker and returns elapsedMs from the two ledger timestamps, never your clock. stopwatch_verify recomputes the elapsed time from the two block times, with no key. <a class="docs-ref" href="mcp-references.html#r-2">R2</a></p>
+            <p>stopwatch_start anchors a start marker and waits for its block. stopwatch_stop anchors a stop marker and returns elapsedMs from the two ledger timestamps, never your clock. stopwatch_verify recomputes the elapsed time from the two block times, with no key.</p>
             <span class="docs-sub">Tools</span>
             <h3><span class="mono-inline">stopwatch_start</span></h3>
             <dl class="docs-spec">
@@ -67,19 +67,19 @@
               <div><dt>Cost</dt><dd>free, keyless</dd></div>
             </dl>
             <div class="docs-note is-agent"><b>Notes for agents</b><ul>
-              <li>Two credits per measurement, one per marker. A wrong start_ledger_id is refused. <a class="docs-ref" href="mcp-references.html#r-2">R2</a></li>
-              <li>Resolution is the block time: a block seals within about 1 s of the write. <a class="docs-ref" href="mcp-references.html#r-2">R2</a></li>
+              <li>Two credits per measurement, one per marker. A wrong start_ledger_id is refused.</li>
+              <li>Resolution is the block time: a block seals within about 1 s of the write.</li>
             </ul></div>
 
             <!-- Timer -->
             <h2 id="tool-timer">Timer</h2>
-            <div class="docs-meta"><span class="status-pill"><span class="live-dot"></span>Live on testnet</span><a class="docs-ref" href="mcp-references.html#r-2">R2</a><a class="docs-ref" href="mcp-references.html#r-3">R3</a></div>
+            <div class="docs-meta"><span class="status-pill"><span class="live-dot"></span>Live on testnet</span></div>
             <figure class="docs-fig is-tool">
               <div class="docs-fig-b" data-tool-fig="timer"></div>
               <figcaption><b>Fig 4.2</b>Timer, as on the main page card.</figcaption>
             </figure>
             <p class="docs-hl">A countdown that fires on verified time while your agent is offline, never early, and anchors the fire.</p>
-            <p>timer_set arms a one-shot trigger delay_ms from now on the hosted keeper, on consensus time. You can disconnect. The keeper fires it, anchors the fire as an Agent Attested Receipt and holds the result. Poll timer_status until the status is done. <a class="docs-ref" href="mcp-references.html#r-2">R2</a></p>
+            <p>timer_set arms a one-shot trigger delay_ms from now on the hosted keeper, on consensus time. You can disconnect. The keeper fires it, anchors the fire as an Agent Attested Receipt and holds the result. Poll timer_status until the status is done.</p>
             <span class="docs-sub">Tools</span>
             <h3><span class="mono-inline">timer_set</span></h3>
             <dl class="docs-spec">
@@ -106,19 +106,19 @@
               <div><dt>Cost</dt><dd>free</dd></div>
             </dl>
             <div class="docs-note is-agent"><b>Notes for agents</b><ul>
-              <li>The fire waits for consensus time to pass the target, then lands on the next keeper tick (1 s). Observed lateness: +87 ms to +922 ms. <a class="docs-ref" href="mcp-references.html#r-2">R2</a></li>
-              <li>Verify the fire with verify_cross_party or verify_receipt. Both are keyless. <a class="docs-ref" href="mcp-references.html#r-2">R2</a></li>
+              <li>The fire waits for consensus time to pass the target, then lands on the next keeper tick (1 s). Observed lateness: +87 ms to +922 ms.</li>
+              <li>Verify the fire with verify_cross_party or verify_receipt. Both are keyless.</li>
             </ul></div>
 
             <!-- Alarm -->
             <h2 id="tool-alarm">Alarm</h2>
-            <div class="docs-meta"><span class="status-pill"><span class="live-dot"></span>Live on testnet</span><a class="docs-ref" href="mcp-references.html#r-2">R2</a><a class="docs-ref" href="mcp-references.html#r-3">R3</a></div>
+            <div class="docs-meta"><span class="status-pill"><span class="live-dot"></span>Live on testnet</span></div>
             <figure class="docs-fig is-tool">
               <div class="docs-fig-b" data-tool-fig="alarm"></div>
               <figcaption><b>Fig 4.3</b>Alarm, as on the main page card.</figcaption>
             </figure>
             <p class="docs-hl">Fires at an absolute time, once or on an interval, with the same anchored receipt as the timer.</p>
-            <p>alarm_set takes fire_at, in ISO-8601 UTC or epoch milliseconds, up to 30 days out. Add every_ms of 60000 or more to repeat: it re-arms after each anchored fire until you cancel it. timer_status, timer_cancel and timer_list work on alarms too. <a class="docs-ref" href="mcp-references.html#r-2">R2</a></p>
+            <p>alarm_set takes fire_at, in ISO-8601 UTC or epoch milliseconds, up to 30 days out. Add every_ms of 60000 or more to repeat: it re-arms after each anchored fire until you cancel it. timer_status, timer_cancel and timer_list work on alarms too.</p>
             <span class="docs-sub">Tools</span>
             <h3><span class="mono-inline">alarm_set</span></h3>
             <dl class="docs-spec">
@@ -133,20 +133,19 @@
               <div><dt>Cost</dt><dd>free</dd></div>
             </dl>
             <div class="docs-note is-agent"><b>Notes for agents</b><ul>
-              <li>Interval alarms spend a credit on every fire. Cancel to stop. <a class="docs-ref" href="mcp-references.html#r-2">R2</a></li>
-              <li>Triggers are scoped to the caller. Another token cannot see, poll or cancel yours. <a class="docs-ref" href="mcp-references.html#r-2">R2</a></li>
+              <li>Interval alarms spend a credit on every fire. Cancel to stop.</li>
+              <li>Triggers are scoped to the caller. Another token cannot see, poll or cancel yours.</li>
             </ul></div>
 
             <!-- Evidence -->
             <h2 id="evidence">Evidence</h2>
-            <div class="docs-meta"><a class="docs-ref" href="mcp-references.html#r-11">R11</a><a class="docs-ref" href="mcp-references.html#r-12">R12</a></div>
-            <p>Real runs against the hosted endpoint on 2026-09-11. Every check is an on-chain re-read. <a class="docs-ref" href="mcp-references.html#r-2">R2</a></p>
+            <p>Real runs against the hosted endpoint on 2026-09-11. Every check is an on-chain re-read.</p>
             <table class="table">
-              <thead><tr><th>Run</th><th>Result</th><th>Record</th></tr></thead>
+              <thead><tr><th>Run</th><th>Result</th></tr></thead>
               <tbody>
-                <tr><td>Live gates G0 to G4</td><td>12 / 12: stopwatch, timer, alarm (soft, confirmed, hosted), freshness</td><td><a class="docs-ref" href="mcp-references.html#r-11">R11</a></td></tr>
-                <tr><td>Production agent, all 50 tools</td><td>24 / 24 tasks</td><td><a class="docs-ref" href="mcp-references.html#r-12">R12</a></td></tr>
-                <tr><td>Five fresh agents on a demo token</td><td>4 / 4 clock tasks each</td><td><a class="docs-ref" href="mcp-references.html#r-12">R12</a></td></tr>
+                <tr><td>Live gates G0 to G4</td><td>12 / 12: stopwatch, timer, alarm (soft, confirmed, hosted), freshness</td></tr>
+                <tr><td>Production agent, all 50 tools</td><td>24 / 24 tasks</td></tr>
+                <tr><td>Five fresh agents on a demo token</td><td>4 / 4 clock tasks each</td></tr>
               </tbody>
             </table>
 
@@ -165,6 +164,6 @@
       if (t) el.innerHTML = t.svg;
     });
   </script>
-  <script src="../app.js?v=15"></script>
+  <script src="../app.js?v=16"></script>
 </body>
 </html>
