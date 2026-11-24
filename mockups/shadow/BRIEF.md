@@ -67,7 +67,7 @@ Infographic animation (main-page style, shared player):
 
 ## Storyboard: the animation
 
-Files: `story-shadow.js` (window.CC_STORY_SHADOW), `scene-shadow.js` (scene, card engine from clockchain-dashboard agents/scene-server.js), shared `agents/player.js`.
+Files: `shadow-page/story.js` (window.CC_STORY_SHADOW), `shadow-page/scene.js` ("the record and its shadow", replaced the first card version), `shadow-page/player.js` (copy of agents/player.js).
 
 Fixed facts (all from the film and the kit page, 2026-11-24):
 - Agent: codex. Session "Changelog draft". Started with `node run2.mjs`. Synthetic task, own key.

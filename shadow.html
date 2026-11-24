@@ -20,9 +20,8 @@
     rel="stylesheet" />
   <link rel="stylesheet" href="styles.css?v=5" />
   <link rel="stylesheet" href="site.css?v=20" />
-  <link rel="stylesheet" href="agents/section.css?v=1" />
-  <link rel="stylesheet" href="agents/r2.css?v=1" />
-  <link rel="stylesheet" href="mockups/shadow/shadow.css?v=1" />
+  <link rel="stylesheet" href="shadow-page/player.css?v=1" />
+  <link rel="stylesheet" href="shadow-page/shadow.css?v=2" />
   <script type="importmap">{ "imports": {
     "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
     "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
@@ -164,7 +163,7 @@
       <div class="sp-film-in">
         <figure class="sp-film-media" style="margin:0">
           <video id="sp-promo" src="https://mcp.clockchain.network/shadow/kit/assets/shadow-promo.mp4"
-            poster="mockups/shadow/current/film-poster.jpg" muted playsinline loop preload="metadata"
+            poster="shadow-page/film-poster.jpg" muted playsinline loop preload="metadata"
             aria-label="17-second film: Codex records a run with Shadow, a second person opens the record, and a one-character change makes the check fail."></video>
         </figure>
         <div class="sp-film-copy">
@@ -353,10 +352,10 @@
   <script src="app.js?v=3"></script>
   <script src="contact.js?v=1"></script>
   <script src="consent.js?v=1"></script>
-  <script src="mockups/shadow/story-shadow.js?v=1"></script>
+  <script src="shadow-page/story.js?v=2"></script>
   <script type="module">
-    import { mount } from './agents/player.js?v=2';
-    mount(document.querySelector('[data-ag-player]'), { scene: '../mockups/shadow/scene-shadow-ring.js?v=1', ui: 'tabs', story: window.CC_STORY_SHADOW });
+    import { mount } from './shadow-page/player.js?v=1';
+    mount(document.querySelector('[data-ag-player]'), { scene: './scene.js?v=2', ui: 'tabs', story: window.CC_STORY_SHADOW });
   </script>
   <script>
     (function () {
