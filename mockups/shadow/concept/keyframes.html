@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en" data-variant="daylight" data-accent="bright" data-font="inter" data-bodyfont="inter" data-headweight="light" data-bodyweight="light">
+<head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Shadow concept key frames</title>
+<meta name="robots" content="noindex" />
+<link rel="stylesheet" href="../../../styles.css?v=5" />
+<link rel="stylesheet" href="../../../site.css?v=20" />
+<script type="importmap">{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }</script>
+<script>(function(){var q=new URLSearchParams(location.search);if(q.get('theme')==='dark')document.documentElement.setAttribute('data-variant','eclipse');})();</script>
+<style>
+/* Concept key frames: "the record and its shadow". Review only, not the animation. */
+html,body{margin:0;height:100%;background:var(--bg);}
+#st{position:fixed;inset:0;overflow:hidden;background:var(--surface);
+  --red:#e5484d;--red-ink:#c4363b;--red-soft:color-mix(in oklab,#e5484d 12%,var(--surface));
+  --ink-g:color-mix(in oklab,var(--accent) 64%,black);--chip:color-mix(in oklab,var(--accent) 11%,var(--surface));}
+:root[data-variant="eclipse"] #st{background:var(--bg);--red-ink:#ff8084;--red-soft:color-mix(in oklab,#e5484d 22%,var(--bg));--ink-g:var(--accent);--chip:color-mix(in oklab,var(--accent) 16%,var(--bg));}
+#st canvas{position:absolute;inset:0;}
+.lay{position:absolute;inset:0;pointer-events:none;}
+.k-n{font:500 9.5px/1.2 var(--f-mono);letter-spacing:.13em;text-transform:uppercase;color:var(--fg-3);white-space:nowrap;}
+.k-h{font:400 10.5px/1.2 var(--f-mono);color:var(--fg);white-space:nowrap;}
+.k-tl{display:flex;flex-direction:column;gap:3px;align-items:center;transform:translateY(-34px);padding:3px 6px;border-radius:6px;background:color-mix(in srgb,var(--surface) 90%,transparent);}
+:root[data-variant="eclipse"] .k-tl{background:color-mix(in srgb,var(--bg) 88%,transparent);}
+.k-tl.g .k-n{color:var(--ink-g);}
+.k-tl.r .k-n,.k-tl.r .k-h{color:var(--red-ink);}
+.k-fl{font:400 10px/1 var(--f-mono);color:var(--fg-3);white-space:nowrap;transform:translateY(16px);}
+.k-fl.g{color:var(--ink-g);} .k-fl.r{color:var(--red-ink);}
+.k-tag{display:flex;align-items:center;gap:7px;padding:6px 10px 6px 8px;border-radius:9px;background:var(--surface);border:1px solid var(--line-2);
+  font:500 10.5px/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--fg);white-space:nowrap;}
+:root[data-variant="eclipse"] .k-tag,:root[data-variant="eclipse"] .k-card{background:color-mix(in oklab,var(--fg) 4%,var(--bg));}
+.k-tag>b{width:8px;height:8px;border-radius:2px;background:var(--fg);}
+.k-tag.g{color:var(--ink-g);border-color:color-mix(in oklab,var(--accent) 45%,var(--line-2));} .k-tag.g>b{background:var(--accent);border-radius:50%;}
+.k-tag em{font-style:normal;color:var(--fg-3);letter-spacing:.04em;text-transform:none;font-weight:400;}
+.k-card{background:var(--surface);border:1px solid var(--line-2);border-radius:12px;padding:10px 12px 11px;font:400 12px/1.35 var(--f-body);color:var(--fg);
+  box-shadow:0 14px 34px -22px color-mix(in oklab,var(--fg) 40%,transparent);white-space:nowrap;}
+.k-card.r{border-color:color-mix(in oklab,var(--red) 60%,var(--line-2));box-shadow:0 0 0 4px var(--red-soft);}
+.k-k{display:flex;align-items:center;gap:8px;font:500 9.5px/1 var(--f-mono);letter-spacing:.13em;text-transform:uppercase;color:var(--fg-3);}
+.k-k b{color:var(--ink-g);font-weight:500;}
+.k-row{display:flex;align-items:center;gap:6px;font:500 9.5px/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-g);margin-top:7px;}
+.k-row.n{color:var(--fg-3);} .k-row.n s{text-decoration:line-through;}
+.k-url{font:400 10.5px/1.2 var(--f-mono);color:var(--fg-2);margin-top:7px;}
+.k-p{white-space:normal;width:250px;margin-top:7px;font:400 12.5px/1.4 var(--f-body);}
+.k-p u{text-decoration:none;background:var(--red-soft);color:var(--red-ink);border-radius:3px;padding:0 2px;}
+.k-chk{display:grid;grid-template-columns:auto auto;gap:3px 12px;margin-top:8px;}
+.k-cr{display:flex;justify-content:space-between;gap:12px;font:400 10px/1 var(--f-mono);color:var(--fg-2);padding:3px 5px;border-radius:4px;}
+.k-cr i{font-style:normal;color:var(--fg-3);} .k-cr.p i{color:var(--ink-g);}
+.k-cr.f{background:var(--red-soft);color:var(--red-ink);} .k-cr.f i{color:var(--red-ink);}
+.k-note{margin-top:8px;font:400 11px/1.3 var(--f-body);color:var(--red-ink);}
+.k-cl{font:500 9.5px/1 var(--f-mono);letter-spacing:.13em;text-transform:uppercase;color:var(--ink-g);white-space:nowrap;padding:3px 5px;border-radius:5px;background:var(--chip);}
+.k-cl.r{color:var(--red-ink);background:var(--red-soft);}
+.k-cl.n{color:var(--fg-3);background:color-mix(in srgb,var(--surface) 90%,transparent);}
+.k-clock{display:flex;flex-direction:column;gap:3px;align-items:flex-start;transform:translate(calc(50% + 18px),0);}
+.k-clock .k-n{color:var(--fg);} .k-clock .k-h i{font-style:normal;color:var(--ink-g);}
+/* frame chrome: chapter + caption, like the player */
+.cap{position:absolute;left:0;right:0;bottom:0;padding:16px 28px 20px;background:linear-gradient(to top,var(--surface) 55%,transparent);font:300 19px/1.35 var(--f-body);color:var(--fg);}
+:root[data-variant="eclipse"] .cap{background:linear-gradient(to top,var(--bg) 55%,transparent);}
+.top{position:absolute;left:28px;top:20px;display:flex;gap:10px;align-items:center;font:500 10px/1 var(--f-mono);letter-spacing:.13em;text-transform:uppercase;color:var(--fg-3);}
+.top b{color:var(--ink-g);font-weight:500;}
+.top .live{display:inline-flex;gap:6px;align-items:center;color:var(--ink-g);} .top .live::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent);}
+.ph .cap{font-size:15px;padding:12px 16px 14px;} .ph .top{left:16px;top:14px;}
+.ov{position:absolute;right:28px;top:52px;}
+.ph .ov{right:8px;top:30px;transform-origin:100% 0;}
+.ph .k-card{transform:scale(.8);} .ph .k-tag{font-size:8.5px;padding:4px 7px;}
+</style>
+</head>
+<body>
+<div id="st"><div class="top"></div><div class="cap"></div></div>
+<script type="module">
+import * as THREE from 'three';
+import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+import { Line2 } from 'three/addons/lines/Line2.js';
+import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
+import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
+THREE.ColorManagement.enabled = false;
+
+const q = new URLSearchParams(location.search), K = +(q.get('k') || 1);
+const st = document.getElementById('st'), W = innerWidth, H = innerHeight, PH = W < 600;
+if (PH) st.classList.add('ph');
+const css = getComputedStyle(document.documentElement), dark = document.documentElement.dataset.variant === 'eclipse';
+const cv = (n) => css.getPropertyValue(n).trim();
+const cx2 = document.createElement('canvas').getContext('2d', { willReadFrequently: true });
+const col = (v) => { cx2.clearRect(0, 0, 1, 1); cx2.fillStyle = '#000'; cx2.fillStyle = v; cx2.fillRect(0, 0, 1, 1); const d = cx2.getImageData(0, 0, 1, 1).data; return new THREE.Color(d[0] / 255, d[1] / 255, d[2] / 255); };
+const BG = col(dark ? cv('--bg') : cv('--surface')), ACC = col(cv('--accent')), FG = col(cv('--fg')), FG3 = col(cv('--fg-3')), RED = new THREE.Color('#e5484d');
+const mix = (a, b, k) => a.clone().lerp(b, k);
+const P = {
+  grid: mix(BG, FG, dark ? 0.035 : 0.06), rail: mix(BG, ACC, dark ? 0.38 : 0.5), band: mix(BG, ACC, dark ? 0.035 : 0.045),
+  tileTop: dark ? mix(BG, FG, 0.07) : new THREE.Color(1, 1, 1), tileSide: mix(BG, FG, dark ? 0.16 : 0.14), edge: mix(BG, FG, dark ? 0.5 : 0.55),
+  shadow: mix(BG, FG, dark ? 0.16 : 0.1), sEdge: mix(BG, FG, dark ? 0.32 : 0.3), beam: mix(BG, ACC, 0.55), link: mix(BG, FG, 0.45),
+};
+
+/* ---------- the story's facts (BRIEF.md) ---------- */
+const STEPS = [['01', 'Step', ''], ['02', 'Step', ''], ['03', 'Step', ''], ['04', 'Task', '701b6153'], ['05', 'Tool call', '3eaed678'], ['06', 'Tool result', 'a8cb9a96'], ['07', 'Message', 'be62ef5d']];
+/* each tile's edge is its fingerprint drawn as a shape: the profile comes from its hash, so a changed step no longer fits */
+const SEED = ['3a1c', '72e0', 'c519'];
+const prof = (i, changed) => {
+  const s = (STEPS[i][2] || SEED[i] + SEED[i]).slice(0, 8);
+  const v = [...s].map((c) => parseInt(c, 16) % 4);
+  if (changed) v[5] = (v[5] + 2) % 4;   /* one character changes: one tooth moves */
+  return v;
+};
+const TW = 0.8, TD = 0.56, GAP = 0.24, X0 = -((7 * TW + 6 * GAP) / 2) + TW / 2;
+const tx = (i) => X0 + i * (TW + GAP);
+function shape(v) {
+  const s = new THREE.Shape(), n = v.length, sw = TW / n, w = TW / 2, d = TD / 2;
+  s.moveTo(-w, d); s.lineTo(-w, -d);
+  for (let k = 0; k < n; k++) { const y = -d + v[k] * 0.07; s.lineTo(-w + k * sw, y); s.lineTo(-w + (k + 1) * sw, y); }
+  s.lineTo(w, -d); s.lineTo(w, d); s.lineTo(-w, d);
+  return s;
+}
+const outline = (v, y) => shape(v).getPoints().map((p) => [p.x, y, -p.y]).flat();
+
+/* ---------- three ---------- */
+const R = new THREE.WebGLRenderer({ antialias: true, alpha: true }); R.setPixelRatio(Math.min(2, devicePixelRatio)); R.setSize(W, H); R.setClearColor(0, 0); R.outputColorSpace = THREE.LinearSRGBColorSpace;
+st.prepend(R.domElement);
+const LR = new CSS2DRenderer(); LR.setSize(W, H); LR.domElement.className = 'lay'; st.insertBefore(LR.domElement, st.querySelector('.top'));
+const scene = new THREE.Scene(); scene.fog = new THREE.Fog(BG, 9, 22);
+const cam = new THREE.PerspectiveCamera(PH ? 40 : 30, W / H, 0.1, 100);
+const mats = [];
+function line(pts, color, w, o = {}) {
+  const g = new LineGeometry(); g.setPositions(pts);
+  const m = new LineMaterial({ color, linewidth: w, transparent: true, opacity: o.op ?? 1, dashed: !!o.dash, fog: true, depthTest: o.depth ?? false });
+  if (o.dash) { m.dashSize = o.dash[0]; m.gapSize = o.dash[1]; }
+  m.resolution.set(W, H); mats.push(m);
+  const l = new Line2(g, m); if (o.dash) l.computeLineDistances(); l.renderOrder = o.ro ?? 2; scene.add(l); return l;
+}
+function label(html, pos) { const el = document.createElement('div'); el.innerHTML = html; const o = new CSS2DObject(el); o.position.copy(pos); scene.add(o); return o; }
+const V = (x, y, z) => new THREE.Vector3(x, y, z);
+
+/* ---------- frame states ---------- */
+const S = {
+  1: { tiles: 0, light: 0, hTile: 1.1, cam: [-2.0, 2.4, 6.2], look: [-3.0, 0.5, 0], phCam: [-3.0, 3.0, 7.5], phLook: [-3.6, 0.6, 0] },
+  2: { tiles: 7, light: 0, hTile: 1.1, cam: [0.6, 2.3, 7.0], look: [0.3, 0.55, 0], phCam: [2.4, 3.4, 6.4], phLook: [2.2, 0.7, 0] },
+  3: { tiles: 7, light: 1, hTile: 1.1, cam: [1.2, 4.4, 11.0], look: [0.3, 1.3, 0], phCam: [2.4, 4.4, 7.4], phLook: [2.0, 1.4, 0] },
+  4: { tiles: 7, light: 0, hTile: 0.012, cam: [1.6, 4.6, 9.4], look: [0.9, 0.3, 0], check: 1, person: 1, phCam: [3.2, 4.4, 6.2], phLook: [2.6, 0.4, 0] },
+  5: { tiles: 7, light: 0.5, hTile: 1.1, cam: [3.4, 2.7, 5.4], look: [2.2, 0.8, 0], changed: 1, person: 1, phCam: [3.2, 3.0, 6.2], phLook: [2.4, 0.9, 0] },
+  6: { tiles: 7, light: 0, hTile: 0.012, cam: [2.9, 3.2, 4.6], look: [1.9, 0.1, 0], check: 1, changed: 1, person: 1, phCam: [3.0, 4.6, 7.0], phLook: [2.3, 0.9, 0] },
+}[K];
+const CAP = {
+  1: ['01', 'Record and share', 'Add one connector to the agent you already use. Free testnet account, no email.'],
+  2: ['01', 'Record and share', 'Each step is recorded as it happens: the task, the tool call, its result, the message.'],
+  3: ['01', 'Record and share', 'Only fingerprints go to Clockchain. Steps 1–7 are checkpointed in block 313,492.'],
+  4: ['01', 'Record and share', 'Result: pass. Each step shows its time window between ledger receipts.'],
+  5: ['02', 'Change one character', 'Someone changes one character in step 7: Faster becomes Fastor.'],
+  6: ['02', 'Change one character', 'Content: fail. One or more steps changed after they were recorded.'],
+}[K];
+st.querySelector('.top').innerHTML = '<b>' + CAP[0] + '</b>' + CAP[1] + '<span class="live">Live on testnet</span>';
+st.querySelector('.cap').textContent = CAP[2];
+
+/* ---------- the ledger floor: a quiet grid, the ledger band, block marks ---------- */
+const g = [];
+for (let x = -7; x <= 7; x += 0.5) g.push([x, 0, -4, x, 0, 4]);
+for (let z = -4; z <= 4; z += 0.5) g.push([-7, 0, z, 7, 0, z]);
+g.forEach((p) => line(p, P.grid, 1, { ro: 0 }));
+const BZ = 0.62, BX0 = tx(0) - TW / 2 - 0.75, BX1 = tx(6) + TW / 2 + 1.6;
+const band = new THREE.Mesh(new THREE.PlaneGeometry(BX1 - BX0 + 3, BZ * 2), new THREE.MeshBasicMaterial({ color: P.band, transparent: true, depthWrite: false }));
+band.rotation.x = -Math.PI / 2; band.position.set((BX0 + BX1) / 2, 0.001, 0); band.renderOrder = 0; scene.add(band);
+[-BZ, BZ].forEach((z) => line([BX0 - 1.5, 0, z, BX1 + 1.5, 0, z], P.rail, 1.2, { ro: 1 }));
+const blocks = [[BX0, '313,491', 'Start'], [tx(6) + TW / 2 + 0.25, '313,492', 'Checkpoint · steps 1–7'], [BX1, '313,493', 'Signed']];
+blocks.forEach(([x, n, w], i) => {
+  if (K === 1 && i) return;
+  if (K === 2 && i) return;
+  if (K === 3 && i === 2) return;
+  line([x, 0, -BZ - 0.12, x, 0, BZ + 0.12], ACC, 2, { ro: 3 });
+  label('<div class="k-fl g" style="transform:translateY(22px);text-align:center"><span class="k-n" style="color:inherit">' + w + '</span><br>Block ' + n + '</div>', V(x, 0, BZ + 0.15));
+});
+label('<span class="k-cl">Ledger · clockchain-testnet</span>', V(BX0 - 1.0, 0, -BZ - 0.1));
+
+/* ---------- Clockchain: the light above ---------- */
+const LY = 3.0, LX = 0.2;
+if (S.light > 0) {
+  const ring = []; for (let i = 0; i <= 64; i++) { const a = i / 64 * Math.PI * 2; ring.push(LX + 0.32 * Math.cos(a), LY, 0.32 * Math.sin(a)); }
+  line(ring, ACC, 2.2, { ro: 6 });
+  const halo = []; for (let i = 0; i <= 64; i++) { const a = i / 64 * Math.PI * 2; halo.push(LX + 0.32 * Math.cos(a), LY, 0.32 * Math.sin(a)); }
+  line(halo, ACC, 9, { op: 0.16, ro: 5 });
+  label('<div class="k-clock"><span class="k-n">Clockchain</span><span class="k-h">01:29:3' + (K === 3 ? '9' : '9') + '<i>.420</i></span></div>', V(LX + 0.35, LY, 0));
+}
+
+/* ---------- the record: tiles chained into a strip; each casts its shadow ---------- */
+const ok = (i) => S.check && !(S.changed && i === 6);
+for (let i = 0; i < S.tiles; i++) {
+  const x = tx(i), h = S.hTile, ch = S.changed && i === 6;
+  const v0 = prof(i, false), v1 = prof(i, ch);
+  /* the shadow on the ledger: always the original shape (the fingerprint anchored at record time) */
+  if (S.light > 0 || S.check) {
+    const sg = new THREE.ShapeGeometry(shape(v0)); sg.rotateX(-Math.PI / 2);
+    const sm = new THREE.Mesh(sg, new THREE.MeshBasicMaterial({ color: ok(i) ? mix(BG, ACC, 0.22) : ch && S.check ? mix(BG, RED, 0.2) : P.shadow, transparent: true, depthWrite: false }));
+    sm.position.set(x, 0.003, 0); sm.renderOrder = 1; scene.add(sm);
+    const op = outline(v0, 0.004).map((c, k) => (k % 3 === 0 ? c + x : c));
+    const ec = ok(i) ? ACC : ch && S.check ? RED : P.sEdge;
+    line(op, ec, ok(i) || (ch && S.check) ? 1.6 : 1, { ro: 2 });
+    if (ok(i) || (ch && S.check)) line(op, ec, 8, { op: 0.16, ro: 1 });
+    if (STEPS[i][2] && K === 3) label('<div class="k-fl">' + STEPS[i][2] + '</div>', V(x, 0, TD / 2 + 0.02));
+    /* the light casts it: a beam from the clock to the tile, the dashed drop from tile to its shadow */
+    if (S.light > 0 && !S.check) {
+      line([LX, LY, 0, x, h + 0.06, 0], P.beam, 1, { op: 0.45 * S.light, ro: 2 });
+      line([x, h, 0, x, 0.01, 0], ACC, 1.2, { dash: [0.06, 0.05], op: 0.8 * S.light, ro: 2 });
+    }
+  }
+  /* the tile */
+  const geo = new THREE.ExtrudeGeometry(shape(v1), { depth: S.check ? 0.02 : 0.07, bevelEnabled: false }); geo.rotateX(-Math.PI / 2);
+  const top = new THREE.MeshBasicMaterial({ color: P.tileTop, fog: true, transparent: !!S.check, opacity: S.check ? 0.25 : 1, depthWrite: !S.check }), side = new THREE.MeshBasicMaterial({ color: ch ? mix(P.tileSide, RED, 0.35) : P.tileSide, fog: true });
+  const m = new THREE.Mesh(geo, [top, side]); m.position.set(x, h, 0); m.renderOrder = 4; scene.add(m);
+  const eo = outline(v1, h + (S.check ? 0.02 : 0.07)).map((c, k) => (k % 3 === 0 ? c + x : c));
+  line(eo, ok(i) ? ACC : ch ? RED : P.edge, ok(i) || ch ? 1.5 : 1.1, { ro: 5 });
+  if (ch) {
+    /* the moved tooth, marked */
+    const sw = TW / 8, k = 5, y0 = -TD / 2 + v0[k] * 0.07, y1 = -TD / 2 + v1[k] * 0.07;
+    line([x - TW / 2 + k * sw, h + 0.08, -y1, x - TW / 2 + (k + 1) * sw, h + 0.08, -y1], RED, 3, { ro: 7 });
+    if (S.check) label('<span class="k-cl r" style="display:block;transform:translateY(26px)">Doesn’t fit its shadow</span>', V(x, 0, TD / 2));
+    if (S.check) line([x - TW / 2 + k * sw, 0.006, -y0, x - TW / 2 + (k + 1) * sw, 0.006, -y0], RED, 3, { ro: 7 });
+  }
+  /* the chain: each step links to the one before it */
+  if (i > 0) {
+    line([tx(i - 1) + TW / 2, h + 0.035, 0, x - TW / 2, h + 0.035, 0], ok(i) && ok(i - 1) ? ACC : P.link, 1.4, { ro: 5 });
+  }
+  const tl = STEPS[i][2] ? '<span class="k-n">' + STEPS[i][0] + ' · ' + STEPS[i][1] + '</span><span class="k-h">' + STEPS[i][2] + '</span>' : '<span class="k-n">' + STEPS[i][0] + '</span>';
+  if (!(K === 5 && i < 4)) label('<div class="k-tl' + (ok(i) ? ' g' : ch && (S.check || K === 5) ? ' r' : '') + '">' + tl + '</div>', V(x, h + 0.07, -TD / 2));
+}
+
+const ov = (html) => { const d = document.createElement('div'); d.className = 'ov'; d.innerHTML = html; st.appendChild(d); };
+/* ---------- parties ---------- */
+const CX = BX0 - 0.9;
+if (K <= 3) {
+  line([CX, 0, 0, CX, 0.9, 0], P.edge, 1, { ro: 3 });
+  label('<div class="k-tag" style="transform:translateY(-14px)"><b></b>Codex<em>Changelog draft</em></div>', V(CX, 0.9, 0));
+  if (S.tiles) line([CX, 0.9, 0, tx(0) - TW / 2, S.hTile + 0.035, 0], P.link, 1.2, { ro: 3, dash: [0.07, 0.05] });
+}
+if (K === 1) {
+  line(outline([0,0,0,0,0,0,0,0], 1.1).map((c, k) => (k % 3 === 0 ? c + tx(0) : c)), P.edge, 1, { dash: [0.05, 0.05], ro: 5 });
+  label('<div class="k-tl"><span class="k-n">Ready to record</span></div>', V(tx(0), 1.1, -TD / 2));
+  line([tx(0), 1.1, 0, tx(0), 0.01, 0], ACC, 1.2, { dash: [0.06, 0.05], op: 0.5 });
+  label('<div class="k-card" style="transform:translate(calc(50% - 20px),calc(50% + 26px))"><div class="k-k"><b>Connector</b></div><div class="k-url">mcp.clockchain.network/shadow/mcp</div><div class="k-row">✓ Free testnet account</div><div class="k-row">✓ No email</div></div>', V(CX, 0.9, 0));
+}
+if (S.person) {
+  const PX = BX1 + 1.1;
+  line([PX, 0, 0, PX, 0.9, 0], P.edge, 1, { ro: 3 });
+  label('<div class="k-tag" style="transform:translateY(-14px)"><b></b>Second person<em>own browser</em></div>', V(PX, 0.9, 0));
+}
+if (K === 3) {
+  label('<span class="k-cl n">Content stays on the Shadow server</span>', V(tx(1), S.hTile + 1.05, 0));
+  label('<span class="k-cl">Ledger · fingerprints only</span>', V(tx(4), 0, BZ + 0.5));
+}
+if (K === 4) {
+  ov('<div class="k-card"><div class="k-k"><b>Viewer</b>Changelog draft</div><div class="k-row">✓ Result: pass</div><div class="k-row n">No check failed</div><div class="k-row">✓ Each step inside its time window</div></div>');
+}
+if (K === 5) {
+  label('<div class="k-card r" style="transform:translate(-30%,-125%)"><div class="k-k"><b style="color:var(--red-ink)">Step 07 · Message</b>copy</div><div class="k-p"><u>Fastor</u> receipt lookups and clearer pending states. Fixed a retry loop when the network is slow.</div></div>', V(tx(6), S.hTile + 0.4, 0));
+}
+if (K === 6) {
+  const CH = [['format', 'pass'], ['content', 'fail'], ['sequence', 'pass'], ['membership', 'pass'], ['signature', 'pass'], ['trust', 'pass'], ['identity', 'not applicable'],
+    ['coverage', 'pass'], ['provenance', 'pass'], ['completion', 'pass'], ['anchors', 'pass'], ['witness', 'indeterminate'], ['time', 'indeterminate'], ['truth', 'not applicable']];
+  const ord = [0, 7, 1, 8, 2, 9, 3, 10, 4, 11, 5, 12, 6, 13];
+  const rows = ord.map((i) => { const [n, r] = CH[i]; return '<div class="k-cr' + (r === 'pass' ? ' p' : r === 'fail' ? ' f' : '') + '">' + n + '<i>' + r + '</i></div>'; }).join('');
+  ov('<div class="k-card r"><div class="k-k"><b>Shadow verifier</b>offline · on the copy</div><div class="k-chk">' + rows + '</div><div class="k-note">One or more steps changed after they were recorded.</div></div>');
+}
+
+cam.position.set(...(PH ? S.phCam : S.cam)); cam.lookAt(...(PH ? S.phLook : S.look)); cam.updateMatrixWorld();
+R.render(scene, cam); LR.render(scene, cam);
+</script>
+</body>
+</html>
