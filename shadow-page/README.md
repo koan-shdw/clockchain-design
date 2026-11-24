@@ -12,7 +12,6 @@ The page is `shadow.html`, in the repo root. Everything that belongs only to thi
 | `shadow-page/scene.js` | Animation scene: "the record and its shadow" (Three.js) |
 | `shadow-page/player.js` | Shared animation player: chapters, captions, pause, reduced-motion still list |
 | `shadow-page/player.css` | Player styles (agents/section.css + agents/r2.css from this repo) |
-| `shadow-page/film-poster.jpg` | Poster for the film |
 
 The page also uses these site files, which the live site already has at the root:
 - `styles.css`, `site.css`, `app.js`, `components.js`, `contact.js`, `consent.js`
@@ -25,7 +24,7 @@ Compared against koan-shdw/clockchain-preview-r2 `main` (the live site) on 2026-
 External resources the page loads:
 - Three.js 0.160.0 from cdn.jsdelivr.net, via the import map in `shadow.html`
 - Google Fonts
-- The film, from mcp.clockchain.network/shadow/kit/assets/shadow-promo.mp4
+
 
 ## Before it goes live
 
@@ -43,6 +42,4 @@ External resources the page loads:
 
 Kept in `mockups/shadow/`:
 - `BRIEF.md`: the audit of the old kit page, storyboard, fixed facts and banned words
-- `current/`: captures of the live kit page and the film
 - `concept/`: concept key frames
-- `shots/`: screenshots

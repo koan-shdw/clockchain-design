@@ -1,6 +1,6 @@
 /* Clockchain Shadow: the storyboard (BRIEF.md, "Storyboard").
    Every value on screen comes from the Shadow film (mcp.clockchain.network/shadow/kit/assets/shadow-promo.mp4,
-   frames in current/) or the kit page, read 2026-11-24. Nothing invented.
+   frames captured 2026-11-24, not kept in the repo) or the kit page, read 2026-11-24. Nothing invented.
    Each step has caption lines shown one after another within its duration (seconds). */
 window.CC_STORY_SHADOW = {
   chapters: [

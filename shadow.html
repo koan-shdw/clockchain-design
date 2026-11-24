@@ -47,8 +47,8 @@
   <div class="sp-bar" role="navigation" aria-label="Clockchain Shadow">
     <div class="sp-bar-in">
       <a class="sp-name" href="#top" aria-label="Clockchain Shadow, top of page">
-        <svg class="sp-mark" viewBox="0 0 24 24" aria-hidden="true"><circle class="s" cx="14.2" cy="14.2" r="8.6" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="11" cy="11" r="8.6" fill="var(--bg)" stroke="currentColor" stroke-width="2.4"/><circle cx="11" cy="6.4" r="2.1" fill="currentColor"/></svg>
-        <span>Clockchain <b>Shadow</b></span>
+        <img class="sp-logo" src="assets/clockchain-logo-full.png" alt="Clockchain" />
+        <span class="sp-prod">Shadow</span>
       </a>
       <span class="sp-desc">A flight recorder for AI agents</span>
       <span class="sp-pill">Testnet</span>
@@ -158,27 +158,6 @@
       </div>
     </section>
 
-    <!-- ===== THE REAL RUN: the film ===== -->
-    <section class="sp-film reveal" data-screen-label="04 The real run">
-      <div class="sp-film-in">
-        <figure class="sp-film-media" style="margin:0">
-          <video id="sp-promo" src="https://mcp.clockchain.network/shadow/kit/assets/shadow-promo.mp4"
-            poster="shadow-page/film-poster.jpg" muted playsinline loop preload="metadata"
-            aria-label="17-second film: Codex records a run with Shadow, a second person opens the record, and a one-character change makes the check fail."></video>
-        </figure>
-        <div class="sp-film-copy">
-          <span class="tag"><span class="sp-k">Shadow ·</span> The real run</span>
-          <h3>17 seconds, on testnet.</h3>
-          <p>Codex records a synthetic task, the record is opened by link, and a copy with one character changed fails the check. No sound.</p>
-          <ol>
-            <li><em>0:01</em>Your agent records each step.</li>
-            <li><em>0:04</em>The record opens in a browser.</li>
-            <li><em>0:08</em>Share one link.</li>
-            <li><em>0:12</em>Change one character. The check fails.</li>
-          </ol>
-        </div>
-      </div>
-    </section>
 
     <!-- ===== WHAT IT DOES ===== -->
     <section class="sp-feats reveal" id="what" data-screen-label="05 What it does">
@@ -304,7 +283,6 @@
           <pre class="sp-copy" id="sp-prompt">Connect to Clockchain Shadow, a flight recorder for AI agents. Read https://mcp.clockchain.network/shadow/connect and follow it to connect (MCP endpoint: https://mcp.clockchain.network/shadow/mcp). Then record this task with Shadow, close the session, and give me the viewer link.<button type="button" data-copy="sp-prompt">Copy</button></pre>
         </div>
         <p class="sp-builton">
-          <svg class="sp-mark" viewBox="0 0 24 24" aria-hidden="true"><circle class="s" cx="14.2" cy="14.2" r="8.6" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="11" cy="11" r="8.6" fill="var(--bg)" stroke="currentColor" stroke-width="2.4"/><circle cx="11" cy="6.4" r="2.1" fill="currentColor"/></svg>
           <span>Shadow is built on Clockchain, the verifiable time network. <a href="index.html">clockchain.network</a> · <a href="https://mcp.clockchain.network/status">Status</a></span>
         </p>
       </div>
@@ -376,9 +354,6 @@
       var q = new URLSearchParams(location.search);
       if (STILL || q.has('rec')) { paint(q.has('rec') ? +q.get('rec') : 12); }
       else { var t0 = performance.now(); paint(0); setInterval(function () { paint(((performance.now() - t0) / 1000) % 14); }, 250); }
-      /* film: plays only when motion is allowed */
-      var v = document.getElementById('sp-promo');
-      if (STILL) v.controls = true; else { v.autoplay = true; v.play && v.play().catch(function () { v.controls = true; }); }
       /* copy prompt */
       document.querySelectorAll('[data-copy]').forEach(function (b) {
         b.addEventListener('click', function () {

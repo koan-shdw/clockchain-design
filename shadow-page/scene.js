@@ -1,7 +1,6 @@
 /* CLOCKCHAIN SHADOW · "the record and its shadow" (scene for the shared player, agents/player.js).
    Not a timeline. The record is a ring of step tiles around Clockchain's light; every tile casts its shadow onto the
-   ledger, and that shadow is its fingerprint. Seen from above, the record and its shadow make the Shadow mark
-   (a ring with its offset shadow ring). Checking moves the record along the light onto its shadow: every tile fits.
+   ledger, and that shadow is its fingerprint. Checking moves the record along the light onto its shadow: every tile fits.
    One changed character moves one notch of tile 07, and it no longer fits.
    Each tile's notched edge is drawn from its step's hash, so "fits" and "doesn't fit" are literal.
    Every value comes from BRIEF.md (the film and the kit page). Everything is a pure function of story time t. */
@@ -144,7 +143,6 @@ const IC = {
   x: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg>',
   key: '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="4.9" cy="8" r="2.7"/><path d="M7.6 8h6.2M11.6 8v2.3M13.8 8v1.7"/></svg>',
   link: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.6 9.4l2.8-2.8M5.4 7.4L4 8.8a2.4 2.4 0 0 0 3.4 3.4l1.4-1.4M10.6 8.6L12 7.2a2.4 2.4 0 0 0-3.4-3.4L7.2 5.2"/></svg>',
-  mark: '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="9.1" cy="9.1" r="4.6" style="opacity:.38"/><circle cx="7.1" cy="7.1" r="4.6"/></svg>',
 };
 
 const CSS = `
@@ -563,7 +561,7 @@ function buildCamera() {
   K('record', 1, { x: 0, y: 0.6, z: -0.4, dist: 9.6, el: 34, az: -8 });
   K('record', 2, { x: 0, y: 0.6, z: 0, dist: 9.6, el: 42, az: 22 });
   K('anchor', 0, { x: -0.3, y: 1.2, z: 0, dist: 11.2, el: 28, az: 38 });
-  K('anchor', 1, { x: 0.2, y: 0, z: 0.35, dist: 15.5, el: 86, az: 0 }, 2.2);   /* straight down: the record and its shadow are the Shadow mark */
+  K('anchor', 1, { x: 0.2, y: 0, z: 0.35, dist: 15.5, el: 86, az: 0 }, 2.2);   /* straight down: the record and its shadow ring */
   K('share', 0, { x: 0, y: 0.4, z: 0.4, dist: 11.4, el: 44, az: 20 });
   K('share', 1, { x: 0, y: 0.5, z: 1.6, dist: 11.8, el: 30, az: 8 });
   K('check', 0, { x: 0, y: 0.6, z: 3.0, dist: 8.6, el: 24, az: 160 });

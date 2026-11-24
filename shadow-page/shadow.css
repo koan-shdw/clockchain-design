@@ -1,7 +1,7 @@
 /* ============================================================
    Clockchain Shadow page (review mockup, 2026-11-24).
    Site tokens and components only (styles.css, site.css, agents/section.css, agents/r2.css).
-   Product touches: the product bar, the Shadow mark (the ring and its shadow), "Shadow ·" on section tags,
+   Product touches: the product bar, the official Clockchain logo with "Shadow" in text, "Shadow ·" on section tags,
    and the dashed "recorded" line beside the solid ledger line. Nothing else departs from the site.
    ============================================================ */
 .sp{--sp-ink:color-mix(in oklab, var(--accent) 68%, black);--sp-red:#e5484d;--sp-red-ink:#c4363b;--sp-amb:#b45309;
@@ -10,9 +10,10 @@
 .sp .tag .sp-k{color:var(--fg-3);}
 .sp section{scroll-margin-top:118px;}
 
-/* ---------- the Shadow mark: the Clockchain ring and its shadow ---------- */
-.sp-mark{width:22px;height:22px;flex:none;color:var(--accent);}
-.sp-mark .s{opacity:.42;}
+/* ---------- product name: official Clockchain logo + "Shadow" ---------- */
+.sp-logo{height:24px;width:auto;flex:none;display:block;}
+:root[data-variant="eclipse"] .sp-logo{filter:brightness(0) invert(1);}
+.sp-prod{font-weight:500;color:var(--fg);}
 
 /* ---------- product bar (under the site nav) ---------- */
 .sp-bar{position:fixed;top:58px;left:0;right:0;z-index:150;height:50px;

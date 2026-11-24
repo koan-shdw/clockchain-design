@@ -8,8 +8,7 @@ Background: Claude Doc "Clockchain Shadow: what it is and where it goes" (https:
 
 ## Captured (2026-11-24, built-in browser; the cloud proxy blocks mcp.clockchain.network)
 
-- `current/live-desktop-hero.jpg`, `current/live-phone-hero.jpg`: the live kit page.
-- `current/film-*.jpg`: frames of the 17 s film (assets/shadow-promo.mp4, 16.8 s, 1920x1080). Source of every value in the animation.
+- Captures of the live kit page and film frames were taken for reference and are not kept in the repo (they carry YT's logo).
 - Dark mode: none. kit.css has no `prefers-color-scheme` and no theme switch, so there is nothing to capture.
 
 ## Audit: what's off today
@@ -42,8 +41,8 @@ Style:
 - Site type and green: Inter Light display, `.h2` with green `<em>`, mono green `.tag` eyebrows, green primary + outline buttons, site cards, radius, shadows, `--band` rhythm.
 
 Product touches (subtle, on brand):
-- Product bar: a slim sticky bar under the site nav: Shadow mark, "Flight recorder for AI agents", Testnet pill, page links, one CTA. Tells you you're on a product inside Clockchain.
-- Shadow mark: the Clockchain ring with a soft offset copy behind it (its shadow). Only on this page.
+- Product bar: a slim sticky bar under the site nav: official Clockchain logo + "Shadow" in text, "Flight recorder for AI agents", Testnet pill, page links, one CTA. Tells you you're on a product inside Clockchain.
+- No invented marks (2026-11-24 fix): only the official Clockchain logo (assets/clockchain-logo-full.png). The kit film was removed because its end card carries YT's logo.
 - Product chip on every section tag: "Shadow ·" before the section name.
 - One extra motif: a dashed "recorded" line next to the solid ledger line (the record, and its shadow on the ledger). Used in the hero card and the animation's ruler only.
 
