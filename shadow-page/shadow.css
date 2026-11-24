@@ -11,8 +11,6 @@
 .sp section{scroll-margin-top:118px;}
 
 /* ---------- product name: official Clockchain logo + "Shadow" ---------- */
-.sp-logo{height:24px;width:auto;flex:none;display:block;}
-:root[data-variant="eclipse"] .sp-logo{filter:brightness(0) invert(1);}
 .sp-prod{font-weight:500;color:var(--fg);}
 
 /* ---------- product bar (under the site nav) ---------- */
@@ -171,14 +169,6 @@
 .sp-builton{max-width:880px;margin:28px auto 0;display:flex;align-items:center;justify-content:center;gap:10px;font-size:13.5px;color:var(--fg-3);}
 .sp-builton a{color:var(--fg-2);font-weight:500;}
 
-/* ---------- review switch (mockup only) ---------- */
-.sp-review{position:fixed;left:16px;bottom:16px;z-index:300;display:flex;align-items:center;gap:6px;padding:6px;border-radius:999px;
-  background:var(--glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line-2);box-shadow:var(--shadow);
-  font:500 10.5px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--fg-3);}
-.sp-review span{padding:0 6px 0 8px;}
-.sp-review a{padding:7px 10px;border-radius:999px;color:var(--fg-2);}
-.sp-review a[aria-current]{background:var(--accent-soft);color:var(--sp-ink);}
-
 /* ---------- responsive ---------- */
 @media(max-width:900px){
   .sp-hero{padding-top:calc(var(--band-sm) + 118px);}
@@ -189,9 +179,6 @@
 @media(min-width:620px) and (max-width:900px){.sp-fgrid{grid-template-columns:1fr 1fr;}}
 @media(max-width:560px){
   .sp-chk-grid{grid-template-columns:1fr;}
-  .sp-review{left:8px;bottom:8px;}
 }
 /* phone: a taller stage so the cards read */
 @media(max-width:600px){.sp .ag-player{--ag-hk:1.28;}}
-/* the review switch sits over content on small screens: phones use ?book=1 instead */
-@media(max-width:900px){.sp-review{display:none;}}

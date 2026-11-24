@@ -31,10 +31,7 @@ External resources the page loads:
 1. **Booking link.** Set `window.SHADOW_BOOKING_URL` near the top of `shadow.html`.
    - Empty (today): the buttons read "Start free on testnet" (Quickstart) and "Talk to the team" (the site's contact form).
    - Set: the buttons read "Book a demo" and "Start free".
-2. **Review-only pieces.** Remove these:
-   - the `<div class="sp-review">` block (the booking-state switch)
-   - the `?book=1` line in the CTA setup script
-   - `<meta name="robots" content="noindex">`
+2. **Review-only piece.** Remove `<meta name="robots" content="noindex">`.
 3. **MCP docs link.** In the "Built on Clockchain" section, the link goes to `app/docs/mcp.html` (this preview's copy of the docs). On the live site, point it at the real MCP docs.
 4. **Cache tags.** Bump the `?v=` numbers if the files change after upload.
 

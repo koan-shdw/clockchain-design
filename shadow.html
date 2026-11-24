@@ -21,7 +21,7 @@
   <link rel="stylesheet" href="styles.css?v=5" />
   <link rel="stylesheet" href="site.css?v=20" />
   <link rel="stylesheet" href="shadow-page/player.css?v=1" />
-  <link rel="stylesheet" href="shadow-page/shadow.css?v=2" />
+  <link rel="stylesheet" href="shadow-page/shadow.css?v=3" />
   <script type="importmap">{ "imports": {
     "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
     "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
@@ -29,12 +29,10 @@
   <!-- mockup: ?theme=light|dark wins over the remembered theme -->
   <script>(function () { try { var q = new URLSearchParams(location.search).get('theme'); var t = q ? (q === 'dark' ? 'eclipse' : 'daylight') : localStorage.getItem('cc-theme'); if (t === 'eclipse' || t === 'daylight') { document.documentElement.setAttribute('data-variant', t); } } catch (e) { } })();</script>
   <script>
-    /* The one booking setting. Empty until the Calendly link exists (Jon / YT).
+    /* The one booking setting. Empty until the booking link exists.
        Empty: "Start free on testnet" leads, "Talk to the team" opens the site's contact form.
-       Set:   "Book a demo" leads, "Start free" follows. No disabled button in either state.
-       Mockup: ?book=1 shows the "set" state with a placeholder link. */
+       Set:   "Book a demo" leads, "Start free" follows. No disabled button in either state. */
     window.SHADOW_BOOKING_URL = '';
-    try { if (new URLSearchParams(location.search).get('book') === '1') window.SHADOW_BOOKING_URL = '#booking-link-goes-here'; } catch (e) { }
   </script>
 </head>
 
@@ -47,7 +45,6 @@
   <div class="sp-bar" role="navigation" aria-label="Clockchain Shadow">
     <div class="sp-bar-in">
       <a class="sp-name" href="#top" aria-label="Clockchain Shadow, top of page">
-        <img class="sp-logo" src="assets/clockchain-logo-full.png" alt="Clockchain" />
         <span class="sp-prod">Shadow</span>
       </a>
       <span class="sp-desc">A flight recorder for AI agents</span>
@@ -291,13 +288,6 @@
 
   <div id="site-footer"></div>
 
-  <!-- review switch: the two booking states (mockup only) -->
-  <div class="sp-review" aria-label="Mockup: booking link state">
-    <span>Booking link</span>
-    <a href="?book=0" data-book="0">Not set</a>
-    <a href="?book=1" data-book="1">Set</a>
-  </div>
-
   <script>
     /* CTA: one setting, two states. Runs before contact.js so "Talk to the team" binds to the site's contact form. */
     (function () {
@@ -319,11 +309,6 @@
       });
       var help = document.querySelector('[data-cta-help]');
       if (help && B) help.innerHTML = 'In a demo we record one of your agent’s tasks live, open the record as a second person, and show you what the checks mean.';
-      var cur = B ? '1' : '0';
-      document.querySelectorAll('[data-book]').forEach(function (a) {
-        if (a.getAttribute('data-book') === cur) a.setAttribute('aria-current', 'true');
-        var q = new URLSearchParams(location.search); q.set('book', a.getAttribute('data-book')); a.href = '?' + q.toString();
-      });
     })();
   </script>
   <script src="components.js?v=6"></script>
