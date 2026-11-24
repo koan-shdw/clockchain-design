@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="../app.css?v=17" />
   <script>(function(){try{if(localStorage.getItem('ccapp-theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
 </head>
-<!-- MCP docs, page 5 of 10: Proof. Content from the MCP technical manual (approved 10-30), section 05. -->
+<!-- MCP docs, page 5 of 8: Proof. Content from the MCP technical manual (approved 10-30), section 05. -->
 <body data-nav="mcp" data-docs>
   <div class="shell">
     <aside class="sidebar" id="sidebar"></aside>
@@ -28,13 +28,13 @@
             <h1 style="margin-top:12px;">Proof, not assurance.</h1>
 
             <h2 id="consensus">Consensus time</h2>
-            <p>Every timestamp is the network's agreed block time, and anyone can re-check it. There is no single clock to trust. <a class="docs-ref" href="mcp-references.html#r-1">R1</a></p>
+            <p>Every timestamp is the network's agreed block time, and anyone can re-check it. There is no single clock to trust.</p>
 
             <h2 id="receipts">Self-verifying receipts</h2>
-            <p>A receipt carries its own payload and anchor. Recompute the hash and compare it with the on-chain block. <a class="docs-ref" href="mcp-references.html#r-1">R1</a><a class="docs-ref" href="mcp-references.html#r-16">R16</a></p>
+            <p>A receipt carries its own payload and anchor. Recompute the hash and compare it with the on-chain block.</p>
 
             <h2 id="tamper">Tamper-evident</h2>
-            <p>Change one byte and verification fails. The ledger is append-only; the immutable block is the record. <a class="docs-ref" href="mcp-references.html#r-1">R1</a></p>
+            <p>Change one byte and verification fails. The ledger is append-only; the immutable block is the record.</p>
 
             <div class="docs-prevnext" id="docs-pn"></div>
           </article>
@@ -43,6 +43,6 @@
       </div>
     </div>
   </div>
-  <script src="../app.js?v=15"></script>
+  <script src="../app.js?v=16"></script>
 </body>
 </html>

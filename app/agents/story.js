@@ -1,5 +1,5 @@
 /* AI & Agents section: the storyboard. One source of truth for every version.
-   Wording checked against Yang's deck (slides 28, 2, 3, 7) and mcp.clockchain.network/#handshake (10-27).
+   Wording checked against the deck (slides 28, 2, 3, 7) and mcp.clockchain.network/#handshake (10-27).
    Each step has caption lines shown one after another within its duration (seconds). */
 window.CC_STORY = {
   head: {

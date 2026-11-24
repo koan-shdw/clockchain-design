@@ -314,9 +314,7 @@
         { label: 'Proof', href: 'mcp-proof.html' },
         { label: 'Install', href: 'mcp-install.html' },
         { label: 'Limits', href: 'mcp-limits.html' },
-        { label: 'Repositories', href: 'mcp-repositories.html' },
-        { label: 'References', href: 'mcp-references.html' },
-        { label: 'Notes for Rasesh', href: 'mcp-notes.html' }
+        { label: 'Repositories', href: 'mcp-repositories.html' }
       ]}
     ]}
   ];

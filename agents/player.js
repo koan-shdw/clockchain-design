@@ -52,7 +52,10 @@ function readColors(scope) {
 }
 
 export function mount(root, opts) {
-  const story = window.CC_STORY;
+  /* opts.story: another storyboard (the Shadow page); default the Agents one */
+  const story = opts.story || window.CC_STORY;
+  /* a chapter's status dot: chapter.live when the story says, else the first is live and the second in development */
+  const liveCls = (c, i) => ((c.live != null ? c.live : i === 0) ? 'is-live' : 'is-dev');
   const steps = story.steps, chapters = story.chapters;
   const starts = []; let total = 0;
   steps.forEach((s) => { starts.push(total); total += s.dur; });
@@ -67,7 +70,7 @@ export function mount(root, opts) {
   chapters.forEach((c, i) => {
     const b = el('button', 'ag-chip',
       '<span class="ag-chip-n">' + c.n + '</span><span class="ag-chip-l">' + esc(c.label) + '</span>' +
-      '<span class="ag-chip-s ' + (i === 0 ? 'is-live' : 'is-dev') + '">' + esc(c.status) + '</span>');
+      '<span class="ag-chip-s ' + liveCls(c, i) + '">' + esc(c.status) + '</span>');
     b.type = 'button'; b.dataset.ch = i;
     b.setAttribute('aria-label', 'Play from ' + c.label + ' (' + c.status + ')');
     b.addEventListener('click', () => { seek(chStart[i]); });
@@ -92,7 +95,7 @@ export function mount(root, opts) {
     chapters.forEach((c, i) => {
       const b = el('button', 'ag-nb',
         '<span class="ag-nb-top"><span class="ag-nb-n">' + c.n + '</span><span class="ag-nb-l">' + esc(c.label) + '</span>' +
-        '<span class="ag-nb-s ' + (i === 0 ? 'is-live' : 'is-dev') + '">' + esc(c.status) + '</span><span class="ag-nb-d">' + len(i) + '</span></span>' +
+        '<span class="ag-nb-s ' + liveCls(c, i) + '">' + esc(c.status) + '</span><span class="ag-nb-d">' + len(i) + '</span></span>' +
         (c.blurb ? '<span class="ag-nb-b">' + esc(c.blurb) + '</span>' : '') +
         '<span class="ag-nb-go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg><em>Play</em></span>' +
         '<span class="ag-nb-bar"><i></i></span>');

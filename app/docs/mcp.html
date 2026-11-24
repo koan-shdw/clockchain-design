@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@100;200;300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../app.css?v=17" />
+  <link rel="stylesheet" href="../app.css?v=18" />
   <link rel="stylesheet" href="../agents/section.css?v=1" />
   <link rel="stylesheet" href="../agents/r2.css?v=1" />
   <script>(function(){try{if(localStorage.getItem('ccapp-theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
@@ -17,8 +17,7 @@
     "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
   } }</script>
 </head>
-<!-- MCP docs, page 1 of 10: Overview. Content from the MCP technical manual (approved 10-30), set in the docs design.
-     Every claim carries a source chip (R#) to MCP: References; orange notes for Rasesh are listed in MCP: Notes for Rasesh. -->
+<!-- MCP docs, page 1 of 8: Overview. Content from the MCP technical manual (approved 10-30), set in the docs design. -->
 <body data-nav="mcp" data-docs>
   <div class="shell">
     <aside class="sidebar" id="sidebar"></aside>
@@ -33,7 +32,7 @@
             <div class="docs-mnav" id="docs-mnav"></div>
             <span class="tag">Model Context Protocol · Testnet</span>
             <h1 style="margin-top:12px;">Time your agents can prove.</h1>
-            <p class="lead">Trusted time, proof, identity, handshakes and commitments for any AI agent. Five services behind one MCP endpoint. <a class="docs-ref" href="mcp-references.html#r-1">R1</a></p>
+            <p class="lead">Trusted time, proof, identity, handshakes and commitments for any AI agent. Five services behind one MCP endpoint.</p>
 
             <div class="docs-cta">
               <a class="btn btn-primary" href="mcp-install.html">Add to your agent</a>
@@ -45,41 +44,36 @@
               <button class="kv-copy" onclick="ccCopy('https://mcp.clockchain.network/mcp','Endpoint copied')">Copy</button>
             </div>
 
-            <div class="docs-stats">
+            <div class="docs-stats is-wide3">
               <div><span class="stat-k">Services</span><b>5</b></div>
-              <div><span class="stat-k">Tools</span><b>50 <a class="docs-ref" href="mcp-references.html#r-10">R10</a></b></div>
+              <div><span class="stat-k">Tools</span><b>50</b></div>
               <div><span class="stat-k">Transport</span><b>Streamable HTTP</b></div>
               <div><span class="stat-k">Network</span><b>Testnet</b></div>
               <div><span class="stat-k">Auth</span><b>x-api-key</b></div>
             </div>
 
-            <div class="docs-note is-rasesh">
-              <b>Note for Rasesh · N2 <a href="mcp-notes.html#n-2">All notes</a></b>
-              The Network Overview film <a class="docs-ref" href="mcp-references.html#r-26">R26</a> says 12 tools. The live page, the README and the server source say 50 <a class="docs-ref" href="mcp-references.html#r-1">R1</a><a class="docs-ref" href="mcp-references.html#r-7">R7</a><a class="docs-ref" href="mcp-references.html#r-10">R10</a>. One of the two needs to change.
-            </div>
 
             <h2 id="what">What the server is</h2>
-            <p>An MCP server that adds Clockchain consensus time, notarization, contract scheduling, audit trails and agent identity verification to any MCP client. It wraps the live node gateway at node.clockchain.network and does not change the blockchain protocol. <a class="docs-ref" href="mcp-references.html#r-7">R7</a></p>
+            <p>An MCP server that adds Clockchain consensus time, notarization, contract scheduling, audit trails and agent identity verification to any MCP client. It wraps the live node gateway at node.clockchain.network and does not change the blockchain protocol.</p>
 
             <figure class="docs-fig">
               <div class="docs-anim"><div data-ag-player></div></div>
-              <figcaption><b>Fig 1.1</b>The demo film, drawn as cards. An agent acts, the action is anchored on a testnet block, the receipt verifies, and a one byte change is rejected. <a class="docs-ref" href="mcp-references.html#r-31">R31</a></figcaption>
+              <figcaption><b>Fig 1.1</b>The demo film, drawn as cards. An agent acts, the action is anchored on a testnet block, the receipt verifies, and a one byte change is rejected.</figcaption>
             </figure>
 
             <h2 id="films">Films for this section</h2>
-            <p>Three films cover the MCP services and the two agent flows. <a class="docs-ref" href="mcp-references.html#r-26">R26</a><a class="docs-ref" href="mcp-references.html#r-27">R27</a><a class="docs-ref" href="mcp-references.html#r-28">R28</a></p>
+            <p>Three films cover the MCP services and the two agent flows.</p>
             <table class="table">
-              <thead><tr><th>Film</th><th>Length</th><th>Shows</th><th>Source</th></tr></thead>
+              <thead><tr><th>Film</th><th>Length</th><th>Shows</th></tr></thead>
               <tbody>
-                <tr><td>Network overview</td><td>34.6 s</td><td>The five services and the endpoint</td><td><a class="docs-ref" href="mcp-references.html#r-26">R26</a></td></tr>
-                <tr><td>Agent Handshake demo</td><td>36.5 s</td><td>Two agents verify each other and get one certificate</td><td><a class="docs-ref" href="mcp-references.html#r-27">R27</a></td></tr>
-                <tr><td>Agent Contract</td><td>30 s</td><td>A family agent and a travel agency; all six milestones anchored</td><td><a class="docs-ref" href="mcp-references.html#r-28">R28</a></td></tr>
+                <tr><td>Network overview</td><td>34.6 s</td><td>The five services and the endpoint</td></tr>
+                <tr><td>Agent Handshake demo</td><td>36.5 s</td><td>Two agents verify each other and get one certificate</td></tr>
+                <tr><td>Agent Contract</td><td>30 s</td><td>A family agent and a travel agency; all six milestones anchored</td></tr>
               </tbody>
             </table>
 
             <div class="docs-foot">
-              <p>Presently anchored on the Clockchain anchoring gateway (testnet, one validator): the event hash, block anchor and block time are real and verifiable with no key against the sealed block, but not yet attested by an independent validator set. Multi-validator supermajority attestation starts at mainnet. Not yet a court-of-law evidentiary claim. <a class="docs-ref" href="mcp-references.html#r-1">R1</a></p>
-              <p>MCP-TM-01 · Draft r2 · 2026-10-30 · <a href="mcp-references.html">34 references</a> · <a href="mcp-notes.html">9 notes for Rasesh</a></p>
+              <p>Presently anchored on the Clockchain anchoring gateway (testnet, one validator): the event hash, block anchor and block time are real and verifiable with no key against the sealed block, but not yet attested by an independent validator set. Multi-validator supermajority attestation starts at mainnet. Not yet a court-of-law evidentiary claim.</p>
             </div>
 
             <div class="docs-prevnext" id="docs-pn"></div>
@@ -90,7 +84,7 @@
     </div>
   </div>
   <script src="../agents/story-server.js?v=1"></script>
-  <script src="../app.js?v=15"></script>
+  <script src="../app.js?v=16"></script>
   <script type="module">
     import { mount } from '../agents/player.js?v=2';
     mount(document.querySelector('[data-ag-player]'), { scene: './scene-server.js?v=1', ui: 'tabs', story: window.CC_STORY_SERVER });
