@@ -11,7 +11,7 @@ window.CC_STORY_SHADOW = {
   ],
   steps: [
     { id: 'connect', ch: 0, title: 'Connect', dur: 5, lines: [
-      'Add one connector to the agent you already use. Free testnet account, no email.' ] },
+      'Add one connector to the agent you already use. Logging runs beside its work and never slows it.' ] },
     { id: 'record', ch: 0, title: 'Record', dur: 10.5, lines: [
       'Codex gets a synthetic task: turn three release notes into a two-line changelog.',
       'Each step is recorded as it happens: the task, the tool call, its result, the message.',

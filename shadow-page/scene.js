@@ -29,6 +29,7 @@ const STEPS = [
   ['04', 'Task', '701b6153'], ['05', 'Tool call', '3eaed678'], ['06', 'Tool result', 'a8cb9a96'], ['07', 'Message', 'be62ef5d'],
   ['08', '', ''], ['09', '', ''], ['10', '', ''],
 ];
+const KIND_IC = { 'Task': 'task', 'Tool call': 'tool', 'Tool result': 'result', 'Message': 'message' };
 const CHECKS = [['format', 'pass'], ['content', 'fail'], ['sequence', 'pass'], ['membership', 'pass'], ['signature', 'pass'], ['trust', 'pass'], ['identity', 'not applicable'],
   ['coverage', 'pass'], ['provenance', 'pass'], ['completion', 'pass'], ['anchors', 'pass'], ['witness', 'indeterminate'], ['time', 'indeterminate'], ['truth', 'not applicable']];
 const CLOCK0 = 1 * 3600 + 29 * 60 + 34.197;
@@ -38,7 +39,8 @@ const VIEW_LINK = 'mcp.clockchain.network/shadow/s/••••••';
 const N = 10, RR = 2.55, TW = 0.98, TD = 0.62, TH = 0.07, H0 = 1.05;
 const ANG = (i) => RAD(30 + i * 31);              /* clockwise from 12 o'clock, seen from above; the gap at the top is where Codex works */
 const DX = 0.36, DZ = 0.36;                        /* the light's slant: a tile at height h casts its shadow h·(DX, DZ) away */
-const LIGHT = new V3(-DX * 3.6, 3.6, -DZ * 3.6);   /* Clockchain, the light above the record */
+const LIGHT = new V3(-3.7, 0.95, 0.4);            /* Clockchain: beside the work, off to the side (not above it) */
+const CU = new V3(3.4, 0, -4.2);                   /* the customer, who keeps getting the agent's work */
 const AG = new V3(0, 0, -4.9), PP = new V3(0.2, 0, 5.0);   /* Codex (12 o'clock) and the second person (6 o'clock) */
 const RIM = 3.75;
 const BLOCKS = [[RAD(12), '313,491', 'Start'], [RAD(30 + 6 * 31 + 15.5), '313,492', 'Checkpoint · steps 1–7'], [RAD(30 + 9 * 31 + 16), '313,493', 'Signed']];
@@ -139,6 +141,11 @@ function sty(el, p, v) { if (el['_' + p] !== v) { el['_' + p] = v; el.style[p] =
 function cls(el, c, on) { if (el['_c' + c] !== on) { el['_c' + c] = on; el.classList.toggle(c, on); } }
 
 const IC = {
+  task: '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="2.5" width="10" height="11.5" rx="1.8"/><path d="M5.8 6.4l1.2 1.2 2.2-2.4M5.8 10.8h4.4"/></svg>',
+  tool: '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="3" width="12" height="10" rx="1.8"/><path d="M5 6.6l2 1.6-2 1.6M8.6 10h2.4"/></svg>',
+  result: '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="3" width="12" height="10" rx="1.8"/><path d="M11 6v2.6H6.2M7.8 7l-1.7 1.6 1.7 1.6"/></svg>',
+  search: '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4"/><path d="M10 10l3.4 3.4"/></svg>',
+  message: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 3.5h11v7.2H8l-3.2 2.4v-2.4H2.5z"/></svg>',
   check: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.2 8.6l3 3 6.6-7.2"/></svg>',
   x: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg>',
   key: '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="4.9" cy="8" r="2.7"/><path d="M7.6 8h6.2M11.6 8v2.3M13.8 8v1.7"/></svg>',
@@ -159,6 +166,7 @@ const CSS = `
 .sh-d{transform:translate(0,calc(50% + 14px));}
 .sh-r{transform:translate(calc(50% + 14px),0);}
 .sh-l{transform:translate(calc(-50% - 14px),0);text-align:right;}
+.sh-ico{display:inline-flex;vertical-align:-3px;margin-right:5px;color:var(--sh-ink);font-weight:400;} .sh-ico svg{width:14px;height:14px;}
 .sh-n{display:block;font:500 9.5px/1.2 var(--f-mono);letter-spacing:.13em;text-transform:uppercase;color:var(--fg-3);white-space:nowrap;}
 .sh-h{display:block;font:400 10.5px/1.2 var(--f-mono);color:var(--fg);white-space:nowrap;font-variant-numeric:tabular-nums;}
 .sh-tl{display:flex;flex-direction:column;align-items:center;gap:2px;padding:3px 6px;border-radius:6px;background:var(--sh-plate);transition:none;}
@@ -186,6 +194,8 @@ const CSS = `
   font:400 12px/1.35 var(--f-body);color:var(--fg);white-space:nowrap;visibility:hidden;}
 :root[data-variant="eclipse"] .sh-card{box-shadow:0 18px 40px -24px rgba(0,0,0,.8);}
 .sh-card.r{border-color:color-mix(in oklab,var(--sh-red) 60%,var(--line-2));box-shadow:0 0 0 4px var(--sh-red-soft);}
+.sh-bl2{bottom:16px;left:16px;} .sh-leg{display:flex;gap:14px;margin-top:9px;} .sh-leg span{display:inline-flex;align-items:center;gap:6px;font:500 10px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--sh-ink);} .sh-leg svg{width:15px;height:15px;}
+.sh-sm .sh-bl2{display:none;}
 .sh-tr{top:16px;right:70px;} .sh-tl2{top:16px;left:16px;} .sh-br{bottom:16px;right:16px;}
 .sh-k{display:flex;align-items:center;gap:8px;font:500 9.5px/1 var(--f-mono);letter-spacing:.13em;text-transform:uppercase;color:var(--fg-3);}
 .sh-k b{color:var(--sh-ink);font-weight:500;} .sh-card.r .sh-k b{color:var(--sh-red-ink);}
@@ -310,9 +320,9 @@ function buildRecord() {
     const ghG = new THREE.Group(); ghG.rotation.y = rotY; ghG.position.set(base.x, H0, base.z); scene.add(ghG); ghG.add(ghost);
     const drop = mkLine([0, 0, 0, DX * H0, -H0, DZ * H0], 'accent', 1.2, { dash: [0.06, 0.05], ro: 3 });
     drop.position.set(base.x, H0, base.z);
-    const beam = mkLine([LIGHT.x, LIGHT.y, LIGHT.z, base.x, H0 + TH, base.z], 'beam', 1, { reveal: true, ro: 2 });
+    const beam = mkLine([LIGHT.x, LIGHT.y, LIGHT.z, base.x, H0 + TH, base.z], 'beam', 0.8, { reveal: true, ro: 2 });
     const beamLen = lineLen(beam);
-    const lab = mkLabel('<div class="sh-tl' + (STEPS[i][2] ? '' : ' un') + '"><span class="sh-n">' + STEPS[i][0] + (STEPS[i][1] ? ' · ' + STEPS[i][1] : '') + '</span>' + (STEPS[i][2] ? '<span class="sh-h">' + STEPS[i][2] + '</span>' : '') + '</div>', 'sh-u', tg, new V3(0, TH, -TD / 2));
+    const lab = mkLabel('<div class="sh-tl' + (STEPS[i][2] ? '' : ' un') + '"><span class="sh-n">' + (STEPS[i][1] ? '<b class="sh-ico">' + IC[KIND_IC[STEPS[i][1]]] + '</b>' : '') + STEPS[i][0] + (STEPS[i][1] ? ' · ' + STEPS[i][1] : '') + '</span>' + (STEPS[i][2] ? '<span class="sh-h">' + STEPS[i][2] + '</span>' : '') + '</div>', 'sh-u', tg, new V3(0, TH, -TD / 2));
     TILES.push({ i, tg, base, tDrop: tDrop[i], tCast: tCast(i), lab });
 
     hooks.push(() => {
@@ -358,7 +368,7 @@ function buildRecord() {
       /* the cast: beam from the light to the tile, dashed drop to its shadow */
       const bu = ramp(T, tc - 0.35, tc + 0.05);
       beam.visible = bu > 0; beam.material.dashSize = Math.max(1e-4, beamLen * eout(bu));
-      beam.material.opacity = 0.5 * win(T, tc - 0.35, (i < 7 ? at('anchor', 1, 0.5) : at('share', 1, 0.2)), 0.1, 0.6);
+      beam.material.opacity = 0.26 * win(T, tc - 0.35, (i < 7 ? at('anchor', 1, 0.5) : at('share', 1, 0.2)), 0.1, 0.6);
       const da = win(T, tc - 0.05, i < 7 ? at('anchor', 1, 0.95) : at('share', 1, 0.6), 0.25, 0.5);
       show(drop, da * 0.85); drop.scale.y = Math.max(0.001, ramp(T, tc - 0.1, tc + 0.35));
       drop.scale.x = drop.scale.z = drop.scale.y;
@@ -462,6 +472,24 @@ function buildStory() {
   });
   const person = mkParty(PP, '<div class="sh-tag"><b></b>Second person<em>own browser</em></div>', sh(0, 0.6), ST.end.s + 0.2);
 
+  /* ---- the agent's own work: Codex keeps delivering to its customer; the ledger is logged beside it, never in its path ---- */
+  const customer = mkParty(CU, '<div class="sh-tag"><b></b>Customer<em>gets the work</em></div>', 0.15, ST.end.s + 0.2);
+  const w0 = AG.clone().setY(0.9), w1 = CU.clone().setY(0.9);
+  const workLn = mkLine([w0.x, w0.y, w0.z, w1.x, w1.y, w1.z], 'ink', 2.2, { ro: 6 });
+  const workHeads = [0, 1, 2].map(() => mkLine(circle(0.07, 0, 16), 'accent', 3.2, { ro: 9 }));
+  const workL = mkLabel('<span class="sh-chip ink">' + IC.check + 'Work delivered · no waiting</span>', 'sh-d', scene, w0.clone().add(w1).multiplyScalar(0.5));
+  ACT.push(() => {
+    const T = F.T, a = ramp(T, 0.5, 1.3) * (1 - ramp(T, ST.end.s, ST.end.s + 0.4));
+    show(workLn, 0.55 * a);
+    workHeads.forEach((hd, k) => { const u = (T * 0.3 + k / 3) % 1; hd.position.lerpVectors(w0, w1, u); show(hd, a * Math.sin(Math.PI * u)); });
+    setA(workL, a * (SM ? 0 : 1) * (1 - ramp(T, ST.share.s - 0.3, ST.share.s + 0.2)));
+  });
+  const sideL = mkLabel('<span class="sh-chip sh-hide">Logged on the side · the agent never stops</span>', 'sh-d', scene, LIGHT.clone().setY(0.05));
+  ACT.push(() => setA(sideL, win(F.T, at('record', 0, 0.3), at('anchor', 1, 0.95), 0.5, 0.5)));
+  const legend = mkCard('<div class="sh-k"><b>Agent actions</b>what gets logged</div><div class="sh-leg">' +
+    [['task', 'Task'], ['tool', 'Tool call'], ['search', 'Search'], ['message', 'Message']].map(([k, n]) => '<span>' + IC[k] + n + '</span>').join('') + '</div>', 'bl2');
+  ACT.push(() => cardA(legend, win(F.T, at('record', 0, 0.12), at('anchor', 1, 0.95), 0.5, 0.5)));
+
   /* ---- 1 Connect: one connector ---- */
   const conn = mkCard('<div class="sh-k"><b>Connector</b></div><div class="sh-url">mcp.clockchain.network/shadow/mcp</div>' +
     '<div class="sh-row r1">' + IC.check + 'Free testnet account</div><div class="sh-row r2">' + IC.check + 'No email</div>', 'tl2');
@@ -479,7 +507,7 @@ function buildStory() {
   TILES.forEach((t) => {
     if (t.i >= 7) return;
     const named = !!STEPS[t.i][1];
-    mkArc(AG.clone().setY(0.9), t.base.clone().setY(H0 + TH), t.tDrop - 0.45, t.tDrop, 'ink', { lift: 0.7, w: 1.3, op: 0.6, hold: 0.3, chip: named ? '<span class="sh-chip out">' + STEPS[t.i][1] + '</span>' : null });
+    mkArc(AG.clone().setY(0.9), t.base.clone().setY(H0 + TH), t.tDrop - 0.45, t.tDrop, 'ink', { lift: 0.7, w: 1.3, op: 0.6, hold: 0.3, chip: named ? '<span class="sh-chip out">' + IC[KIND_IC[STEPS[t.i][1]]] + STEPS[t.i][1] + '</span>' : null });
   });
   const chainL = mkLabel('<span class="sh-chip">Numbered and chained · seq 4–7</span>', 'sh-u', scene, new V3(0, H0 + 0.95, 0));
   ACT.push(() => setA(chainL, win(F.T, rc(2, 0.25), an(0, 0.05), 0.35, 0.35)));

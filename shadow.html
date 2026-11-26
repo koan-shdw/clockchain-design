@@ -21,7 +21,7 @@
   <link rel="stylesheet" href="styles.css?v=5" />
   <link rel="stylesheet" href="site.css?v=20" />
   <link rel="stylesheet" href="shadow-page/player.css?v=1" />
-  <link rel="stylesheet" href="shadow-page/shadow.css?v=3" />
+  <link rel="stylesheet" href="shadow-page/shadow.css?v=4" />
   <script type="importmap">{ "imports": {
     "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
     "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
@@ -82,13 +82,17 @@
             <span class="cw-head-label"><span class="live-dot"></span><span data-rec-state>Recording</span></span>
             <span class="cw-net">TESTNET</span>
           </div>
-          <div class="sp-rec-t">Changelog draft</div>
-          <div class="sp-rec-sub">codex · synthetic task · own key</div>
+          <div class="sp-mandate">
+            <span class="sp-mk">Mandate · what you asked</span>
+            <p>“Turn these three testnet release notes into a two-line changelog.”</p>
+            <span class="sp-ma">Codex did it, and recorded each action:</span>
+          </div>
+          <div class="sp-rec-sub">Changelog draft · codex · own key</div>
           <ol class="sp-steps">
-            <li class="sp-step"><i></i><span>04</span><span>task</span><span class="h">701b6153</span></li>
-            <li class="sp-step"><i></i><span>05</span><span>tool_call</span><span class="h">3eaed678</span></li>
-            <li class="sp-step"><i></i><span>06</span><span>tool_result</span><span class="h">a8cb9a96</span></li>
-            <li class="sp-step"><i></i><span>07</span><span>message</span><span class="h">be62ef5d</span></li>
+            <li class="sp-step"><i></i><span>04</span><span class="sp-k2"><span class="sp-ic"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="2.5" width="10" height="11.5" rx="1.8"/><path d="M5.8 6.4l1.2 1.2 2.2-2.4M5.8 10.8h4.4"/></svg></span>task</span><span class="h">701b6153</span></li>
+            <li class="sp-step"><i></i><span>05</span><span class="sp-k2"><span class="sp-ic"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="3" width="12" height="10" rx="1.8"/><path d="M5 6.6l2 1.6-2 1.6M8.6 10h2.4"/></svg></span>tool_call</span><span class="h">3eaed678</span></li>
+            <li class="sp-step"><i></i><span>06</span><span class="sp-k2"><span class="sp-ic"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="3" width="12" height="10" rx="1.8"/><path d="M11 6v2.6H6.2M7.8 7l-1.7 1.6 1.7 1.6"/></svg></span>tool_result</span><span class="h">a8cb9a96</span></li>
+            <li class="sp-step"><i></i><span>07</span><span class="sp-k2"><span class="sp-ic"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 3.5h11v7.2H8l-3.2 2.4v-2.4H2.5z"/></svg></span>message</span><span class="h">be62ef5d</span></li>
           </ol>
           <div class="sp-axis" aria-hidden="true">
             <span class="sp-blk" style="left:14%">313,491</span>
@@ -103,39 +107,6 @@
           <div class="cw-foot">From the real run on testnet. Only fingerprints go to the ledger.</div>
         </div>
       </div>
-    </section>
-
-    <!-- ===== BUILT ON CLOCKCHAIN ===== -->
-    <section class="sp-built reveal" id="built" data-screen-label="02 Built on Clockchain">
-      <div class="sp-head">
-        <span class="tag"><span class="sp-k">Shadow ·</span> Built on Clockchain</span>
-        <h2 class="h2">One product, <em>three Clockchain services.</em></h2>
-        <p class="body-lg">Clockchain runs five services for AI agents behind one MCP endpoint. Shadow is the first finished
-          product made from them, so you can use it without learning the tools.</p>
-      </div>
-      <div class="sp-svc">
-        <div class="sp-svc-c">
-          <span class="sp-svc-k"><i><svg viewBox="0 0 16 16"><path d="M8 2.2a5.8 5.8 0 0 1 5.8 5.8M4.4 3.5A5.8 5.8 0 0 0 2.2 8c0 1.6.4 3.1 1.1 4.4M8 5a3 3 0 0 1 3 3c0 2-.5 3.9-1.4 5.6M5 8a3 3 0 0 1 .6-1.8M8 8c0 2.2-.6 4.3-1.7 6"/></svg></i>Proof</span>
-          <h3>Fingerprints on the ledger</h3>
-          <p>Each recorded step is hashed and anchored on Clockchain. The ledger holds the fingerprint, never the step's content.</p>
-          <span class="sp-in">In the real run: <b>steps 1–7 · block 313,492</b></span>
-        </div>
-        <div class="sp-svc-c">
-          <span class="sp-svc-k"><i><svg viewBox="0 0 16 16"><path d="M4 3h8M4 8h8M4 13h5"/><circle cx="1.8" cy="3" r=".6"/><circle cx="1.8" cy="8" r=".6"/><circle cx="1.8" cy="13" r=".6"/></svg></i>Commitments &amp; Audit</span>
-          <h3>An ordered trail you can hand over</h3>
-          <p>Steps are numbered, chained and signed, so a missing, reordered or changed step shows up for whoever checks.</p>
-          <span class="sp-in">In the real run: <b>10 steps · one link · one pin</b></span>
-        </div>
-        <div class="sp-svc-c">
-          <span class="sp-svc-k"><i><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><path d="M8 4.6V8l2.4 1.5"/></svg></i>Trusted Time</span>
-          <h3>A time window for every step</h3>
-          <p>Each step's time comes from ledger receipts: a window between two blocks, not the agent's own clock.</p>
-          <span class="sp-in">In the real run: <b>after block 313,491 · before 313,492</b></span>
-        </div>
-      </div>
-      <p class="sp-toolbox">Agent Handshake and Agent Identity are the other two, in the same toolbox.
-        <a href="services.html">All five services<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg></a>
-        <a href="app/docs/mcp.html">MCP docs<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg></a></p>
     </section>
 
     <!-- ===== HOW IT WORKS: the infographic animation (shared player) ===== -->
@@ -315,10 +286,10 @@
   <script src="app.js?v=3"></script>
   <script src="contact.js?v=1"></script>
   <script src="consent.js?v=1"></script>
-  <script src="shadow-page/story.js?v=2"></script>
+  <script src="shadow-page/story.js?v=3"></script>
   <script type="module">
     import { mount } from './shadow-page/player.js?v=1';
-    mount(document.querySelector('[data-ag-player]'), { scene: './scene.js?v=3', ui: 'tabs', story: window.CC_STORY_SHADOW });
+    mount(document.querySelector('[data-ag-player]'), { scene: './scene.js?v=4', ui: 'tabs', story: window.CC_STORY_SHADOW });
   </script>
   <script>
     (function () {
