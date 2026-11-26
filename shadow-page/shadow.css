@@ -182,3 +182,28 @@
 }
 /* phone: a taller stage so the cards read */
 @media(max-width:600px){.sp .ag-player{--ag-hk:1.28;}}
+
+/* ---------- revision: hero fits one screen; mandate on the recording card; action icons ---------- */
+.sp-hero{padding:132px 24px 24px;min-height:0;}
+.sp-hero .hero-q-title{font-size:clamp(32px,3.7vw,52px);line-height:1.06;margin:12px 0 14px;}
+.sp-hero .hero-q-inner{align-items:center;gap:48px;}
+.sp-hero .eyebrow{margin-bottom:16px;}
+.sp-hero .hero-lede{margin-top:14px;}
+.sp-hero .hero-sub{margin-top:10px;font-size:15.5px;line-height:1.5;}
+.sp-hero .hero-q-actions{margin-top:20px;}
+.sp-facts{margin-top:16px;}
+.sp-rec{padding-top:16px;padding-bottom:16px;}
+.sp-mandate{margin-top:14px;padding:11px 13px 12px;border-radius:10px;background:var(--accent-soft);border:1px solid var(--accent-line);}
+.sp-mk{display:block;font:500 10px/1 var(--f-mono);letter-spacing:.13em;text-transform:uppercase;color:var(--sp-ink);}
+.sp-mandate p{margin:8px 0 0;font:400 15px/1.35 var(--f-display);color:var(--fg);}
+.sp-ma{display:block;margin-top:8px;font:400 11.5px/1.2 var(--f-mono);color:var(--fg-3);}
+.sp-rec-sub{margin-top:12px;}
+.sp-rec .sp-steps{margin-top:10px;}
+.sp-rec .sp-step{height:30px;}
+.sp-rec .sp-step i::before{height:21px;}
+.sp-rec .sp-axis{margin-top:8px;height:30px;}
+.sp-rec .cw-stats{margin-top:12px;}
+.sp-k2{display:inline-flex;align-items:center;gap:8px;}
+.sp-ic{display:inline-flex;width:16px;height:16px;color:var(--sp-ink);}
+.sp-ic svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
+@media(max-width:1080px){.sp-hero{padding-top:150px;}}
